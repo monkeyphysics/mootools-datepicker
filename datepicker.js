@@ -1,5 +1,5 @@
 /**
- * datepicker.js - v1.03 - MooTools Datepicker class
+ * datepicker.js - v1.04 - MooTools Datepicker class
  * 
  * by MonkeyPhysics.com
  *
@@ -32,7 +32,7 @@ var DatePicker = new Class({
 	choice: {}, 
 	
 	// size of body, used to animate the sliding
-	s: {}, 
+	bodysize: {}, 
 	
 	// to check availability of next/previous buttons
 	limit: {}, 
@@ -57,6 +57,7 @@ var DatePicker = new Class({
 		yearPicker: true,
 		yearsPerPage: 20,
 		format: 'd-m-Y',
+		allowEmpty: false,
 		inputOutputFormat: 'U', // default to unix timestamp
 		animationDuration: 400,
 		useFadeInOut: !Browser.Engine.trident, // dont animate fade-in/fade-out for IE
@@ -85,23 +86,39 @@ var DatePicker = new Class({
 			// never double attach
 			if (item.retrieve('datepicker')) return;
 			
-			if (!$chk(item.get('value'))) item.set('value', this.format(new Date(), this.options.inputOutputFormat));
-
+			// determine starting value(s)
+			if ($chk(item.get('value'))) {
+				var init_clone_val   = this.format(new Date(this.unformat(item.get('value'), this.options.inputOutputFormat)), this.options.format);
+				var init_visual_date = this.unformat(item.get('value'), this.options.inputOutputFormat).valueOf();
+			} else if (!this.options.allowEmpty) {
+				var init_clone_val   = this.format(new Date(), this.options.format);
+				var init_visual_date = new Date();
+			} else {
+				var init_clone_val   = '';
+				var init_visual_date = new Date();
+			}
+			
+			// create clone & attach events
 			item
 			.setStyle('display', this.options.debug ? '' : 'none')
 			.store('datepicker', true) // to prevent double attachment...
 			.clone()
 			.store('datepicker', true) // ...even for the clone (!)
-			.removeProperty('name') // secure clean submission
+			.removeProperty('name') // secure clean (form)submission
 			.setStyle('display', '')
-			.set('value', this.format(new Date(this.unformat(item.get('value'), this.options.inputOutputFormat)), this.options.format))
+			.set('value', init_clone_val)
 			.addEvents({
 				'keydown': function(e) {
+					if (this.options.allowEmpty && (e.key == "delete" || e.key == "backspace")) {
+                        item.set('value', '');
+                        e.target.set('value', '');
+                        this.close(null, true);
+                    }
 					e.stop();
-				},
+				}.bind(this),
 				'focus': function(event, item) {
 					var d = event.target.getCoordinates();
-					this.show({	left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, this.unformat(item.get('value'), this.options.inputOutputFormat).valueOf());
+                    this.show({left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, init_visual_date);
 					this.input = item;
 					this.visual = event.target;
 					this.options.onShow();
@@ -156,24 +173,27 @@ var DatePicker = new Class({
 		if (!$chk(this.picker)) {
 			this.constructPicker();
 		} else {
-			// swapperoo
+			// swap contents so we can fill the newContents again and animate
 			var o = this.oldContents;
 			this.oldContents = this.newContents;
 			this.newContents = o;
 			this.newContents.empty();
 		}
 		
+		// remember current working date
 		var startDate = new Date(this.d.getTime());
 		
+		// intially assume both left and right are allowed
 		this.limit = { right: false, left: false };
 		
+		// render! booty!
 		if (this.mode == 'decades') {
 			this.renderDecades();
 		} else if (this.mode == 'year') {
 			this.renderYear();
 		} else if (this.mode == 'time') {
 			this.renderTime();
-			this.limit = { right: true, left: true };
+			this.limit = { right: true, left: true }; // no left/right in timeview
 		} else {
 			this.renderMonth();
 		}
@@ -182,24 +202,28 @@ var DatePicker = new Class({
 		this.picker.getElement('.next').setStyle('visibility', this.limit.right ? 'hidden' : 'visible');
 		this.picker.getElement('.titleText').setStyle('cursor', this.allowZoomOut() ? 'pointer' : 'default');
 		
+		// restore working date
 		this.d = startDate;
 		
+		// if ever the opacity is set to '0' it was only to have us fade it in here
+		// refer to the constructPicker() function, which instantiates the picker at opacity 0 when fading is desired
 		if (this.picker.getStyle('opacity') == 0) {
 			this.picker.tween('opacity', 0, 1);
 		}
 		
+		// animate
 		if ($chk(fx)) this.fx(fx);
 	},
 	
 	fx: function(fx) {
 		if (fx == 'right') {
 			this.oldContents.setStyles({ left: 0, opacity: 1 });
-			this.newContents.setStyles({ left: this.s.x, opacity: 1 });
-			this.slider.setStyle('left', 0).tween('left', 0, -this.s.x);
+			this.newContents.setStyles({ left: this.bodysize.x, opacity: 1 });
+			this.slider.setStyle('left', 0).tween('left', 0, -this.bodysize.x);
 		} else if (fx == 'left') {
-			this.oldContents.setStyles({ left: this.s.x, opacity: 1 });
+			this.oldContents.setStyles({ left: this.bodysize.x, opacity: 1 });
 			this.newContents.setStyles({ left: 0, opacity: 1 });
-			this.slider.setStyle('left', -this.s.x).tween('left', -this.s.x, 0);
+			this.slider.setStyle('left', -this.bodysize.x).tween('left', -this.bodysize.x, 0);
 		} else if (fx == 'fade') {
 			this.slider.setStyle('left', 0);
 			this.oldContents.setStyle('left', 0).set('tween', { duration: this.options.animationDuration / 2 }).tween('opacity', 1, 0);
@@ -221,11 +245,11 @@ var DatePicker = new Class({
 		new Element('span', { 'class': 'titleText' }).addEvent('click', this.zoomOut.bind(this)).inject(titlecontainer);
 		
 		var b = new Element('div', { 'class': 'body' }).inject(this.picker);
-		this.s = b.getSize();
-		this.slider = new Element('div', { styles: { position: 'absolute', top: 0, left: 0, width: 2 * this.s.x, height: this.s.y }})
+		this.bodysize = b.getSize();
+		this.slider = new Element('div', { styles: { position: 'absolute', top: 0, left: 0, width: 2 * this.bodysize.x, height: this.bodysize.y }})
 					.set('tween', { duration: this.options.animationDuration, transition: Fx.Transitions.Quad.easeInOut }).inject(b);
-		this.oldContents = new Element('div', { styles: { position: 'absolute', top: 0, left: this.s.x, width: this.s.x, height: this.s.y }}).inject(this.slider);
-		this.newContents = new Element('div', { styles: { position: 'absolute', top: 0, left: 0, width: this.s.x, height: this.s.y }}).inject(this.slider);
+		this.oldContents = new Element('div', { styles: { position: 'absolute', top: 0, left: this.bodysize.x, width: this.bodysize.x, height: this.bodysize.y }}).inject(this.slider);
+		this.newContents = new Element('div', { styles: { position: 'absolute', top: 0, left: 0, width: this.bodysize.x, height: this.bodysize.y }}).inject(this.slider);
 	},
 	
 	renderTime: function() {
@@ -378,7 +402,7 @@ var DatePicker = new Class({
 	},
 	
 	renderDecades: function() {
-		// start neatly at interval
+		// start neatly at interval (eg. 1980 instead of 1987)
 		while (this.d.getFullYear() % this.options.yearsPerPage > 0) {
 			this.d.setFullYear(this.d.getFullYear() - 1);
 		}
