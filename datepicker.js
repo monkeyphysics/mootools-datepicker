@@ -113,12 +113,15 @@ var DatePicker = new Class({
                         item.set('value', '');
                         e.target.set('value', '');
                         this.close(null, true);
-                    }
-					e.stop();
+                    } else if (e.key == "tab") {
+						this.close(null, true);
+					} else {
+						e.stop();
+					}
 				}.bind(this),
 				'focus': function(event, item) {
 					var d = event.target.getCoordinates();
-                    this.show({left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, init_visual_date);
+					this.show({left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, init_visual_date);
 					this.input = item;
 					this.visual = event.target;
 					this.options.onShow();
