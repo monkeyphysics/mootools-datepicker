@@ -1,5 +1,6 @@
 /**
- * datepicker.js - v1.04 - MooTools Datepicker class
+ * datepicker.js - MooTools Datepicker class
+ * @version 1.05
  * 
  * by MonkeyPhysics.com
  *
@@ -14,7 +15,7 @@
  * --
  *
  * Some Rights Reserved
- * http://creativecommons.org/licenses/by-sa/3.0/nl/deed.en
+ * http://creativecommons.org/licenses/by-sa/3.0/
  * 
  */
 
@@ -112,8 +113,8 @@ var DatePicker = new Class({
 					if (this.options.allowEmpty && (e.key == "delete" || e.key == "backspace")) {
                         item.set('value', '');
                         e.target.set('value', '');
-                        this.close(null, true);
-                    } else if (e.key == "tab") {
+						this.close(null, true);
+					} else if (e.key == "tab") {
 						this.close(null, true);
 					} else {
 						e.stop();
