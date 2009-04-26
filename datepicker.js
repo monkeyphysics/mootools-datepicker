@@ -88,15 +88,13 @@ var DatePicker = new Class({
 			if (item.retrieve('datepicker')) return;
 			
 			// determine starting value(s)
+			var init_visual_date = new Date();
 			if ($chk(item.get('value'))) {
-				var init_clone_val   = this.format(new Date(this.unformat(item.get('value'), this.options.inputOutputFormat)), this.options.format);
-				var init_visual_date = this.unformat(item.get('value'), this.options.inputOutputFormat).valueOf();
+				var init_clone_val = this.format(new Date(this.unformat(item.get('value'), this.options.inputOutputFormat)), this.options.format);
 			} else if (!this.options.allowEmpty) {
-				var init_clone_val   = this.format(new Date(), this.options.format);
-				var init_visual_date = new Date();
+				var init_clone_val = this.format(new Date(), this.options.format);
 			} else {
-				var init_clone_val   = '';
-				var init_visual_date = new Date();
+				var init_clone_val = '';
 			}
 			
 			// create clone & attach events
@@ -111,8 +109,8 @@ var DatePicker = new Class({
 			.addEvents({
 				'keydown': function(e) {
 					if (this.options.allowEmpty && (e.key == "delete" || e.key == "backspace")) {
-                        item.set('value', '');
-                        e.target.set('value', '');
+						item.set('value', '');
+						e.target.set('value', '');
 						this.close(null, true);
 					} else if (e.key == "tab") {
 						this.close(null, true);
@@ -122,6 +120,11 @@ var DatePicker = new Class({
 				}.bind(this),
 				'focus': function(event, item) {
 					var d = event.target.getCoordinates();
+					if ($chk(item.get('value'))) {
+						init_visual_date = this.unformat(item.get('value'), this.options.inputOutputFormat).valueOf();
+					} else {
+						init_visual_date = new Date();
+					}
 					this.show({left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, init_visual_date);
 					this.input = item;
 					this.visual = event.target;
@@ -357,6 +360,7 @@ var DatePicker = new Class({
 				e.addEvent('click', function(e, d) {
 					if (this.options.timePicker) {
 						this.d.setDate(d.day);
+						this.d.setMonth(d.month);
 						this.mode = 'time';
 						this.render('fade');
 					} else {
