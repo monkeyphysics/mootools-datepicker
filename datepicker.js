@@ -1,6 +1,6 @@
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.06
+ * @version 1.07
  * 
  * by MonkeyPhysics.com
  *
@@ -595,7 +595,7 @@ var DatePicker = new Class({
 				case 'a': r = '(am|pm)'; break;
 				case 'A': r = '(AM|PM)'; break;
 				case 'i': 
-				case 's': r = '0[1-9]|[12345][0-9]|60'; break;
+				case 's': r = '[012345][0-9]'; break;
 				case 'U': r = '-?[0-9]+$'; break;
 				default:  r = null;
 			}
