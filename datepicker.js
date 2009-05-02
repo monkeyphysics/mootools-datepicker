@@ -1,6 +1,6 @@
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.07
+ * @version 1.10
  * 
  * by MonkeyPhysics.com
  *
@@ -67,6 +67,7 @@ var DatePicker = new Class({
 		minDate: null, // { date: '[date-string]', format: '[date-string-interpretation-format]' }
 		maxDate: null, // same as minDate
 		debug: false,
+		toggleElements: null,
 		
 		// and some event hooks:
 		onShow: $empty,   // triggered when the datepicker pops up
@@ -83,12 +84,25 @@ var DatePicker = new Class({
 	},
 	
 	attach: function() {
+		// toggle the datepicker through a separate element?
+		if ($chk(this.options.toggleElements)) {
+			var togglers = $$(this.options.toggleElements);
+			document.addEvents({
+				'keydown': function(e) {
+					if (e.key == "tab") {
+						this.close(null, true);
+					}
+				}.bind(this)
+			});
+		};
+		
+		// attach functionality to the inputs		
 		$$(this.attachTo).each(function(item, index) {
+			
 			// never double attach
 			if (item.retrieve('datepicker')) return;
 			
 			// determine starting value(s)
-			var init_visual_date = new Date();
 			if ($chk(item.get('value'))) {
 				var init_clone_val = this.format(new Date(this.unformat(item.get('value'), this.options.inputOutputFormat)), this.options.format);
 			} else if (!this.options.allowEmpty) {
@@ -97,42 +111,61 @@ var DatePicker = new Class({
 				var init_clone_val = '';
 			}
 			
-			// create clone & attach events
-			item
-			.setStyle('display', this.options.debug ? '' : 'none')
+			// create clone
+			var display = item.getStyle('display');
+			var clone = item
+			.setStyle('display', this.options.debug ? display : 'none')
 			.store('datepicker', true) // to prevent double attachment...
 			.clone()
 			.store('datepicker', true) // ...even for the clone (!)
-			.removeProperty('name') // secure clean (form)submission
-			.setStyle('display', '')
+			.removeProperty('name')    // secure clean (form)submission
+			.setStyle('display', display)
 			.set('value', init_clone_val)
-			.addEvents({
-				'keydown': function(e) {
-					if (this.options.allowEmpty && (e.key == "delete" || e.key == "backspace")) {
-						item.set('value', '');
-						e.target.set('value', '');
-						this.close(null, true);
-					} else if (e.key == "tab") {
-						this.close(null, true);
-					} else {
-						e.stop();
-					}
-				}.bind(this),
-				'focus': function(event, item) {
-					var d = event.target.getCoordinates();
-					if ($chk(item.get('value'))) {
-						init_visual_date = this.unformat(item.get('value'), this.options.inputOutputFormat).valueOf();
-					} else {
-						init_visual_date = new Date();
-					}
-					this.show({left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, init_visual_date);
-					this.input = item;
-					this.visual = event.target;
-					this.options.onShow();
-				}.bindWithEvent(this, item)
-			})
 			.inject(item, 'after');
+			
+			// events
+			if ($chk(this.options.toggleElements)) {
+				togglers[index]
+					.setStyle('cursor', 'pointer')
+					.addEvents({
+						'click': function(e) {
+							this.onFocus(item, clone);
+						}.bind(this)
+					});
+			} else {
+				clone.addEvents({
+					'keydown': function(e) {
+						if (this.options.allowEmpty && (e.key == "delete" || e.key == "backspace")) {
+							item.set('value', '');
+							e.target.set('value', '');
+							this.close(null, true);
+						} else if (e.key == "tab") {
+							this.close(null, true);
+						} else {
+							e.stop();
+						}
+					}.bind(this),
+					'focus': function(e) {
+						this.onFocus(item, clone);
+					}.bind(this)
+				});
+			}
 		}.bind(this));
+	},
+	
+	onFocus: function(original_input, visual_input) {
+		var init_visual_date, d = visual_input.getCoordinates();
+		
+		if ($chk(original_input.get('value'))) {
+			init_visual_date = this.unformat(original_input.get('value'), this.options.inputOutputFormat).valueOf();
+		} else {
+			init_visual_date = new Date();
+		}
+		
+		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, init_visual_date);
+		this.input = original_input;
+		this.visual = visual_input;
+		this.options.onShow();
 	},
 	
 	dateToObject: function(d) {
