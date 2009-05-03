@@ -132,6 +132,11 @@ var DatePicker = new Class({
 							this.onFocus(item, clone);
 						}.bind(this)
 					});
+				clone.addEvents({
+					'blur': function() {
+						item.set('value', clone.get('value'));
+					}
+				});
 			} else {
 				clone.addEvents({
 					'keydown': function(e) {
@@ -603,7 +608,7 @@ var DatePicker = new Class({
 	},
 	
 	unformat: function(t, format) {
-		var d = new Date(0);
+		var d = new Date();
 		var a = {};
 		var c, m;
 		
