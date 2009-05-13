@@ -582,7 +582,7 @@ var DatePicker = new Class({
 		for (var i = 0; i < format.length; i++) {
 			switch(format.charAt(i)) {
 				case '\\': i++; f+= format.charAt(i); break;
-				case 'y': f += t.getYear(); break
+				case 'y': f += (100 + t.getYear() + '').substring(1); break
 				case 'Y': f += t.getFullYear(); break;
 				case 'm': f += this.leadZero(m + 1); break;
 				case 'n': f += (m + 1); break;
@@ -655,7 +655,7 @@ var DatePicker = new Class({
 		for (c in a) {
 			var v = a[c];
 			switch(c) {
-				case 'y': d.setYear(v); break;
+				case 'y': d.setFullYear(v < 30 ? 2000 + v.toInt() : 1900 + v.toInt()); break; // assume between 1930 - 2029
 				case 'Y': d.setFullYear(v); break;
 				case 'm':
 				case 'n': d.setMonth(v - 1); break;
