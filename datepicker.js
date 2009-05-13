@@ -1,6 +1,6 @@
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.11
+ * @version 1.12
  * 
  * by MonkeyPhysics.com
  *
