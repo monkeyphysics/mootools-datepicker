@@ -306,13 +306,14 @@ var DatePicker = new Class({
 			.set('value', this.leadZero(this.d.getHours()))
 			.addEvents({
 				mousewheel: function(e) {
-					var i = e.target;
+					var i = e.target, v = i.get('value').toInt();
 					i.focus();
 					if (e.wheel > 0) {
-						if (i.get('value').toInt() < 23) i.set('value', this.leadZero(i.get('value').toInt() + 1));
+						v = (v < 23) ? v + 1 : 0;
 					} else {
-						if (i.get('value').toInt() > 0) i.set('value', this.leadZero(i.get('value').toInt() -1));
+						v = (v > 0) ? v - 1 : 23;
 					}
+					i.set('value', this.leadZero(v));
 					e.stop();
 				}.bind(this)
 			})
@@ -323,13 +324,14 @@ var DatePicker = new Class({
 			.set('value', this.leadZero(this.d.getMinutes()))
 			.addEvents({
 				mousewheel: function(e) {
-					var i = e.target;
+					var i = e.target, v = i.get('value').toInt();
 					i.focus();
 					if (e.wheel > 0) {
-						if (i.get('value').toInt() < 59) i.set('value', this.leadZero(i.get('value').toInt() + 1));
+						v = (v < 59) ? v + 1 : 0;
 					} else {
-						if (i.get('value').toInt() > 0) i.set('value', this.leadZero(i.get('value').toInt() -1));
+						v = (v > 0) ? v - 1 : 59;
 					}
+					i.set('value', this.leadZero(v));
 					e.stop();
 				}.bind(this)
 			})
