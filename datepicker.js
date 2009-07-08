@@ -1,6 +1,6 @@
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.12
+ * @version 1.13
  * 
  * by MonkeyPhysics.com
  *
@@ -79,7 +79,12 @@ var DatePicker = new Class({
 		this.attachTo = attachTo;
 		this.setOptions(options).attach();
 		if ($chk(this.options.minDate)) this.options.minDate = this.unformat(this.options.minDate.date, this.options.minDate.format);
-		if ($chk(this.options.maxDate)) this.options.maxDate = this.unformat(this.options.maxDate.date, this.options.maxDate.format);
+		if ($chk(this.options.maxDate)) {
+			this.options.maxDate = this.unformat(this.options.maxDate.date, this.options.maxDate.format);
+			this.options.maxDate.setHours(23);
+			this.options.maxDate.setMinutes(59);
+			this.options.maxDate.setSeconds(59);
+		}
 		document.addEvent('mousedown', this.close.bind(this));
 	},
 	
@@ -388,12 +393,10 @@ var DatePicker = new Class({
 			e = new Element('div', { 'class': classes.join(' ') }).set('text', this.d.getDate()).inject(weekcontainer);
 			if (this.limited('date')) {
 				e.addClass('unavailable');
-				if (this.d.getMonth() == month) {
-					if (available) {
-						this.limit.right = true;
-					} else {
-						this.limit.left = true;
-					}
+				if (available) {
+					this.limit.right = true;
+				} else if (this.d.getMonth() == month) {
+					this.limit.left = true;
 				}
 			} else {
 				available = true;
@@ -442,7 +445,7 @@ var DatePicker = new Class({
 					this.d.setMonth(d);
 					this.mode = 'month';
 					this.render('fade');
-				}.bindWithEvent(this, this.d.getMonth()));
+				}.bindWithEvent(this, i));
 			}
 			this.d.setMonth(this.d.getMonth() + 1);
 		}
