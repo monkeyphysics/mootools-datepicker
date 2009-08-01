@@ -1,6 +1,6 @@
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.13
+ * @version 1.14
  * 
  * by MonkeyPhysics.com
  *
@@ -191,6 +191,7 @@ var DatePicker = new Class({
 	
 	dateFromObject: function(values) {
 		var d = new Date();
+		d.setDate(1);
 		['year', 'month', 'day', 'hours', 'minutes', 'seconds'].each(function(type) {
 			var v = values[type];
 			if (!$chk(v)) return;
@@ -442,12 +443,13 @@ var DatePicker = new Class({
 			} else {
 				available = true;
 				e.addEvent('click', function(e, d) {
+					this.d.setDate(1);
 					this.d.setMonth(d);
 					this.mode = 'month';
 					this.render('fade');
 				}.bindWithEvent(this, i));
 			}
-			this.d.setMonth(this.d.getMonth() + 1);
+			this.d.setMonth(i);
 		}
 		if (!available) this.limit.right = true;
 	},
