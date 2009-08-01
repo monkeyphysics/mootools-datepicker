@@ -1,6 +1,6 @@
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.14
+ * @version 1.15
  * 
  * by MonkeyPhysics.com
  *
@@ -170,6 +170,12 @@ var DatePicker = new Class({
 			init_visual_date = this.unformat(original_input.get('value'), this.options.inputOutputFormat).valueOf();
 		} else {
 			init_visual_date = new Date();
+			if ($chk(this.options.maxDate) && init_visual_date.valueOf() > this.options.maxDate.valueOf()) {
+				init_visual_date = new Date(this.options.maxDate.valueOf());
+			}
+			if ($chk(this.options.minDate) && init_visual_date.valueOf() < this.options.minDate.valueOf()) {
+				init_visual_date = new Date(this.options.minDate.valueOf());
+			}
 		}
 		
 		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, init_visual_date);
@@ -466,6 +472,10 @@ var DatePicker = new Class({
 		var available = false;
 		var container = new Element('div', { 'class': 'years' }).inject(this.newContents);
 		
+		if ($chk(this.options.minDate) && this.d.getFullYear() <= this.options.minDate.getFullYear()) {
+			this.limit.left = true;
+		}
+		
 		for (i = 0; i < this.options.yearsPerPage; i++) {
 			y = this.d.getFullYear();
 			e = new Element('div', { 'class': 'year year' + i + (y == this.today.getFullYear() ? ' today' : '') + (y == this.choice.year ? ' selected' : '') }).set('text', y).inject(container);
@@ -487,7 +497,12 @@ var DatePicker = new Class({
 			}
 			this.d.setFullYear(this.d.getFullYear() + 1);
 		}
-		if (!available) this.limit.right = true;
+		if (!available) {
+			this.limit.right = true;
+		}
+		if ($chk(this.options.maxDate) && this.d.getFullYear() >= this.options.maxDate.getFullYear()) {
+			this.limit.right = true;
+		}
 	},
 	
 	limited: function(type) {
