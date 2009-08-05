@@ -1,6 +1,6 @@
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.15
+ * @version 1.16
  * 
  * by MonkeyPhysics.com
  *
@@ -55,6 +55,7 @@ var DatePicker = new Class({
 		monthShort: 3,
 		startDay: 1, // Sunday (0) through Saturday (6) - be aware that this may affect your layout, since the days on the right might have a different margin
 		timePicker: false,
+		timePickerOnly: false,
 		yearPicker: true,
 		yearsPerPage: 20,
 		format: 'd-m-Y',
@@ -78,14 +79,24 @@ var DatePicker = new Class({
 	initialize: function(attachTo, options) {
 		this.attachTo = attachTo;
 		this.setOptions(options).attach();
-		if ($chk(this.options.minDate)) this.options.minDate = this.unformat(this.options.minDate.date, this.options.minDate.format);
-		if ($chk(this.options.maxDate)) {
+		if (this.options.timePickerOnly) {
+			this.options.timePicker = true;
+			this.options.startView = 'time';
+		}
+		this.formatMinMaxDates();
+		document.addEvent('mousedown', this.close.bind(this));
+	},
+	
+	formatMinMaxDates: function() {
+		if (this.options.minDate && this.options.minDate.format) {
+			this.options.minDate = this.unformat(this.options.minDate.date, this.options.minDate.format);
+		}
+		if (this.options.maxDate && this.options.maxDate.format) {
 			this.options.maxDate = this.unformat(this.options.maxDate.date, this.options.maxDate.format);
 			this.options.maxDate.setHours(23);
 			this.options.maxDate.setMinutes(59);
 			this.options.maxDate.setSeconds(59);
 		}
-		document.addEvent('mousedown', this.close.bind(this));
 	},
 	
 	attach: function() {
@@ -214,6 +225,7 @@ var DatePicker = new Class({
 	},
 	
 	show: function(position, timestamp) {
+		this.formatMinMaxDates();
 		if ($chk(timestamp)) {
 			this.d = new Date(timestamp);
 		} else {
@@ -312,7 +324,11 @@ var DatePicker = new Class({
 	renderTime: function() {
 		var container = new Element('div', { 'class': 'time' }).inject(this.newContents);
 		
-		this.picker.getElement('.titleText').set('text', this.format(this.d, 'j M, Y'));
+		if (this.options.timePickerOnly) {
+			this.picker.getElement('.titleText').set('text', 'Select a time');
+		} else {
+			this.picker.getElement('.titleText').set('text', this.format(this.d, 'j M, Y'));
+		}
 		
 		new Element('input', { type: 'text', 'class': 'hour' })
 			.set('value', this.leadZero(this.d.getHours()))
@@ -526,6 +542,7 @@ var DatePicker = new Class({
 	},
 	
 	allowZoomOut: function() {
+		if (this.mode == 'time' && this.options.timePickerOnly) return false;
 		if (this.mode == 'decades') return false;
 		if (this.mode == 'year' && !this.options.yearPicker) return false;
 		return true;
@@ -588,7 +605,7 @@ var DatePicker = new Class({
 		var d = this.dateFromObject(this.choice);
 		this.input.set('value', this.format(d, this.options.inputOutputFormat));
 		this.visual.set('value', this.format(d, this.options.format));
-		this.options.onSelect();
+		this.options.onSelect(d);
 		this.close(null, true);
 	},
 	
@@ -633,6 +650,7 @@ var DatePicker = new Class({
 		var d = new Date();
 		var a = {};
 		var c, m;
+		t = t.toString();
 		
 		for (var i = 0; i < format.length; i++) {
 			c = format.charAt(i);
