@@ -647,7 +647,7 @@ var DatePicker = new Class({
 	},
 	
 	unformat: function(t, format) {
-		var d = new Date();
+		var d = new Date('January 1, 1970 00:00:00');
 		var a = {};
 		var c, m;
 		t = t.toString();
