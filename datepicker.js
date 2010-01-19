@@ -89,10 +89,10 @@ var DatePicker = new Class({
 	
 	formatMinMaxDates: function() {
 		if (this.options.minDate && this.options.minDate.format) {
-			this.options.minDate = this.unformat(this.options.minDate.date, this.options.minDate.format);
+			this.options.minDate = this.unformat(this.options.minDate.date);
 		}
 		if (this.options.maxDate && this.options.maxDate.format) {
-			this.options.maxDate = this.unformat(this.options.maxDate.date, this.options.maxDate.format);
+			this.options.maxDate = this.unformat(this.options.maxDate.date);
 			this.options.maxDate.setHours(23);
 			this.options.maxDate.setMinutes(59);
 			this.options.maxDate.setSeconds(59);
@@ -120,7 +120,7 @@ var DatePicker = new Class({
 			
 			// determine starting value(s)
 			if ($chk(item.get('value'))) {
-				var init_clone_val = this.format(new Date(this.unformat(item.get('value'), this.options.inputOutputFormat)), this.options.format);
+				var init_clone_val = this.format(this.unformat(item.get('value')), this.options.format);
 			} else if (!this.options.allowEmpty) {
 				var init_clone_val = this.format(new Date(), this.options.format);
 			} else {
@@ -178,7 +178,7 @@ var DatePicker = new Class({
 		var init_visual_date, d = visual_input.getCoordinates();
 		
 		if ($chk(original_input.get('value'))) {
-			init_visual_date = this.unformat(original_input.get('value'), this.options.inputOutputFormat).valueOf();
+			init_visual_date = this.unformat(original_input.get('value')).valueOf();
 		} else {
 			init_visual_date = new Date();
 			if ($chk(this.options.maxDate) && init_visual_date.valueOf() > this.options.maxDate.valueOf()) {
@@ -646,74 +646,15 @@ var DatePicker = new Class({
 		return f;
 	},
 	
-	unformat: function(t, format) {
-		var d = new Date();
-		var a = {};
-		var c, m;
-		t = t.toString();
+	unformat: function(t) {
+		t = Date.parse(t);
 		
-		for (var i = 0; i < format.length; i++) {
-			c = format.charAt(i);
-			switch(c) {
-				case '\\': r = null; i++; break;
-				case 'y': r = '[0-9]{2}'; break;
-				case 'Y': r = '[0-9]{4}'; break;
-				case 'm': r = '0[1-9]|1[012]'; break;
-				case 'n': r = '[1-9]|1[012]'; break;
-				case 'M': r = '[A-Za-z]{'+this.options.monthShort+'}'; break;
-				case 'F': r = '[A-Za-z]+'; break;
-				case 'd': r = '0[1-9]|[12][0-9]|3[01]'; break;
-				case 'j': r = '[1-9]|[12][0-9]|3[01]'; break;
-				case 'D': r = '[A-Za-z]{'+this.options.dayShort+'}'; break;
-				case 'l': r = '[A-Za-z]+'; break;
-				case 'G': 
-				case 'H': 
-				case 'g': 
-				case 'h': r = '[0-9]{1,2}'; break;
-				case 'a': r = '(am|pm)'; break;
-				case 'A': r = '(AM|PM)'; break;
-				case 'i': 
-				case 's': r = '[012345][0-9]'; break;
-				case 'U': r = '-?[0-9]+$'; break;
-				default:  r = null;
-			}
-			
-			if ($chk(r)) {
-				m = t.match('^'+r);
-				if ($chk(m)) {
-					a[c] = m[0];
-					t = t.substring(a[c].length);
-				} else {
-					if (this.options.debug) alert("Fatal Error in DatePicker\n\nUnexpected format at: '"+t+"' expected format character '"+c+"' (pattern '"+r+"')");
-					return d;
-				}
-			} else {
-				t = t.substring(1);
-			}
+		if(isNaN(t.get('year'))) {
+			t = new Date();
 		}
 		
-		for (c in a) {
-			var v = a[c];
-			switch(c) {
-				case 'y': d.setFullYear(v < 30 ? 2000 + v.toInt() : 1900 + v.toInt()); break; // assume between 1930 - 2029
-				case 'Y': d.setFullYear(v); break;
-				case 'm':
-				case 'n': d.setMonth(v - 1); break;
-				// FALL THROUGH NOTICE! "M" has no break, because "v" now is the full month (eg. 'February'), which will work with the next format "F":
-				case 'M': v = this.options.months.filter(function(item, index) { return item.substring(0,this.options.monthShort) == v }.bind(this))[0];
-				case 'F': d.setMonth(this.options.months.indexOf(v)); break;
-				case 'd':
-				case 'j': d.setDate(v); break;
-				case 'G': 
-				case 'H': d.setHours(v); break;
-				case 'g': 
-				case 'h': if (a['a'] == 'pm' || a['A'] == 'PM') { d.setHours(v == 12 ? 0 : v.toInt() + 12); } else { d.setHours(v); } break;
-				case 'i': d.setMinutes(v); break;
-				case 's': d.setSeconds(v); break;
-				case 'U': d = new Date(v.toInt() * 1000);
-			}
-		};
+		t = (t.get('year') < 1900) ? new Date() : t;
 		
-		return d;
+		return t;
 	}
 });
