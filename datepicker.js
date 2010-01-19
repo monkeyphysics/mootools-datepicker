@@ -138,7 +138,6 @@ var DatePicker = new Class({
 							this.onFocus(item);
 						}.bind(this)
 					});
-				});
 			} else {
 				item.addEvents({
 					'keydown': function(e) {
