@@ -218,9 +218,23 @@ var DatePicker = new Class({
 		this.choice = this.dateToObject(this.d);
 		this.mode = (this.options.startView == 'time' && !this.options.timePicker) ? 'month' : this.options.startView;
 		this.render();
-		this.picker.setStyles(position);
+		this.position({x: position.left, y: position.top});
 	},
-	
+
+	position: function(p) {
+		var w = window.getSize(),
+			s = window.getScroll(),
+			d = this.picker.getSize(),
+			max_y = (w.y + s.y) - d.y,
+			max_x = (w.x + s.x) - d.x,
+			i = this.input.getCoordinates();
+			
+		if(p.x > max_x) p.x = i.right - this.options.positionOffset.x - d.x;
+		if(p.y > max_y) p.y = i.top - this.options.positionOffset.y - d.y;
+		
+		this.picker.setStyles({left: p.x, top: p.y});
+	},
+		
 	render: function(fx) {
 		if (!$chk(this.picker)) {
 			this.constructPicker();
