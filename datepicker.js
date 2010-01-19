@@ -173,8 +173,8 @@ var DatePicker = new Class({
 			}
 		}
 		
-		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, input_date);
 		this.input = input;
+		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, input_date);
 		this.fireEvent('show');
 	},
 	
