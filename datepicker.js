@@ -59,7 +59,7 @@ var DatePicker = new Class({
 		yearPicker: true,
 		yearsPerPage: 20,
 		format: 'd-m-Y',
-		allowEmpty: false,
+		allowEmpty: true,
 		inputOutputFormat: 'U', // default to unix timestamp
 		animationDuration: 400,
 		useFadeInOut: !Browser.Engine.trident, // dont animate fade-in/fade-out for IE
