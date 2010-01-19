@@ -614,36 +614,7 @@ var DatePicker = new Class({
 	},
 	
 	format: function(t, format) {
-		var f = '';
-		var h = t.getHours();
-		var m = t.getMonth();
-		
-		for (var i = 0; i < format.length; i++) {
-			switch(format.charAt(i)) {
-				case '\\': i++; f+= format.charAt(i); break;
-				case 'y': f += (100 + t.getYear() + '').substring(1); break
-				case 'Y': f += t.getFullYear(); break;
-				case 'm': f += this.leadZero(m + 1); break;
-				case 'n': f += (m + 1); break;
-				case 'M': f += this.options.months[m].substring(0,this.options.monthShort); break;
-				case 'F': f += this.options.months[m]; break;
-				case 'd': f += this.leadZero(t.getDate()); break;
-				case 'j': f += t.getDate(); break;
-				case 'D': f += this.options.days[t.getDay()].substring(0,this.options.dayShort); break;
-				case 'l': f += this.options.days[t.getDay()]; break;
-				case 'G': f += h; break;
-				case 'H': f += this.leadZero(h); break;
-				case 'g': f += (h % 12 ? h % 12 : 12); break;
-				case 'h': f += this.leadZero(h % 12 ? h % 12 : 12); break;
-				case 'a': f += (h > 11 ? 'pm' : 'am'); break;
-				case 'A': f += (h > 11 ? 'PM' : 'AM'); break;
-				case 'i': f += this.leadZero(t.getMinutes()); break;
-				case 's': f += this.leadZero(t.getSeconds()); break;
-				case 'U': f += Math.floor(t.valueOf() / 1000); break;
-				default:  f += format.charAt(i);
-			}
-		}
-		return f;
+		return new Date(t).format(format);
 	},
 	
 	unformat: function(t) {
