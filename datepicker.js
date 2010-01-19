@@ -68,6 +68,7 @@ var DatePicker = new Class({
 		maxDate: null, // same as minDate
 		debug: false,
 		toggleElements: null,
+		draggable: true,
 		
 		// and some event hooks:
 		onShow: $empty,   // triggered when the datepicker pops up
@@ -219,6 +220,11 @@ var DatePicker = new Class({
 		this.mode = (this.options.startView == 'time' && !this.options.timePicker) ? 'month' : this.options.startView;
 		this.render();
 		this.position({x: position.left, y: position.top});
+		
+		if(this.options.draggable) {
+      this.dragger = this.picker.makeDraggable();
+      this.picker.setStyle('cursor', 'move');
+    }
 	},
 
 	position: function(p) {
