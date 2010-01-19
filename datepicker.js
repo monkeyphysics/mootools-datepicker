@@ -21,7 +21,7 @@
 
 var DatePicker = new Class({
 	
-	Implements: Options,
+	Implements: [Options, Events],
 	
 	// working date, which we will keep modifying to render the calendars
 	d: '',
@@ -58,9 +58,8 @@ var DatePicker = new Class({
 		timePickerOnly: false,
 		yearPicker: true,
 		yearsPerPage: 20,
-		format: 'd-m-Y',
+		format: '%d-%m-%Y',
 		allowEmpty: true,
-		inputOutputFormat: 'U', // default to unix timestamp
 		animationDuration: 400,
 		useFadeInOut: !Browser.Engine.trident, // dont animate fade-in/fade-out for IE
 		startView: 'month', // allowed values: {time, month, year, decades}
@@ -120,24 +119,15 @@ var DatePicker = new Class({
 			
 			// determine starting value(s)
 			if ($chk(item.get('value'))) {
-				var init_clone_val = this.format(this.unformat(item.get('value')), this.options.format);
+				var init_val = this.format(this.unformat(item.get('value')), this.options.format);
 			} else if (!this.options.allowEmpty) {
-				var init_clone_val = this.format(new Date(), this.options.format);
+				var init_val = this.format(new Date(), this.options.format);
 			} else {
-				var init_clone_val = '';
+				var init_val = '';
 			}
 			
-			// create clone
-			var display = item.getStyle('display');
-			var clone = item
-			.setStyle('display', this.options.debug ? display : 'none')
-			.store('datepicker', true) // to prevent double attachment...
-			.clone()
-			.store('datepicker', true) // ...even for the clone (!)
-			.removeProperty('name')    // secure clean (form)submission
-			.setStyle('display', display)
-			.set('value', init_clone_val)
-			.inject(item, 'after');
+			
+			item.store('datepicker', true); // to prevent double attachment...
 			
 			// events
 			if ($chk(this.options.toggleElements)) {
@@ -145,20 +135,15 @@ var DatePicker = new Class({
 					.setStyle('cursor', 'pointer')
 					.addEvents({
 						'click': function(e) {
-							this.onFocus(item, clone);
+							this.onFocus(item);
 						}.bind(this)
 					});
-				clone.addEvents({
-					'blur': function() {
-						item.set('value', clone.get('value'));
-					}
 				});
 			} else {
-				clone.addEvents({
+				item.addEvents({
 					'keydown': function(e) {
 						if (this.options.allowEmpty && (e.key == "delete" || e.key == "backspace")) {
 							item.set('value', '');
-							e.target.set('value', '');
 							this.close(null, true);
 						} else if (e.key == "tab") {
 							this.close(null, true);
@@ -167,32 +152,31 @@ var DatePicker = new Class({
 						}
 					}.bind(this),
 					'focus': function(e) {
-						this.onFocus(item, clone);
+						this.onFocus(item);
 					}.bind(this)
 				});
 			}
 		}.bind(this));
 	},
 	
-	onFocus: function(original_input, visual_input) {
-		var init_visual_date, d = visual_input.getCoordinates();
+	onFocus: function(input) {
+		var input_date, d = input.getCoordinates();
 		
-		if ($chk(original_input.get('value'))) {
-			init_visual_date = this.unformat(original_input.get('value')).valueOf();
+		if ($chk(input.get('value'))) {
+			input_date = this.unformat(input.get('value')).valueOf();
 		} else {
-			init_visual_date = new Date();
-			if ($chk(this.options.maxDate) && init_visual_date.valueOf() > this.options.maxDate.valueOf()) {
-				init_visual_date = new Date(this.options.maxDate.valueOf());
+			input_date = new Date();
+			if ($chk(this.options.maxDate) && input_date.valueOf() > this.options.maxDate.valueOf()) {
+				input_date = new Date(this.options.maxDate.valueOf());
 			}
-			if ($chk(this.options.minDate) && init_visual_date.valueOf() < this.options.minDate.valueOf()) {
-				init_visual_date = new Date(this.options.minDate.valueOf());
+			if ($chk(this.options.minDate) && input_date.valueOf() < this.options.minDate.valueOf()) {
+				input_date = new Date(this.options.minDate.valueOf());
 			}
 		}
 		
-		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, init_visual_date);
-		this.input = original_input;
-		this.visual = visual_input;
-		this.options.onShow();
+		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, input_date);
+		this.input = input;
+		this.fireEvent('show');
 	},
 	
 	dateToObject: function(d) {
@@ -597,15 +581,15 @@ var DatePicker = new Class({
 	destroy: function() {
 		this.picker.destroy();
 		this.picker = null;
-		this.options.onClose();
+		this.fireEvent('close');
 	},
 	
 	select: function(values) {
 		this.choice = $merge(this.choice, values);
 		var d = this.dateFromObject(this.choice);
-		this.input.set('value', this.format(d, this.options.inputOutputFormat));
-		this.visual.set('value', this.format(d, this.options.format));
-		this.options.onSelect(d);
+		this.input.set('value', this.format(d, this.options.format));
+		this.fireEvent('select', this, [d]);
+		
 		this.close(null, true);
 	},
 	
