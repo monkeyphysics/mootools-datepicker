@@ -1,4 +1,4 @@
-/**
+﻿/**
  * datepicker.js - MooTools Datepicker class
  * @version 1.16
  * 
@@ -648,7 +648,7 @@ var DatePicker = new Class({
 	unformat: function(t) {
 		t = Date.parse(t);
 		
-		if(isNaN(t.get('year'))) {
+		if(!t.isValid()) {
 			t = new Date();
 		}
 		
