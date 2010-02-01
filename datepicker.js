@@ -120,7 +120,7 @@ var DatePicker = new Class({
 			
 			// determine starting value(s)
 			if ($chk(item.get('value'))) {
-				var init_val = this.format(this.unformat(item.get('value')), this.options.format);
+				var init_val = this.format(this.unformat(item.get('value'),this.options.format), this.options.format);
 			} else if (!this.options.allowEmpty) {
 				var init_val = this.format(new Date(), this.options.format);
 			} else {
@@ -163,7 +163,7 @@ var DatePicker = new Class({
 		var input_date, d = input.getCoordinates();
 		
 		if ($chk(input.get('value'))) {
-			input_date = this.unformat(input.get('value')).valueOf();
+			input_date = this.unformat(input.get('value'),this.options.format).valueOf();
 		} else {
 			input_date = new Date();
 			if ($chk(this.options.maxDate) && input_date.valueOf() > this.options.maxDate.valueOf()) {
@@ -645,7 +645,8 @@ var DatePicker = new Class({
 		return new Date(t).format(format);
 	},
 	
-	unformat: function(t) {
+	unformat: function(t,format) {
+		Date.defineParser(format);
 		t = Date.parse(t);
 		
 		if(!t.isValid()) {
