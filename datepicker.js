@@ -88,11 +88,11 @@ var DatePicker = new Class({
 	},
 	
 	formatMinMaxDates: function() {
-		if (this.options.minDate && this.options.minDate.format) {
-			this.options.minDate = this.unformat(this.options.minDate.date);
+		if (this.options.minDate && this.options.minDate.inputFormat) {  //cbaxter changed minDate.format for minDate.inputFormat to address issues when implemented with MooTools.Date extension due to date.format() being confused with date.format string
+			this.options.minDate = this.unformat(this.options.minDate.date, this.options.minDate.inputFormat);
 		}
-		if (this.options.maxDate && this.options.maxDate.format) {
-			this.options.maxDate = this.unformat(this.options.maxDate.date);
+		if (this.options.maxDate && this.options.maxDate.inputFormat) {
+			this.options.maxDate = this.unformat(this.options.maxDate.date, this.options.maxDate.inputFormat);
 			this.options.maxDate.setHours(23);
 			this.options.maxDate.setMinutes(59);
 			this.options.maxDate.setSeconds(59);
