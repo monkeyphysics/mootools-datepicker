@@ -221,7 +221,7 @@ var DatePicker = new Class({
 		this.render();
 		this.position({x: position.left, y: position.top});
 		
-		if(this.options.draggable) {
+		if(this.options.draggable && $type(this.picker.makeDraggable) == 'function') {
       this.dragger = this.picker.makeDraggable();
       this.picker.setStyle('cursor', 'move');
     }
