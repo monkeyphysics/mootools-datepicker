@@ -594,6 +594,7 @@ var DatePicker = new Class({
 		} else if (this.mode == 'year') {
 			this.d.setFullYear(this.d.getFullYear() - 1);
 		} else if (this.mode == 'month') {
+			this.d.setDate(1);
 			this.d.setMonth(this.d.getMonth() - 1);
 		}
 		this.render('left');
@@ -605,6 +606,7 @@ var DatePicker = new Class({
 		} else if (this.mode == 'year') {
 			this.d.setFullYear(this.d.getFullYear() + 1);
 		} else if (this.mode == 'month') {
+			this.d.setDate(1);
 			this.d.setMonth(this.d.getMonth() + 1);
 		}
 		this.render('right');
