@@ -474,7 +474,7 @@ var DatePicker = new Class({
 		
 		this.picker.getElement('.titleText').set('text', this.d.getFullYear());
 		this.d.setMonth(0);
-		if ($chk(this.options.minDate) {
+		if ($chk(this.options.minDate)) {
 			this.d.decrement('month',1)
 			this.d.set('date',this.d.get('lastdayofmonth'));
 			if (this.limited('month')) {
