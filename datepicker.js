@@ -474,7 +474,15 @@ var DatePicker = new Class({
 		
 		this.picker.getElement('.titleText').set('text', this.d.getFullYear());
 		this.d.setMonth(0);
-		
+		if ($chk(this.options.minDate) {
+			this.d.decrement('month',1)
+			this.d.set('date',this.d.get('lastdayofmonth'));
+			if (this.limited('month')) {
+				this.limit.left = true;
+			}
+			this.d.increment('month',1)
+		}
+		this.d.set('date',this.d.get('lastdayofmonth'))		
 		var i, e;
 		var available = false;
 		var container = new Element('div', { 'class': 'months' }).inject(this.newContents);
@@ -499,7 +507,8 @@ var DatePicker = new Class({
 					this.render('fade');
 				}.bindWithEvent(this, i));
 			}
-			this.d.setMonth(i);
+			this.d.increment('month',1)
+			this.d.set('date',this.d.get('lastdayofmonth'))
 		}
 		if (!available) this.limit.right = true;
 	},
