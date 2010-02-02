@@ -136,7 +136,7 @@ var DatePicker = new Class({
 					.setStyle('cursor', 'pointer')
 					.addEvents({
 						'click': function(e) {
-							this.onFocus(item);
+							this.onFocus(item,togglers[index]);
 						}.bind(this)
 					});
 			} else {
@@ -159,8 +159,8 @@ var DatePicker = new Class({
 		}.bind(this));
 	},
 	
-	onFocus: function(input) {
-		var input_date, d = input.getCoordinates();
+	onFocus: function(input,toggler) {
+		var input_date, d = ($defined(toggler) ? toggler:input).getCoordinates();
 		
 		if ($chk(input.get('value'))) {
 			input_date = this.unformat(input.get('value'),this.options.format).valueOf();
