@@ -445,7 +445,9 @@ var DatePicker = new Class({
 			if (this.limited('date')) {
 				e.addClass('unavailable');
 				if (available) {
-					this.limit.right = true;
+					if(month == this.d.getMonth() || this.d.getDate() == 1) {
+						this.limit.right = true;
+					}
 				} else {
 					this.limit.left = true;
 				}
