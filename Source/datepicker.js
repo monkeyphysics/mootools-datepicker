@@ -1,3 +1,23 @@
+/*
+---
+description: MooTools Datepicker class
+
+authors:
+  - MonkeyPhysics.com
+
+license:
+  - Attribution-Share Alike 3.0 Unported
+
+requires:
+  core/1.2.4: '*'
+
+provides:
+  - [DatePicker]
+
+...
+*/
+
+
 /**
  * datepicker.js - MooTools Datepicker class
  * @version 1.16
