@@ -88,12 +88,12 @@ var DatePicker = new Class({
 		minDate: null, // { date: '[date-string]', format: '[date-string-interpretation-format]' }
 		maxDate: null, // same as minDate
 		debug: false,
-		toggleElements: null,
+		toggleElements: null/*,
 		
 		// and some event hooks:
 		onShow: $empty,   // triggered when the datepicker pops up
 		onClose: $empty,  // triggered after the datepicker is closed (destroyed)
-		onSelect: $empty  // triggered when a date is selected
+		onSelect: $empty  // triggered when a date is selected*/
 	},
 	
 	initialize: function(attachTo, options) {
