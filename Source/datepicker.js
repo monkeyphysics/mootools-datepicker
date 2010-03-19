@@ -72,8 +72,8 @@ var DatePicker = new Class({
 	
 	options: { 
 		pickerClass: 'datepicker',
-		months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-		days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+		months: null,
+		days: null,
 		dayShort: 2,
 		monthShort: 3,
 		startDay: 1, // Sunday (0) through Saturday (6) - be aware that this may affect your layout, since the days on the right might have a different margin
@@ -81,7 +81,7 @@ var DatePicker = new Class({
 		timePickerOnly: false,
 		yearPicker: true,
 		yearsPerPage: 20,
-		format: '%d-%m-%Y',
+		format: null,
 		allowEmpty: true,
 		animationDuration: 400,
 		useFadeInOut: !Browser.Engine.trident, // dont animate fade-in/fade-out for IE
@@ -102,9 +102,7 @@ var DatePicker = new Class({
 	},
 	
 	initialize: function(attachTo, options) {
-		this.attachTo = attachTo;
-		this.setOptions(options);
-		
+		this.attachTo = attachTo;	
 		if (MooTools.lang) {
 			this.setOptions({
 				days: MooTools.lang.get('Date', 'days'),
@@ -112,6 +110,7 @@ var DatePicker = new Class({
 				format: MooTools.lang.get('Date', 'shortDate')
 			});
 		}
+		this.setOptions(options);
 		
 		this.attach();		
 		if (this.options.timePickerOnly) {

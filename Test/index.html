@@ -49,7 +49,10 @@ window.addEvent('domready',function(){
 
 	MooTools.lang.setLanguage("nl-NL");
 	
-	new DatePicker('.demo', { positionOffset: { x: 0, y: 5 }});
+	new DatePicker('.demo', {
+		positionOffset: { x: 0, y: 5 },
+		format: 'long'
+	});
 
 });
 	
