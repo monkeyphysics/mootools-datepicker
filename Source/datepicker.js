@@ -6,6 +6,8 @@ authors:
   - MonkeyPhysics.com
   - Arian Stolwijk
   - MadmanMonty (Chris Baxter)
+  - marfillaster (Ken Marfilla)
+  - eerne (Enrique Erne)
 
 license:
   - Attribution-Share Alike 3.0 Unported
@@ -23,7 +25,7 @@ provides:
 
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.17
+ * @version 1.18
  * 
  * by MonkeyPhysics.com
  *
