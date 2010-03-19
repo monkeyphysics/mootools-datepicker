@@ -17,3 +17,12 @@ How to use
 
 where the input-target-selector naturally is a MooTools selector (eg. .datepickers or #great_picker). The datepicker will be effective for all selected input elements. Usage examples are given at the bottom of this document.
 
+### MooTools.lang
+
+This plugin supports MooTools.lang, so you can use the datepicker in your own language.
+
+	#JS
+	MooTools.lang.setLanguage("nl-NL");
+	new DatePicker('.demo');
+
+For more options: checkout [MonkeyPhysics datepicker](http://www.monkeyphysics.com/mootools/script/2/datepicker)
