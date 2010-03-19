@@ -1,3 +1,4 @@
+<<<<<<< HEAD:Source/datepicker.js
 /*
 ---
 description: MooTools Datepicker class
@@ -18,8 +19,7 @@ provides:
 */
 
 
-/**
- * datepicker.js - MooTools Datepicker class
+/** datepicker.js - MooTools Datepicker class
  * @version 1.16
  * 
  * by MonkeyPhysics.com
@@ -41,7 +41,7 @@ provides:
 
 var DatePicker = new Class({
 	
-	Implements: Options,
+	Implements: [Options, Events],
 	
 	// working date, which we will keep modifying to render the calendars
 	d: '',
@@ -78,9 +78,8 @@ var DatePicker = new Class({
 		timePickerOnly: false,
 		yearPicker: true,
 		yearsPerPage: 20,
-		format: 'd-m-Y',
-		allowEmpty: false,
-		inputOutputFormat: 'U', // default to unix timestamp
+		format: '%d-%m-%Y',
+		allowEmpty: true,
 		animationDuration: 400,
 		useFadeInOut: !Browser.Engine.trident, // dont animate fade-in/fade-out for IE
 		startView: 'month', // allowed values: {time, month, year, decades}
@@ -88,7 +87,8 @@ var DatePicker = new Class({
 		minDate: null, // { date: '[date-string]', format: '[date-string-interpretation-format]' }
 		maxDate: null, // same as minDate
 		debug: false,
-		toggleElements: null/*,
+		toggleElements: null,
+		draggable: true,
 		
 		// and some event hooks:
 		onShow: $empty,   // triggered when the datepicker pops up
@@ -108,11 +108,11 @@ var DatePicker = new Class({
 	},
 	
 	formatMinMaxDates: function() {
-		if (this.options.minDate && this.options.minDate.format) {
-			this.options.minDate = this.unformat(this.options.minDate.date, this.options.minDate.format);
+		if (this.options.minDate && this.options.minDate.inputFormat) {  //cbaxter changed minDate.format for minDate.inputFormat to address issues when implemented with MooTools.Date extension due to date.format() being confused with date.format string
+			this.options.minDate = this.unformat(this.options.minDate.date, this.options.minDate.inputFormat);
 		}
-		if (this.options.maxDate && this.options.maxDate.format) {
-			this.options.maxDate = this.unformat(this.options.maxDate.date, this.options.maxDate.format);
+		if (this.options.maxDate && this.options.maxDate.inputFormat) {
+			this.options.maxDate = this.unformat(this.options.maxDate.date, this.options.maxDate.inputFormat);
 			this.options.maxDate.setHours(23);
 			this.options.maxDate.setMinutes(59);
 			this.options.maxDate.setSeconds(59);
@@ -139,24 +139,15 @@ var DatePicker = new Class({
 			
 			// determine starting value(s)
 			if ($chk(item.get('value'))) {
-				var init_clone_val = this.format(new Date(this.unformat(item.get('value'), this.options.inputOutputFormat)), this.options.format);
+				var init_val = this.format(this.unformat(item.get('value'),this.options.format), this.options.format);
 			} else if (!this.options.allowEmpty) {
-				var init_clone_val = this.format(new Date(), this.options.format);
+				var init_val = this.format(new Date(), this.options.format);
 			} else {
-				var init_clone_val = '';
+				var init_val = '';
 			}
 			
-			// create clone
-			var display = item.getStyle('display');
-			var clone = item
-			.setStyle('display', this.options.debug ? display : 'none')
-			.store('datepicker', true) // to prevent double attachment...
-			.clone()
-			.store('datepicker', true) // ...even for the clone (!)
-			.removeProperty('name')    // secure clean (form)submission
-			.setStyle('display', display)
-			.set('value', init_clone_val)
-			.inject(item, 'after');
+			
+			item.store('datepicker', true); // to prevent double attachment...
 			
 			// events
 			if ($chk(this.options.toggleElements)) {
@@ -164,20 +155,14 @@ var DatePicker = new Class({
 					.setStyle('cursor', 'pointer')
 					.addEvents({
 						'click': function(e) {
-							this.onFocus(item, clone);
+							this.onFocus(item,togglers[index]);
 						}.bind(this)
 					});
-				clone.addEvents({
-					'blur': function() {
-						item.set('value', clone.get('value'));
-					}
-				});
 			} else {
-				clone.addEvents({
+				item.addEvents({
 					'keydown': function(e) {
 						if (this.options.allowEmpty && (e.key == "delete" || e.key == "backspace")) {
 							item.set('value', '');
-							e.target.set('value', '');
 							this.close(null, true);
 						} else if (e.key == "tab") {
 							this.close(null, true);
@@ -186,32 +171,31 @@ var DatePicker = new Class({
 						}
 					}.bind(this),
 					'focus': function(e) {
-						this.onFocus(item, clone);
+						this.onFocus(item);
 					}.bind(this)
 				});
 			}
 		}.bind(this));
 	},
 	
-	onFocus: function(original_input, visual_input) {
-		var init_visual_date, d = visual_input.getCoordinates();
+	onFocus: function(input,toggler) {
+		var input_date, d = ($defined(toggler) ? toggler:input).getCoordinates();
 		
-		if ($chk(original_input.get('value'))) {
-			init_visual_date = this.unformat(original_input.get('value'), this.options.inputOutputFormat).valueOf();
+		if ($chk(input.get('value'))) {
+			input_date = this.unformat(input.get('value'),this.options.format).valueOf();
 		} else {
-			init_visual_date = new Date();
-			if ($chk(this.options.maxDate) && init_visual_date.valueOf() > this.options.maxDate.valueOf()) {
-				init_visual_date = new Date(this.options.maxDate.valueOf());
+			input_date = new Date();
+			if ($chk(this.options.maxDate) && input_date.valueOf() > this.options.maxDate.valueOf()) {
+				input_date = new Date(this.options.maxDate.valueOf());
 			}
-			if ($chk(this.options.minDate) && init_visual_date.valueOf() < this.options.minDate.valueOf()) {
-				init_visual_date = new Date(this.options.minDate.valueOf());
+			if ($chk(this.options.minDate) && input_date.valueOf() < this.options.minDate.valueOf()) {
+				input_date = new Date(this.options.minDate.valueOf());
 			}
 		}
 		
-		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, init_visual_date);
-		this.input = original_input;
-		this.visual = visual_input;
-		this.options.onShow();
+		this.input = input;
+		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, input_date);
+		this.fireEvent('show');
 	},
 	
 	dateToObject: function(d) {
@@ -254,9 +238,53 @@ var DatePicker = new Class({
 		this.choice = this.dateToObject(this.d);
 		this.mode = (this.options.startView == 'time' && !this.options.timePicker) ? 'month' : this.options.startView;
 		this.render();
-		this.picker.setStyles(position);
+		this.position({x: position.left, y: position.top});
+		
+		if(this.options.draggable && $type(this.picker.makeDraggable) == 'function') {
+      this.dragger = this.picker.makeDraggable();
+      this.picker.setStyle('cursor', 'move');
+    }
+    
+    if(Browser.Engine.trident) this.shim();
 	},
-	
+
+	shim: function() {				
+		var coords = this.picker.setStyle('zIndex', 1000).getCoordinates();
+		this.frame = new Element('iframe', {
+			src: 'javascript:false;document.write("");',
+			styles: {
+				position: 'absolute',
+				zIndex: 999,
+				height: coords.height, width: coords.width,
+				left: coords.left, top: coords.top
+			}
+		}).inject(document.body);
+		this.frame.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
+    
+    this.addEvent('close', function() {this.destroy()}.bind(this.frame));
+    
+    if(this.options.draggable) {
+      this.dragger.addEvent('drag', function() {
+          var coords = this.picker.getCoordinates();
+					this.frame.setStyles({left: coords.left, top: coords.top});
+      }.bind(this));
+    }
+	},
+
+	position: function(p) {
+		var w = window.getSize(),
+			s = window.getScroll(),
+			d = this.picker.getSize(),
+			max_y = (w.y + s.y) - d.y,
+			max_x = (w.x + s.x) - d.x,
+			i = this.input.getCoordinates();
+			
+		if(p.x > max_x) p.x = i.right - this.options.positionOffset.x - d.x;
+		if(p.y > max_y) p.y = i.top - this.options.positionOffset.y - d.y;
+		
+		this.picker.setStyles({left: p.x, top: p.y});
+	},
+		
 	render: function(fx) {
 		if (!$chk(this.picker)) {
 			this.constructPicker();
@@ -436,8 +464,10 @@ var DatePicker = new Class({
 			if (this.limited('date')) {
 				e.addClass('unavailable');
 				if (available) {
-					this.limit.right = true;
-				} else if (this.d.getMonth() == month) {
+					if(month == this.d.getMonth() || this.d.getDate() == 1) {
+						this.limit.right = true;
+					}
+				} else {
 					this.limit.left = true;
 				}
 			} else {
@@ -465,7 +495,15 @@ var DatePicker = new Class({
 		
 		this.picker.getElement('.titleText').set('text', this.d.getFullYear());
 		this.d.setMonth(0);
-		
+		if ($chk(this.options.minDate)) {
+			this.d.decrement('month',1)
+			this.d.set('date',this.d.get('lastdayofmonth'));
+			if (this.limited('month')) {
+				this.limit.left = true;
+			}
+			this.d.increment('month',1)
+		}
+		this.d.set('date',this.d.get('lastdayofmonth'))		
 		var i, e;
 		var available = false;
 		var container = new Element('div', { 'class': 'months' }).inject(this.newContents);
@@ -490,7 +528,8 @@ var DatePicker = new Class({
 					this.render('fade');
 				}.bindWithEvent(this, i));
 			}
-			this.d.setMonth(i);
+			this.d.increment('month',1)
+			this.d.set('date',this.d.get('lastdayofmonth'))
 		}
 		if (!available) this.limit.right = true;
 	},
@@ -585,6 +624,7 @@ var DatePicker = new Class({
 		} else if (this.mode == 'year') {
 			this.d.setFullYear(this.d.getFullYear() - 1);
 		} else if (this.mode == 'month') {
+			this.d.setDate(1);
 			this.d.setMonth(this.d.getMonth() - 1);
 		}
 		this.render('left');
@@ -596,6 +636,7 @@ var DatePicker = new Class({
 		} else if (this.mode == 'year') {
 			this.d.setFullYear(this.d.getFullYear() + 1);
 		} else if (this.mode == 'month') {
+			this.d.setDate(1);
 			this.d.setMonth(this.d.getMonth() + 1);
 		}
 		this.render('right');
@@ -616,15 +657,15 @@ var DatePicker = new Class({
 	destroy: function() {
 		this.picker.destroy();
 		this.picker = null;
-		this.options.onClose();
+		this.fireEvent('close');
 	},
 	
 	select: function(values) {
 		this.choice = $merge(this.choice, values);
 		var d = this.dateFromObject(this.choice);
-		this.input.set('value', this.format(d, this.options.inputOutputFormat));
-		this.visual.set('value', this.format(d, this.options.format));
-		this.options.onSelect(d);
+		this.input.set('value', this.format(d, this.options.format));
+		this.fireEvent('select', d);
+		
 		this.close(null, true);
 	},
 	
@@ -633,106 +674,19 @@ var DatePicker = new Class({
 	},
 	
 	format: function(t, format) {
-		var f = '';
-		var h = t.getHours();
-		var m = t.getMonth();
-		
-		for (var i = 0; i < format.length; i++) {
-			switch(format.charAt(i)) {
-				case '\\': i++; f+= format.charAt(i); break;
-				case 'y': f += (100 + t.getYear() + '').substring(1); break
-				case 'Y': f += t.getFullYear(); break;
-				case 'm': f += this.leadZero(m + 1); break;
-				case 'n': f += (m + 1); break;
-				case 'M': f += this.options.months[m].substring(0,this.options.monthShort); break;
-				case 'F': f += this.options.months[m]; break;
-				case 'd': f += this.leadZero(t.getDate()); break;
-				case 'j': f += t.getDate(); break;
-				case 'D': f += this.options.days[t.getDay()].substring(0,this.options.dayShort); break;
-				case 'l': f += this.options.days[t.getDay()]; break;
-				case 'G': f += h; break;
-				case 'H': f += this.leadZero(h); break;
-				case 'g': f += (h % 12 ? h % 12 : 12); break;
-				case 'h': f += this.leadZero(h % 12 ? h % 12 : 12); break;
-				case 'a': f += (h > 11 ? 'pm' : 'am'); break;
-				case 'A': f += (h > 11 ? 'PM' : 'AM'); break;
-				case 'i': f += this.leadZero(t.getMinutes()); break;
-				case 's': f += this.leadZero(t.getSeconds()); break;
-				case 'U': f += Math.floor(t.valueOf() / 1000); break;
-				default:  f += format.charAt(i);
-			}
-		}
-		return f;
+		return new Date(t).format(format);
 	},
 	
-	unformat: function(t, format) {
-		var d = new Date();
-		var a = {};
-		var c, m;
-		t = t.toString();
+	unformat: function(t,format) {
+		Date.defineParser(format);
+		t = Date.parse(t);
 		
-		for (var i = 0; i < format.length; i++) {
-			c = format.charAt(i);
-			switch(c) {
-				case '\\': r = null; i++; break;
-				case 'y': r = '[0-9]{2}'; break;
-				case 'Y': r = '[0-9]{4}'; break;
-				case 'm': r = '0[1-9]|1[012]'; break;
-				case 'n': r = '[1-9]|1[012]'; break;
-				case 'M': r = '[A-Za-z]{'+this.options.monthShort+'}'; break;
-				case 'F': r = '[A-Za-z]+'; break;
-				case 'd': r = '0[1-9]|[12][0-9]|3[01]'; break;
-				case 'j': r = '[1-9]|[12][0-9]|3[01]'; break;
-				case 'D': r = '[A-Za-z]{'+this.options.dayShort+'}'; break;
-				case 'l': r = '[A-Za-z]+'; break;
-				case 'G': 
-				case 'H': 
-				case 'g': 
-				case 'h': r = '[0-9]{1,2}'; break;
-				case 'a': r = '(am|pm)'; break;
-				case 'A': r = '(AM|PM)'; break;
-				case 'i': 
-				case 's': r = '[012345][0-9]'; break;
-				case 'U': r = '-?[0-9]+$'; break;
-				default:  r = null;
-			}
-			
-			if ($chk(r)) {
-				m = t.match('^'+r);
-				if ($chk(m)) {
-					a[c] = m[0];
-					t = t.substring(a[c].length);
-				} else {
-					if (this.options.debug) alert("Fatal Error in DatePicker\n\nUnexpected format at: '"+t+"' expected format character '"+c+"' (pattern '"+r+"')");
-					return d;
-				}
-			} else {
-				t = t.substring(1);
-			}
+		if(!t.isValid()) {
+			t = new Date();
 		}
 		
-		for (c in a) {
-			var v = a[c];
-			switch(c) {
-				case 'y': d.setFullYear(v < 30 ? 2000 + v.toInt() : 1900 + v.toInt()); break; // assume between 1930 - 2029
-				case 'Y': d.setFullYear(v); break;
-				case 'm':
-				case 'n': d.setMonth(v - 1); break;
-				// FALL THROUGH NOTICE! "M" has no break, because "v" now is the full month (eg. 'February'), which will work with the next format "F":
-				case 'M': v = this.options.months.filter(function(item, index) { return item.substring(0,this.options.monthShort) == v }.bind(this))[0];
-				case 'F': d.setMonth(this.options.months.indexOf(v)); break;
-				case 'd':
-				case 'j': d.setDate(v); break;
-				case 'G': 
-				case 'H': d.setHours(v); break;
-				case 'g': 
-				case 'h': if (a['a'] == 'pm' || a['A'] == 'PM') { d.setHours(v == 12 ? 0 : v.toInt() + 12); } else { d.setHours(v); } break;
-				case 'i': d.setMinutes(v); break;
-				case 's': d.setSeconds(v); break;
-				case 'U': d = new Date(v.toInt() * 1000);
-			}
-		};
+		t = (t.get('year') < 1900) ? new Date() : t;
 		
-		return d;
+		return t;
 	}
 });
