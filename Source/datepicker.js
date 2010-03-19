@@ -12,7 +12,7 @@ license:
 
 requires:
   core/1.2.4: '*'
-  more/1.2.4.4: [Date]
+  more/1.2.4.4: [Date,MooTools.lang]
 
 provides:
   - [DatePicker]
@@ -72,8 +72,6 @@ var DatePicker = new Class({
 	
 	options: { 
 		pickerClass: 'datepicker',
-		months: null,
-		days: null,
 		dayShort: 2,
 		monthShort: 3,
 		startDay: 1, // Sunday (0) through Saturday (6) - be aware that this may affect your layout, since the days on the right might have a different margin
@@ -81,7 +79,6 @@ var DatePicker = new Class({
 		timePickerOnly: false,
 		yearPicker: true,
 		yearsPerPage: 20,
-		format: null,
 		allowEmpty: true,
 		animationDuration: 400,
 		useFadeInOut: !Browser.Engine.trident, // dont animate fade-in/fade-out for IE
@@ -92,6 +89,11 @@ var DatePicker = new Class({
 		debug: false,
 		toggleElements: null,
 		draggable: true,
+
+		// i18n
+		months: null,
+		days: null,
+		format: null,
 		
 		// and some event hooks:
 		onShow: $empty,   // triggered when the datepicker pops up
