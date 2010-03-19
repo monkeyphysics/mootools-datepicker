@@ -240,14 +240,14 @@ var DatePicker = new Class({
 		this.position({x: position.left, y: position.top});
 		
 		if(this.options.draggable && $type(this.picker.makeDraggable) == 'function') {
-      this.dragger = this.picker.makeDraggable();
-      this.picker.setStyle('cursor', 'move');
-    }
-    
-    if(Browser.Engine.trident) this.shim();
+			this.dragger = this.picker.makeDraggable();
+			this.picker.setStyle('cursor', 'move');
+		}
+		
+		if(Browser.Engine.trident) this.shim();
 	},
 
-	shim: function() {				
+	shim: function() {
 		var coords = this.picker.setStyle('zIndex', 1000).getCoordinates();
 		this.frame = new Element('iframe', {
 			src: 'javascript:false;document.write("");',
@@ -260,14 +260,14 @@ var DatePicker = new Class({
 		}).inject(document.body);
 		this.frame.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
     
-    this.addEvent('close', function() {this.destroy()}.bind(this.frame));
-    
-    if(this.options.draggable) {
-      this.dragger.addEvent('drag', function() {
-          var coords = this.picker.getCoordinates();
-					this.frame.setStyles({left: coords.left, top: coords.top});
-      }.bind(this));
-    }
+		this.addEvent('close', function() {this.destroy()}.bind(this.frame));
+		
+		if(this.options.draggable) {
+			this.dragger.addEvent('drag', function() {
+				var coords = this.picker.getCoordinates();
+				this.frame.setStyles({left: coords.left, top: coords.top});
+			}.bind(this));
+		}
 	},
 
 	position: function(p) {
