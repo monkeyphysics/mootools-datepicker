@@ -72,8 +72,8 @@ var DatePicker = new Class({
 	
 	options: { 
 		pickerClass: 'datepicker',
-		days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 		months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+		days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 		dayShort: 2,
 		monthShort: 3,
 		startDay: 1, // Sunday (0) through Saturday (6) - be aware that this may affect your layout, since the days on the right might have a different margin
@@ -103,7 +103,17 @@ var DatePicker = new Class({
 	
 	initialize: function(attachTo, options) {
 		this.attachTo = attachTo;
-		this.setOptions(options).attach();
+		this.setOptions(options);
+		
+		if (MooTools.lang) {
+			this.setOptions({
+				days: MooTools.lang.get('Date', 'days'),
+				months: MooTools.lang.get('Date', 'months'),
+				format: MooTools.lang.get('Date', 'shortDate')
+			});
+		}
+		
+		this.attach();		
 		if (this.options.timePickerOnly) {
 			this.options.timePicker = true;
 			this.options.startView = 'time';
