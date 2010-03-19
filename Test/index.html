@@ -21,9 +21,27 @@
 
 window.addEvent('domready',function(){
 	
+	var debugElmt = document.id('debug');
+	var debug = function(txt){
+		debugElmt.set('text',txt);
+	}
+	
 	new DatePicker('.demo_vista', {
 		pickerClass: 'datepicker_vista',
+		onShow: function(){
+			debug('onShow');
+		},
+		onClose: function(){
+			debug('onClose');
+		},
 		onSelect: function(){
+			debug('onSelect');
+		},
+		onNext: function(){
+			debug('onNext');
+		},
+		onPrevious: function(){
+			debug('onPrevious');
 		}
 	});
 	new DatePicker('.demo_dashboard', { pickerClass: 'datepicker_dashboard' });
@@ -51,6 +69,8 @@ window.addEvent('domready',function(){
 
 
 <h2>Demo and Examples</h2>
+
+<div id="debug">&nbsp;</div>
 
 <p>
 <label>Datepicker with Vista skin:</label><br />
