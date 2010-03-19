@@ -88,7 +88,7 @@ var DatePicker = new Class({
 		maxDate: null, // same as minDate
 		debug: false,
 		toggleElements: null,
-		draggable: true,
+		draggable: true/*,
 
 		// i18n
 		months: null,
@@ -100,7 +100,7 @@ var DatePicker = new Class({
 		onClose: $empty,  // triggered after the datepicker is closed (destroyed)
 		onSelect: $empty,  // triggered when a date is selected
 		onNext: $empty,  // triggered when changing to next month
-		onPrevious: $empty  // triggered when changing to previous month
+		onPrevious: $empty  // triggered when changing to previous month */
 	},
 	
 	initialize: function(attachTo, options) {
