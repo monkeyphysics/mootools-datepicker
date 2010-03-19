@@ -13,6 +13,7 @@
 
 
 <script src="mootools-1.2.4-core.js" type="text/javascript"></script>
+<script src="mootools-1.2.4.4-more.js" type="text/javascript"></script>
 <script src="../Source/datepicker.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -20,7 +21,12 @@
 
 window.addEvent('domready',function(){
 	
-	new DatePicker('.demo_vista', { pickerClass: 'datepicker_vista' });
+	new DatePicker('.demo_vista', {
+		pickerClass: 'datepicker_vista',
+		onSelect: function(){
+			console.log(arguments);
+		}
+	});
 	new DatePicker('.demo_dashboard', { pickerClass: 'datepicker_dashboard' });
 	new DatePicker('.demo_jqui', { pickerClass: 'datepicker_jqui', positionOffset: { x: 0, y: 5 } });
 	new DatePicker('.demo', { positionOffset: { x: 0, y: 5 }});
