@@ -96,7 +96,9 @@ var DatePicker = new Class({
 		// and some event hooks:
 		onShow: $empty,   // triggered when the datepicker pops up
 		onClose: $empty,  // triggered after the datepicker is closed (destroyed)
-		onSelect: $empty  // triggered when a date is selected*/
+		onSelect: $empty,  // triggered when a date is selected
+		onNext: $empty,  // triggered when changing to next month
+		onPrevious: $empty  // triggered when changing to previous month
 	},
 	
 	initialize: function(attachTo, options) {
@@ -631,6 +633,7 @@ var DatePicker = new Class({
 			this.d.setMonth(this.d.getMonth() - 1);
 		}
 		this.render('left');
+		this.options.onPrevious();
 	},
 	
 	next: function() {
@@ -643,6 +646,7 @@ var DatePicker = new Class({
 			this.d.setMonth(this.d.getMonth() + 1);
 		}
 		this.render('right');
+		this.options.onNext();
 	},
 	
 	close: function(e, force) {

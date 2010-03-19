@@ -207,7 +207,8 @@
 	color: #fff !important;
 }
 
-.datepicker .unavailable {
+.datepicker .unavailable,
+.datepicker .body .days .week .day.unavailable:hover {
 	background: #edd !important;
 	color: #b88 !important;
 	cursor: default !important;
