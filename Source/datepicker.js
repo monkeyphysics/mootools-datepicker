@@ -103,13 +103,11 @@ var DatePicker = new Class({
 	
 	initialize: function(attachTo, options) {
 		this.attachTo = attachTo;	
-		if (MooTools.lang) {
-			this.setOptions({
-				days: MooTools.lang.get('Date', 'days'),
-				months: MooTools.lang.get('Date', 'months'),
-				format: MooTools.lang.get('Date', 'shortDate')
-			});
-		}
+		this.setOptions({
+			days: MooTools.lang.get('Date', 'days'),
+			months: MooTools.lang.get('Date', 'months'),
+			format: MooTools.lang.get('Date', 'shortDate')
+		});
 		this.setOptions(options);
 		
 		this.attach();		
