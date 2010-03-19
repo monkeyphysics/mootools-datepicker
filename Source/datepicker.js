@@ -4,12 +4,15 @@ description: MooTools Datepicker class
 
 authors:
   - MonkeyPhysics.com
+  - Arian Stolwijk
+  - MadmanMonty (Chris Baxter)
 
 license:
   - Attribution-Share Alike 3.0 Unported
 
 requires:
   core/1.2.4: '*'
+  more/1.2.4.4: [Date]
 
 provides:
   - [DatePicker]
@@ -18,8 +21,9 @@ provides:
 */
 
 
-/** datepicker.js - MooTools Datepicker class
- * @version 1.16
+/**
+ * datepicker.js - MooTools Datepicker class
+ * @version 1.17
  * 
  * by MonkeyPhysics.com
  *
