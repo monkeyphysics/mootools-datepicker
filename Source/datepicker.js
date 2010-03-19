@@ -1,4 +1,3 @@
-<<<<<<< HEAD:Source/datepicker.js
 /*
 ---
 description: MooTools Datepicker class
