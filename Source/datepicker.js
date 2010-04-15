@@ -190,7 +190,7 @@ var DatePicker = new Class({
 	onFocus: function(input,toggler) {
 		var input_date, d = ($defined(toggler) ? toggler:input).getCoordinates();
 		
-		var value = input.get('value');
+		var value = input.retrieve('DatePicker:value') || input.get('value');
 		if (value) {
 			input_date = Date.parse(value);
 		} else {
@@ -643,8 +643,9 @@ var DatePicker = new Class({
 	
 	select: function(values) {
 		this.choice = $merge(this.choice, values);
-		var d = Date.fromObject(this.choise);
-		this.input.set('value', this.format(d, this.options.format));
+		var d = Date.fromObject(this.choice);
+		this.input.set('value', this.format(d, this.options.format))
+			.store('DatePicker:value',d);
 		this.fireEvent('select', d);
 		
 		this.close(null, true);
@@ -656,19 +657,8 @@ var DatePicker = new Class({
 	
 	format: function(t, format) {
 		return new Date(t).format(format);
-	}/*,
+	}
 	
-	unformat: function(t,format) {
-		Date.defineParser(format);
-		t = Date.parse(t);
-		
-		if(!t.isValid()) {
-			t = new Date();
-		}
-		
-		t = (t.get('year') < 1900) ? new Date() : t;
-		return t;
-	}*/
 });
 
 
@@ -689,7 +679,7 @@ Date.implement({
 Date.extend({
 	
 	fromObject: function(values) {
-		console.log(values);
+		values = values || {};
 		var d = new Date();
 		d.setDate(1);
 		['year', 'month', 'day', 'hours', 'minutes', 'seconds'].each(function(type) {
