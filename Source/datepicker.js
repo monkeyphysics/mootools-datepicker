@@ -64,7 +64,6 @@ var DatePicker = new Class({
 	limit: {}, 
 	
 	// element references:
-	attachTo: null,    // selector for target inputs
 	picker: null,      // main datepicker container
 	slider: null,      // slider that contains both oldContents and newContents, used to animate between 2 different views
 	oldContents: null, // used in animating from-view to new-view
@@ -106,7 +105,6 @@ var DatePicker = new Class({
 	},
 	
 	initialize: function(attachTo, options) {
-		this.attachTo = attachTo;	
 		this.setOptions({
 			days: MooTools.lang.get('Date', 'days'),
 			months: MooTools.lang.get('Date', 'months'),
@@ -114,7 +112,7 @@ var DatePicker = new Class({
 		});
 		this.setOptions(options);
 		
-		this.attach();		
+		this.attach(attachTo, this.options.toggleElements);
 		if (this.options.timePickerOnly) {
 			this.options.timePicker = true;
 			this.options.startView = 'time';
@@ -135,10 +133,14 @@ var DatePicker = new Class({
 		}
 	},
 	
-	attach: function() {
+	attach: function(attachTo, toggleElements) {
+
+		//dont bother trying to attach when not set
+		if (!$chk(attachTo)) return;
+
 		// toggle the datepicker through a separate element?
-		if ($chk(this.options.toggleElements)) {
-			var togglers = document.getElements(this.options.toggleElements);
+		if ($chk(toggleElements)) {
+			var togglers = document.getElements(toggleElements);
 			document.addEvents({
 				'keydown': function(e) {
 					if (e.key == "tab") {
@@ -147,9 +149,12 @@ var DatePicker = new Class({
 				}.bind(this)
 			});
 		};
-
-		// attach functionality to the inputs		
-		document.getElements(this.attachTo).each(function(item, index) {
+		
+		// see what is being attached and get an array suitable for it
+		var elems = $type(attachTo) == 'element' ? [attachTo] : document.getElements(attachTo);
+		
+		// attach functionality to the inputs       
+		elems.each(function(item, index) {		
 			// never double attach
 			if (item.retrieve('datepicker')) return;
 			
@@ -166,7 +171,7 @@ var DatePicker = new Class({
 			item.store('datepicker', true); // to prevent double attachment...
 			
 			// events
-			if ($chk(this.options.toggleElements)) {
+			if ($chk(toggleElements)) {
 				togglers[index]
 					.setStyle('cursor', 'pointer')
 					.addEvents({
