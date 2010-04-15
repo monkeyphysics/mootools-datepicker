@@ -683,9 +683,13 @@ Date.implement({
 			minutes: this.getMinutes(),
 			seconds: this.getSeconds()
 		};
-	},
+	}
+});
+
+Date.extend({
 	
 	fromObject: function(values) {
+		console.log(values);
 		var d = new Date();
 		d.setDate(1);
 		['year', 'month', 'day', 'hours', 'minutes', 'seconds'].each(function(type) {
