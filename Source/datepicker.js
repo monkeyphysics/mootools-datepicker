@@ -425,7 +425,7 @@ var DatePicker = new Class({
 		
 		var available = false;
 		var t = this.today.toDateString();
-		var currentChoice = this.choice.fromObject().toDateString();
+		var currentChoice = Date.fromObject(this.choice).toDateString();
 		
 		for (i = 0; i < 42; i++) {
 			classes = [];
@@ -643,7 +643,7 @@ var DatePicker = new Class({
 	
 	select: function(values) {
 		this.choice = $merge(this.choice, values);
-		var d = this.choise.fromObject();
+		var d = Date.fromObject(this.choise);
 		this.input.set('value', this.format(d, this.options.format));
 		this.fireEvent('select', d);
 		
@@ -685,8 +685,7 @@ Date.implement({
 		};
 	},
 	
-	fromObject: function() {
-		var values = this;
+	fromObject: function(values) {
 		var d = new Date();
 		d.setDate(1);
 		['year', 'month', 'day', 'hours', 'minutes', 'seconds'].each(function(type) {
