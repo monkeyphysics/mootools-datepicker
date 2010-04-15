@@ -135,10 +135,10 @@ var DatePicker = new Class({
 	attach: function(attachTo, toggleElements) {
 
 		//dont bother trying to attach when not set
-		if (!$chk(attachTo)) return;
+		if (!attachTo) return;
 
 		// toggle the datepicker through a separate element?
-		if ($chk(toggleElements)) {
+		if (toggleElements) {
 			var togglers = document.getElements(toggleElements);
 			document.addEvents({
 				'keydown': function(e) {
@@ -159,7 +159,7 @@ var DatePicker = new Class({
 			item.store('datepicker', true); // to prevent double attachment...
 			
 			// events
-			if ($chk(toggleElements)) {
+			if (toggleElements) {
 				togglers[index]
 					.setStyle('cursor', 'pointer')
 					.addEvents({
@@ -188,7 +188,7 @@ var DatePicker = new Class({
 	},
 	
 	onFocus: function(input,toggler) {
-		var input_date, d = ($defined(toggler) ? toggler:input).getCoordinates();
+		var input_date, d = ($defined(toggler) ? toggler : input).getCoordinates();
 		
 		var value = input.retrieve('DatePicker:value') || input.get('value');
 		if (value) {
@@ -307,7 +307,7 @@ var DatePicker = new Class({
 		}
 		
 		// animate
-		if ($chk(fx)) this.fx(fx);
+		if (fx) this.fx(fx);
 	},
 	
 	fx: function(fx) {
