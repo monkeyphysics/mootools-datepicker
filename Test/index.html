@@ -53,6 +53,13 @@ window.addEvent('domready',function(){
 		positionOffset: { x: 0, y: 5 },
 		format: 'long'
 	});
+	
+	
+	var dp = new DatePicker();
+	document.id('attach').addEvent('click',function(e){
+		e.stop();
+		dp.attach(document.id('attachByClick'));
+	});
 
 });
 	
@@ -80,23 +87,30 @@ window.addEvent('domready',function(){
 
 <p>
 <label>Datepicker with Vista skin:</label><br />
-<input name='date_B' type='text' value='' class='date demo_vista' />
+<input name="date_B" type="text" value="" class="date demo_vista" />
 </p>
 
 <p>
 <label>Datepicker with OSX Dashboard skin:</label><br />
-<input name='date_B' type='text' value='' class='date demo_dashboard' />
+<input name="date_B" type="text" value="04/07/2010" class="date demo_dashboard" />
 </p>
 
 <p>
 <label>Datepicker with jQuery UI skin:</label><br />
-<input name='date_B' type='text' value='' class='date demo_jqui' />
+<input name="date_B" type="text" value="" class="date demo_jqui" />
 </p>
 
 <p>
 <label>Datepicker basic (CSS only) With localisation (Dutch):</label><br />
-<input name='date_B' type='text' value='' class='date demo' />
+<input name="date_B" type="text" value="" class="date demo" />
 </p>
+
+<p>
+<a href="#" id="attach">Click to attach the datpicker to this field</a><br />
+<label>Attach Datepicker:</label><br />
+<input id="attachByClick" type="text" value="" class="date" />
+</p>
+
 
 </body>
 </html>
