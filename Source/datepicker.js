@@ -203,36 +203,7 @@ var DatePicker = new Class({
 		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, input_date);
 		this.fireEvent('show');
 	},
-	
-	dateToObject: function(d) {
-		return {
-			year: d.getFullYear(),
-			month: d.getMonth(),
-			day: d.getDate(),
-			hours: d.getHours(),
-			minutes: d.getMinutes(),
-			seconds: d.getSeconds()
-		};
-	},
-	
-	dateFromObject: function(values) {
-		var d = new Date();
-		d.setDate(1);
-		['year', 'month', 'day', 'hours', 'minutes', 'seconds'].each(function(type) {
-			var v = values[type];
-			if (!$chk(v)) return;
-			switch (type) {
-				case 'day': d.setDate(v); break;
-				case 'month': d.setMonth(v); break;
-				case 'year': d.setFullYear(v); break;
-				case 'hours': d.setHours(v); break;
-				case 'minutes': d.setMinutes(v); break;
-				case 'seconds': d.setSeconds(v); break;
-			}
-		});
-		return d;
-	},
-	
+		
 	show: function(position, timestamp) {		
 		if(timestamp instanceof Date){
 			this.d = timestamp;
@@ -243,7 +214,7 @@ var DatePicker = new Class({
 		}
 		
 		this.today = new Date();
-		this.choice = this.dateToObject(this.d);
+		this.choice = this.d.toObject();
 		this.mode = (this.options.startView == 'time' && !this.options.timePicker) ? 'month' : this.options.startView;
 		this.render();
 		this.position({x: position.left, y: position.top});
@@ -427,7 +398,7 @@ var DatePicker = new Class({
 			.addEvents({
 				click: function(e) {
 					e.stop();
-					this.select($merge(this.dateToObject(this.d), { hours: this.picker.getElement('.hour').get('value').toInt(), minutes: this.picker.getElement('.minutes').get('value').toInt() }));
+					this.select($merge(this.d.toObject(), { hours: this.picker.getElement('.hour').get('value').toInt(), minutes: this.picker.getElement('.minutes').get('value').toInt() }));
 				}.bind(this)
 			})
 			.set('maxlength', 2)
@@ -454,7 +425,7 @@ var DatePicker = new Class({
 		
 		var available = false;
 		var t = this.today.toDateString();
-		var currentChoice = this.dateFromObject(this.choice).toDateString();
+		var currentChoice = this.choice.fromObject().toDateString();
 		
 		for (i = 0; i < 42; i++) {
 			classes = [];
@@ -672,7 +643,7 @@ var DatePicker = new Class({
 	
 	select: function(values) {
 		this.choice = $merge(this.choice, values);
-		var d = this.dateFromObject(this.choice);
+		var d = this.choise.fromObject();
 		this.input.set('value', this.format(d, this.options.format));
 		this.fireEvent('select', d);
 		
@@ -698,4 +669,39 @@ var DatePicker = new Class({
 		t = (t.get('year') < 1900) ? new Date() : t;
 		return t;
 	}*/
+});
+
+
+Date.implement({
+	
+	toObject: function() {
+		return {
+			year: this.getFullYear(),
+			month: this.getMonth(),
+			day: this.getDate(),
+			hours: this.getHours(),
+			minutes: this.getMinutes(),
+			seconds: this.getSeconds()
+		};
+	},
+	
+	fromObject: function() {
+		var values = this;
+		var d = new Date();
+		d.setDate(1);
+		['year', 'month', 'day', 'hours', 'minutes', 'seconds'].each(function(type) {
+			var v = values[type];
+			if (!$chk(v)) return;
+			switch (type) {
+				case 'day': d.setDate(v); break;
+				case 'month': d.setMonth(v); break;
+				case 'year': d.setFullYear(v); break;
+				case 'hours': d.setHours(v); break;
+				case 'minutes': d.setMinutes(v); break;
+				case 'seconds': d.setSeconds(v); break;
+			}
+		});
+		return d;
+	}
+
 });
