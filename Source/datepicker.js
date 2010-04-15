@@ -25,7 +25,7 @@ provides:
 
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.18
+ * @version 1.19
  * 
  * by MonkeyPhysics.com
  *
