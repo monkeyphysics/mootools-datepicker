@@ -85,9 +85,8 @@ var DatePicker = new Class({
 		useFadeInOut: !Browser.Engine.trident, // dont animate fade-in/fade-out for IE
 		startView: 'month', // allowed values: {time, month, year, decades}
 		positionOffset: { x: 0, y: 0 },
-		minDate: null, // { date: '[date-string]', format: '[date-string-interpretation-format]' }
+		minDate: null, // Date object or a string
 		maxDate: null, // same as minDate
-		debug: false,
 		toggleElements: null,
 		draggable: true/*,
 
@@ -122,11 +121,11 @@ var DatePicker = new Class({
 	},
 	
 	formatMinMaxDates: function() {
-		if (this.options.minDate && this.options.minDate.inputFormat) {  //cbaxter changed minDate.format for minDate.inputFormat to address issues when implemented with MooTools.Date extension due to date.format() being confused with date.format string
-			this.options.minDate = this.unformat(this.options.minDate.date, this.options.minDate.inputFormat);
+		if (this.options.minDate) {
+			if(!(this.options.minDate instanceof Date)) this.options.minDate = Date.parse(this.options.minDate);
 		}
-		if (this.options.maxDate && this.options.maxDate.inputFormat) {
-			this.options.maxDate = this.unformat(this.options.maxDate.date, this.options.maxDate.inputFormat);
+		if (this.options.maxDate) {
+			if(!(this.options.minDate instanceof Date)) this.options.minDate = Date.parse(this.options.minDate);
 			this.options.maxDate.setHours(23);
 			this.options.maxDate.setMinutes(59);
 			this.options.maxDate.setSeconds(59);
@@ -191,17 +190,15 @@ var DatePicker = new Class({
 	onFocus: function(input,toggler) {
 		var input_date, d = ($defined(toggler) ? toggler:input).getCoordinates();
 		
-		if (input.get('value')) {
-			input_date = this.unformat(input.get('value'),this.options.format);
+		var value = input.get('value');
+		if (value) {
+			input_date = Date.parse(value);
 		} else {
 			input_date = new Date();
-			if ($chk(this.options.maxDate) && input_date.valueOf() > this.options.maxDate.valueOf()) {
-				input_date = new Date(this.options.maxDate.valueOf());
-			}
-			if ($chk(this.options.minDate) && input_date.valueOf() < this.options.minDate.valueOf()) {
-				input_date = new Date(this.options.minDate.valueOf());
-			}
+			if (this.options.maxDate && input_date > this.options.maxDate) input_date = this.options.maxDate;
+			if (this.options.minDate && input_date < this.options.minDate) input_date = this.options.minDate;
 		}
+
 		this.input = input;
 		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, input_date);
 		this.fireEvent('show');
@@ -236,8 +233,7 @@ var DatePicker = new Class({
 		return d;
 	},
 	
-	show: function(position, timestamp) {
-		this.formatMinMaxDates();
+	show: function(position, timestamp) {		
 		if(timestamp instanceof Date){
 			this.d = timestamp;
 		}else if (timestamp) {
@@ -245,6 +241,7 @@ var DatePicker = new Class({
 		} else {
 			this.d = new Date();
 		}
+		
 		this.today = new Date();
 		this.choice = this.dateToObject(this.d);
 		this.mode = (this.options.startView == 'time' && !this.options.timePicker) ? 'month' : this.options.startView;
@@ -688,7 +685,7 @@ var DatePicker = new Class({
 	
 	format: function(t, format) {
 		return new Date(t).format(format);
-	},
+	}/*,
 	
 	unformat: function(t,format) {
 		Date.defineParser(format);
@@ -700,5 +697,5 @@ var DatePicker = new Class({
 		
 		t = (t.get('year') < 1900) ? new Date() : t;
 		return t;
-	}
+	}*/
 });
