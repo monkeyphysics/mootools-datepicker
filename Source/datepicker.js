@@ -138,7 +138,7 @@ var DatePicker = new Class({
 	attach: function() {
 		// toggle the datepicker through a separate element?
 		if ($chk(this.options.toggleElements)) {
-			var togglers = $$(this.options.toggleElements);
+			var togglers = document.getElements(this.options.toggleElements);
 			document.addEvents({
 				'keydown': function(e) {
 					if (e.key == "tab") {
