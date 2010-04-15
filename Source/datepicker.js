@@ -156,18 +156,7 @@ var DatePicker = new Class({
 		// attach functionality to the inputs       
 		elems.each(function(item, index) {		
 			// never double attach
-			if (item.retrieve('datepicker')) return;
-			
-			// determine starting value(s)
-			if ($chk(item.get('value'))) {
-				var init_val = this.format(this.unformat(item.get('value'),this.options.format), this.options.format);
-			} else if (!this.options.allowEmpty) {
-				var init_val = this.format(new Date(), this.options.format);
-			} else {
-				var init_val = '';
-			}
-			
-			
+			if (item.retrieve('datepicker')) return;			
 			item.store('datepicker', true); // to prevent double attachment...
 			
 			// events
@@ -202,8 +191,8 @@ var DatePicker = new Class({
 	onFocus: function(input,toggler) {
 		var input_date, d = ($defined(toggler) ? toggler:input).getCoordinates();
 		
-		if ($chk(input.get('value'))) {
-			input_date = this.unformat(input.get('value'),this.options.format).valueOf();
+		if (input.get('value')) {
+			input_date = this.unformat(input.get('value'),this.options.format);
 		} else {
 			input_date = new Date();
 			if ($chk(this.options.maxDate) && input_date.valueOf() > this.options.maxDate.valueOf()) {
@@ -213,7 +202,6 @@ var DatePicker = new Class({
 				input_date = new Date(this.options.minDate.valueOf());
 			}
 		}
-		
 		this.input = input;
 		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, input_date);
 		this.fireEvent('show');
@@ -250,7 +238,9 @@ var DatePicker = new Class({
 	
 	show: function(position, timestamp) {
 		this.formatMinMaxDates();
-		if ($chk(timestamp)) {
+		if(timestamp instanceof Date){
+			this.d = timestamp;
+		}else if (timestamp) {
 			this.d = new Date(timestamp);
 		} else {
 			this.d = new Date();
@@ -709,7 +699,6 @@ var DatePicker = new Class({
 		}
 		
 		t = (t.get('year') < 1900) ? new Date() : t;
-		
 		return t;
 	}
 });
