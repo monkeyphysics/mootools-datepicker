@@ -172,13 +172,12 @@ var DatePicker = new Class({
 				var events = {
 					'click': function(e){
 						if (e) e.stop();
+						var open = false;
 						if (!this.retrieve('datepicker:open')) {
 							self.show(item, togglers[index]);
-							this.store('datepicker:open',true);
-						}else{
-							self.close(e,true);
-							this.store('datepicker:open',false);
+							open = true;
 						}
+						this.store('datepicker:open',open);
 					}
 					
 				};
@@ -198,7 +197,7 @@ var DatePicker = new Class({
 						} else if (e.key == "tab") {
 							this.close(null, true);
 						} else {
-							e.stop();
+							e.stop(e);
 						}
 					}.bind(this),
 					'focus': this.show.bind(this,[item])
@@ -271,6 +270,7 @@ var DatePicker = new Class({
 
 	close: function(e, force) {
 		if (!document.id(this.picker)) return;
+		if($type(e) != 'event') force = true;
 		var clickOutside = e && e.target != this.picker && !this.picker.hasChild(e.target) && e.target != this.visual;
 		if (force || clickOutside) {
 			if (this.options.useFadeInOut) {
