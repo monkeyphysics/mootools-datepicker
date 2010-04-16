@@ -150,26 +150,32 @@ var DatePicker = new Class({
 		};
 		
 		// see what is being attached and get an array suitable for it
-		var elems = $type(attachTo) == 'element' ? [attachTo] : document.getElements(attachTo);
+		var elems = $type(attachTo) == 'array' ? attachTo : [document.id(attachTo)];
 		
 		// attach functionality to the inputs       
 		elems.each(function(item, index) {		
 			// never double attach
 			if (item.retrieve('datepicker')) return;			
+
 			item.store('datepicker', true); // to prevent double attachment...
 			
 			// events
 			if (toggleElements) {
-				togglers[index]
+				var events = {
+					'click': function(e) {
+						this.onFocus(item,togglers[index]);
+					}.bind(this)
+				};
+				var toggler = togglers[index]
 					.setStyle('cursor', 'pointer')
-					.addEvents({
-						'click': function(e) {
-							this.onFocus(item,togglers[index]);
-						}.bind(this)
-					});
+					.addEvents(events);
+				item.store('datepicker:toggler',toggler)
+					.store('datepicker:events',events);
+					
 			} else {
-				item.addEvents({
-					'keydown': function(e) {
+				var events = {
+					'keydown': function(e){
+						// prevent the user from typing in the field
 						if (this.options.allowEmpty && (e.key == "delete" || e.key == "backspace")) {
 							item.set('value', '');
 							this.close(null, true);
@@ -178,19 +184,36 @@ var DatePicker = new Class({
 						} else {
 							e.stop();
 						}
-					}.bind(this),
-					'focus': function(e) {
+					}.bind(this)	
+									,
+					'focus': function(e){
 						this.onFocus(item);
 					}.bind(this)
-				});
+				};
+				
+				item.addEvents(events).store('datepicker:events',events);
 			}
 		}.bind(this));
+	},
+	
+	detach: function(detach){
+		var elems = $type(detach) == 'array' ? detach : [document.id(detach)];
+		
+		elems.each(function(item){
+			// Only when the datepicker is attached
+			if (!item.retrieve('datepicker')) return;
+		
+			var toggler = item.retrieve('datepicker:toggler');
+			var events = item.retrieve('datepicker:events');
+			// Detach the Events
+			(toggler ? toggler : item).removeEvents(events);			
+		});
 	},
 	
 	onFocus: function(input,toggler) {
 		var input_date, d = ($defined(toggler) ? toggler : input).getCoordinates();
 		
-		var value = input.retrieve('DatePicker:value') || input.get('value');
+		var value = input.retrieve('datepicker:value') || input.get('value');
 		if (value) {
 			input_date = Date.parse(value);
 		} else {
@@ -645,7 +668,7 @@ var DatePicker = new Class({
 		this.choice = $merge(this.choice, values);
 		var d = Date.fromObject(this.choice);
 		this.input.set('value', this.format(d, this.options.format))
-			.store('DatePicker:value',d);
+			.store('datepicker:value',d);
 		this.fireEvent('select', d);
 		
 		this.close(null, true);
