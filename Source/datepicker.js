@@ -111,7 +111,12 @@ var DatePicker = new Class({
 			months: MooTools.lang.get('Date', 'months'),
 			format: MooTools.lang.get('Date', 'shortDate')
 		});
+		var oldFormat = this.options.format;
 		this.setOptions(options);
+		if (this.options.timePicker && this.options.format == oldFormat) {
+			var timeFormat = MooTools.lang.get('Date', 'shortTime');
+			this.options.format = this.options.timePickerOnly ? timeFormat : this.options.format + ' ' + timeFormat;
+		}
 		
 		// Support for deprecated toggleElements
 		if(this.options.toggleElements) this.toggle = document.getElements(this.toggleElements);
@@ -379,7 +384,7 @@ var DatePicker = new Class({
 		if (this.options.timePickerOnly) {
 			this.picker.getElement('.titleText').set('text', 'Select a time');
 		} else {
-			this.picker.getElement('.titleText').set('text', this.format(this.d, 'j M, Y'));
+			this.picker.getElement('.titleText').set('text', this.d.format('j M, Y'));
 		}
 		
 		new Element('input', { type: 'text', 'class': 'hour' })
@@ -670,7 +675,7 @@ var DatePicker = new Class({
 	select: function(values) {
 		this.choice = $merge(this.choice, values);
 		var d = Date.fromObject(this.choice);
-		this.input.set('value', this.format(d, this.options.format))
+		this.input.set('value', this.d.format(this.options.format))
 			.store('datepicker:value',d);
 		this.fireEvent('select', d);
 		
@@ -679,10 +684,6 @@ var DatePicker = new Class({
 	
 	leadZero: function(v) {
 		return v < 10 ? '0'+v : v;
-	},
-	
-	format: function(t, format) {
-		return new Date(t).format(format);
 	}
 	
 });
