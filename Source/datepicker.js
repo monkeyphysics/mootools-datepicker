@@ -161,7 +161,7 @@ var DatePicker = new Class({
 			if (toggleElements) {
 				var events = {
 					'click': function(e) {
-						this.onFocus(item,togglers[index]);
+						this.show(item,togglers[index]);
 					}.bind(this)
 				};
 				var toggler = togglers[index]
@@ -185,7 +185,7 @@ var DatePicker = new Class({
 					}.bind(this)	
 									,
 					'focus': function(e){
-						this.onFocus(item);
+						this.show(item);
 					}.bind(this)
 				};
 				
@@ -208,31 +208,29 @@ var DatePicker = new Class({
 		});
 	},
 	
-	onFocus: function(input,toggler) {
-		var input_date, d = ($defined(toggler) ? toggler : input).getCoordinates();
-		
-		var value = input.retrieve('datepicker:value') || input.get('value');
-		if (value) {
-			input_date = Date.parse(value);
-		} else {
-			input_date = new Date();
-			if (this.options.maxDate && input_date > this.options.maxDate) input_date = this.options.maxDate;
-			if (this.options.minDate && input_date < this.options.minDate) input_date = this.options.minDate;
-		}
-
-		this.input = input;
-		this.show({ left: d.left + this.options.positionOffset.x, top: d.top + d.height + this.options.positionOffset.y }, input_date);
-		this.fireEvent('show');
-	},
-		
-	show: function(position, timestamp) {		
-		if(timestamp instanceof Date){
-			this.d = timestamp;
-		}else if (timestamp) {
+	show: function(input,toggler,timestamp) {
+		if (timestamp) {
 			this.d = new Date(timestamp);
-		} else {
-			this.d = new Date();
+		} else {		
+			var value = input.retrieve('datepicker:value') || input.get('value');
+			if (value) {
+				this.d = Date.parse(value);
+			} else {
+				this.d = new Date();
+				if (this.options.maxDate && input_date > this.options.maxDate) 
+					this.d = this.options.maxDate;
+				if (this.options.minDate && input_date < this.options.minDate) 
+					this.d = this.options.minDate;
+			}
 		}
+		
+		this.input = input;
+		var d = (toggler ? toggler : input).getCoordinates();
+		var position = {
+			left: d.left + this.options.positionOffset.x,
+			top: d.top + d.height + this.options.positionOffset.y
+		};
+		this.fireEvent('show');
 		
 		this.today = new Date();
 		this.choice = this.d.toObject();
