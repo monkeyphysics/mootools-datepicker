@@ -231,7 +231,7 @@ var DatePicker = new Class({
 		// Cannot show the picker if its not attached
 		if(!input.retrieve('datepicker')) return;
 		
-		// Determin the date that should be opened
+		// Determine the date that should be opened
 		if (timestamp) {
 			this.d = new Date(timestamp);
 		} else {		
