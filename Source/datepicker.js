@@ -133,14 +133,14 @@ var DatePicker = new Class({
 		}
 	},
 	
-	attach: function(attachTo, toggleElements) {
+	attach: function(attachTo, toggle) {
 
 		//dont bother trying to attach when not set
 		if (!attachTo) return;
 
 		// toggle the datepicker through a separate element?
-		if (toggleElements) {
-			var togglers = document.getElements(toggleElements);
+		if (toggle) {
+			var togglers = $type(toggle) == 'array' ? toggle : [document.id(toggle)];
 			document.addEvents({
 				'keydown': function(e) {
 					if (e.key == "tab") this.close(null, true);
@@ -159,7 +159,7 @@ var DatePicker = new Class({
 			item.store('datepicker', true); // to prevent double attachment...
 			
 			// events
-			if (toggleElements) {
+			if (toggle && togglers) {
 				var events = {
 					'click': this.show.bind(this,[item,togglers[index]])
 				};
