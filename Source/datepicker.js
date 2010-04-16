@@ -142,9 +142,7 @@ var DatePicker = new Class({
 			var togglers = document.getElements(toggleElements);
 			document.addEvents({
 				'keydown': function(e) {
-					if (e.key == "tab") {
-						this.close(null, true);
-					}
+					if (e.key == "tab") this.close(null, true);
 				}.bind(this)
 			});
 		};
@@ -288,7 +286,7 @@ var DatePicker = new Class({
 	},
 		
 	render: function(fx) {
-		if (!$chk(this.picker)) {
+		if (!this.picker) {
 			this.constructPicker();
 		} else {
 			// swap contents so we can fill the newContents again and animate
@@ -497,7 +495,7 @@ var DatePicker = new Class({
 		
 		this.picker.getElement('.titleText').set('text', this.d.getFullYear());
 		this.d.setMonth(0);
-		if ($chk(this.options.minDate)) {
+		if (this.options.minDate) {
 			this.d.decrement('month',1)
 			this.d.set('date',this.d.get('lastdayofmonth'));
 			if (this.limited('month')) {
@@ -548,7 +546,7 @@ var DatePicker = new Class({
 		var available = false;
 		var container = new Element('div', { 'class': 'years' }).inject(this.newContents);
 		
-		if ($chk(this.options.minDate) && this.d.getFullYear() <= this.options.minDate.getFullYear()) {
+		if (this.options.minDate && this.d.getFullYear() <= this.options.minDate.getFullYear()) {
 			this.limit.left = true;
 		}
 		
@@ -576,14 +574,14 @@ var DatePicker = new Class({
 		if (!available) {
 			this.limit.right = true;
 		}
-		if ($chk(this.options.maxDate) && this.d.getFullYear() >= this.options.maxDate.getFullYear()) {
+		if (this.options.maxDate && this.d.getFullYear() >= this.options.maxDate.getFullYear()) {
 			this.limit.right = true;
 		}
 	},
 	
 	limited: function(type) {
-		var cs = $chk(this.options.minDate);
-		var ce = $chk(this.options.maxDate);
+		var cs = this.options.minDate;
+		var ce = this.options.maxDate;
 		if (!cs && !ce) return false;
 		
 		switch (type) {
@@ -648,7 +646,7 @@ var DatePicker = new Class({
 	
 	close: function(e, force) {
 		if (!document.id(this.picker)) return;
-		var clickOutside = ($chk(e) && e.target != this.picker && !this.picker.hasChild(e.target) && e.target != this.visual);
+		var clickOutside = e && e.target != this.picker && !this.picker.hasChild(e.target) && e.target != this.visual;
 		if (force || clickOutside) {
 			if (this.options.useFadeInOut) {
 				this.picker.set('tween', { duration: this.options.animationDuration / 2, onComplete: this.destroy.bind(this) }).tween('opacity', 1, 0);
@@ -707,7 +705,7 @@ Date.extend({
 		d.setDate(1);
 		['year', 'month', 'day', 'hours', 'minutes', 'seconds'].each(function(type) {
 			var v = values[type];
-			if (!$chk(v)) return;
+			if (!v) return;
 			switch (type) {
 				case 'day': d.setDate(v); break;
 				case 'month': d.setMonth(v); break;
