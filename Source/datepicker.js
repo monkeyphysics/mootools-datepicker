@@ -176,7 +176,7 @@ var DatePicker = new Class({
 							self.show(item, togglers[index]);
 							this.store('datepicker:open',true);
 						}else{
-							self.close.bind(this);
+							self.close(e,true);
 							this.store('datepicker:open',false);
 						}
 					}
@@ -207,6 +207,8 @@ var DatePicker = new Class({
 				item.addEvents(events).store('datepicker:events',events);
 			}
 		}.bind(this));
+		
+		return this;
 	},
 	
 	detach: function(detach){
@@ -221,6 +223,8 @@ var DatePicker = new Class({
 			// Detach the Events
 			(toggler ? toggler : item).removeEvents(events);			
 		});
+		
+		return this;
 	},
 	
 	show: function(input,toggler,timestamp) {
@@ -261,7 +265,25 @@ var DatePicker = new Class({
 		}
 		
 		if(Browser.Engine.trident) this.shim();
+		
+		return this;
 	},
+
+	close: function(e, force) {
+		if (!document.id(this.picker)) return;
+		var clickOutside = e && e.target != this.picker && !this.picker.hasChild(e.target) && e.target != this.visual;
+		if (force || clickOutside) {
+			if (this.options.useFadeInOut) {
+				this.picker.set('tween', { duration: this.options.animationDuration / 2, onComplete: this.destroy.bind(this) }).tween('opacity', 1, 0);
+			} else {
+				this.destroy();
+			}
+		}
+		
+		return this;
+	},
+	
+	// Protected/Private methods
 
 	shim: function() {
 		var coords = this.picker.setStyle('zIndex', 1000).getCoordinates();
@@ -658,19 +680,7 @@ var DatePicker = new Class({
 		this.render('right');
 		this.fireEvent('next');
 	},
-	
-	close: function(e, force) {
-		if (!document.id(this.picker)) return;
-		var clickOutside = e && e.target != this.picker && !this.picker.hasChild(e.target) && e.target != this.visual;
-		if (force || clickOutside) {
-			if (this.options.useFadeInOut) {
-				this.picker.set('tween', { duration: this.options.animationDuration / 2, onComplete: this.destroy.bind(this) }).tween('opacity', 1, 0);
-			} else {
-				this.destroy();
-			}
-		}
-	},
-	
+		
 	destroy: function() {
 		this.picker.destroy();
 		this.picker = null;
