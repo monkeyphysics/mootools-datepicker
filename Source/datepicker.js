@@ -244,7 +244,7 @@ var DatePicker = new Class({
 
 	shim: function() {
 		var coords = this.picker.setStyle('zIndex', 1000).getCoordinates();
-		this.frame = new Element('iframe', {
+		var frame = this.frame = new Element('iframe', {
 			src: 'javascript:false;document.write("");',
 			styles: {
 				position: 'absolute',
@@ -255,12 +255,12 @@ var DatePicker = new Class({
 		}).inject(document.body);
 		this.frame.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
     
-		this.addEvent('close', function() {this.destroy()}.bind(this.frame));
+		this.addEvent('close', function() {frame.destroy()});
 		
 		if(this.options.draggable) {
 			this.dragger.addEvent('drag', function() {
 				var coords = this.picker.getCoordinates();
-				this.frame.setStyles({left: coords.left, top: coords.top});
+				frame.setStyles({left: coords.left, top: coords.top});
 			}.bind(this));
 		}
 	},
