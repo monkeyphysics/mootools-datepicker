@@ -36,6 +36,24 @@ How to use
 		pickerClass: 'datepicker_jqui'		
 	});
 
+### Options
+
+Check out the options at this page: http://www.monkeyphysics.com/mootools/script/2/datepicker
+
+- toggle: (*element*,*string*,*array*) Toggle your datepicker by clicking another element. 
+
+#### Note
+- toggleElements is deprecated, use toggle instead
+
+### Events
+
+- show - triggered when the datepicker pops up
+- close - triggered after the datepicker is closed (destroyed)
+- select - triggered when a date is selected
+- next - triggered when changing to next month
+- previous - triggered when changing to previous month
+
+
 ## DatePicker.attach
 
 A method to attach the datepicker to input field(s)
@@ -52,6 +70,8 @@ A method to attach the datepicker to input field(s)
 
 ## DatePicker.detach
 
+Detach the picker from the input field
+
 ### Syntax
 
 	#JS
@@ -63,22 +83,41 @@ A method to attach the datepicker to input field(s)
 
 ## DatePicker.show
 
-## Syntax 
+A method to show the datepicker manually
+
+### Syntax 
 
 	#JS
 	dp.show(element[,toggle,timestamp])
 
-1. element: (*element*,*string*) The input field 
-2. toggle: (*element,*string*, optional) The toggle element
-3. timestamp: (*Date*,*number*, optional) A date object or a timestamp.
-where the input-target-selector naturally is a MooTools selector (eg. .datepickers or #great_picker). The datepicker will be effective for all selected input elements. Usage examples are given at the bottom of this document.
+### Arguments
 
-### MooTools.lang
+1. element: (*element*,*string*) The input field 
+2. toggle: (*element,*string*, optional) The toggle element (the picker will use the position of the toggle element)
+3. timestamp: (*Date*,*number*, optional) A date object or a timestamp.
+
+## DatePicker.close
+
+A method to close the picker. You do not need link this to a link or something (because if you click anywhere but the picker, it will already close), 
+This method is there to close the picker for example with a delay, or an Ajax Event or something.
+
+### Syntax
+
+	#JS
+	dp.close();
+
+
+
+
+## MooTools.lang
 
 This plugin supports MooTools.lang, so you can use the datepicker in your own language.
 
 	#JS
 	MooTools.lang.setLanguage("nl-NL");
 	new DatePicker('.demo');
+
+#### Note
+If you use more than one language on your page, things might get messed up (for example Date Parsing)
 
 For more options: checkout [MonkeyPhysics datepicker](http://www.monkeyphysics.com/mootools/script/2/datepicker)
