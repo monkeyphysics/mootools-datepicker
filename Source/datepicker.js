@@ -125,7 +125,8 @@ var DatePicker = new Class({
 			if(!(this.options.minDate instanceof Date)) this.options.minDate = Date.parse(this.options.minDate);
 		}
 		if (this.options.maxDate) {
-			if(!(this.options.minDate instanceof Date)) this.options.minDate = Date.parse(this.options.minDate);
+			if(!(this.options.maxnDate instanceof Date)) this.options.maxDate = Date.parse(this.options.maxDate);
+			console.log(this.options.maxDate);
 			this.options.maxDate.setHours(23);
 			this.options.maxDate.setMinutes(59);
 			this.options.maxDate.setSeconds(59);
@@ -215,9 +216,9 @@ var DatePicker = new Class({
 			this.d = value ? Date.parse(value) : new Date();
 		}
 		// Min/max date
-		if (this.options.maxDate && input_date > this.options.maxDate) 
+		if (this.options.maxDate && this.d > this.options.maxDate) 
 			this.d = this.options.maxDate;
-		if (this.options.minDate && input_date < this.options.minDate) 
+		if (this.options.minDate && this.d < this.options.minDate) 
 			this.d = this.options.minDate;
 		
 		this.input = input;
