@@ -168,11 +168,19 @@ var DatePicker = new Class({
 			
 			// events
 			if (toggle && togglers) {
+				var self = this;
 				var events = {
 					'click': function(e){
 						if (e) e.stop();
-						this.show(item, togglers[index]);
-					}.bind(this)
+						if (!this.retrieve('datepicker:open')) {
+							self.show(item, togglers[index]);
+							this.store('datepicker:open',true);
+						}else{
+							self.close.bind(this);
+							this.store('datepicker:open',false);
+						}
+					}
+					
 				};
 				var toggler = togglers[index]
 					.setStyle('cursor', 'pointer')
