@@ -205,20 +205,20 @@ var DatePicker = new Class({
 	},
 	
 	show: function(input,toggler,timestamp) {
+		input = document.id(input);
+		
+		// Determin the date that should be opened
 		if (timestamp) {
 			this.d = new Date(timestamp);
 		} else {		
 			var value = input.retrieve('datepicker:value') || input.get('value');
-			if (value) {
-				this.d = Date.parse(value);
-			} else {
-				this.d = new Date();
-				if (this.options.maxDate && input_date > this.options.maxDate) 
-					this.d = this.options.maxDate;
-				if (this.options.minDate && input_date < this.options.minDate) 
-					this.d = this.options.minDate;
-			}
+			this.d = value ? Date.parse(value) : new Date();
 		}
+		// Min/max date
+		if (this.options.maxDate && input_date > this.options.maxDate) 
+			this.d = this.options.maxDate;
+		if (this.options.minDate && input_date < this.options.minDate) 
+			this.d = this.options.minDate;
 		
 		this.input = input;
 		var d = (toggler ? toggler : input).getCoordinates();
