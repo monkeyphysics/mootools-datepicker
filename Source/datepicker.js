@@ -194,8 +194,7 @@ var DatePicker = new Class({
 						} else {
 							e.stop();
 						}
-					}.bind(this)	
-									,
+					}.bind(this),
 					'focus': this.show.bind(this,[item])
 				};
 				
