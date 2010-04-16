@@ -127,11 +127,7 @@ var DatePicker = new Class({
 			this.options.timePicker = true;
 			this.options.startView = 'time';
 		}
-		this.formatMinMaxDates();
-		document.addEvent('mousedown', this.close.bind(this));
-	},
-	
-	formatMinMaxDates: function() {
+
 		if (this.options.minDate) {
 			if(!(this.options.minDate instanceof Date)) this.options.minDate = Date.parse(this.options.minDate);
 		}
@@ -141,6 +137,8 @@ var DatePicker = new Class({
 			this.options.maxDate.setMinutes(59);
 			this.options.maxDate.setSeconds(59);
 		}
+
+		document.addEvent('mousedown', this.close.bind(this));
 	},
 	
 	attach: function(attachTo, toggle) {
