@@ -26,7 +26,7 @@ window.addEvent('domready',function(){
 		debugElmt.set('text',txt);
 	}
 	
-	new DatePicker('.demo_vista', {
+	new DatePicker($$('.demo_vista'), {
 		pickerClass: 'datepicker_vista',
 		onShow: function(){
 			debug('onShow');
@@ -44,22 +44,33 @@ window.addEvent('domready',function(){
 			debug('onPrevious');
 		}
 	});
-	new DatePicker('.demo_dashboard', { pickerClass: 'datepicker_dashboard' });
-	new DatePicker('.demo_jqui', { pickerClass: 'datepicker_jqui', positionOffset: { x: 0, y: 5 } });
+	new DatePicker($$('.demo_dashboard'), { pickerClass: 'datepicker_dashboard' });
+	new DatePicker($$('.demo_jqui'), { pickerClass: 'datepicker_jqui', positionOffset: { x: 0, y: 5 } });
 
-	MooTools.lang.setLanguage("nl-NL");
+//	MooTools.lang.setLanguage("nl-NL");
 	
-	new DatePicker('.demo', {
+	new DatePicker('i18n', {
 		positionOffset: { x: 0, y: 5 },
-		format: 'long'
+		format: '%d-%m-%Y'
 	});
 	
 	
+	// Attach the datepicker manually 
 	var dp = new DatePicker();
 	document.id('attach').addEvent('click',function(e){
 		e.stop();
-		dp.attach(document.id('attachByClick'));
+		dp.attach('attachByClick');
 	});
+	document.id('detach').addEvent('click',function(e){
+		e.stop();
+		dp.detach('attachByClick');
+	});
+	document.id('show').addEvent('click',function(e){
+		e.stop();
+		dp.show('attachByClick');
+	});
+	
+	
 
 });
 	
@@ -92,7 +103,7 @@ window.addEvent('domready',function(){
 
 <p>
 <label>Datepicker with OSX Dashboard skin:</label><br />
-<input name="date_B" type="text" value="04/07/2010" class="date demo_dashboard" />
+<input name="date_B" type="text" value="03/07/2010" class="date demo_dashboard" />
 </p>
 
 <p>
@@ -102,11 +113,13 @@ window.addEvent('domready',function(){
 
 <p>
 <label>Datepicker basic (CSS only) With localisation (Dutch):</label><br />
-<input name="date_B" type="text" value="" class="date demo" />
+<input id="i18n" type="text" value="" class="date" />
 </p>
 
 <p>
 <a href="#" id="attach">Click to attach the datpicker to this field</a><br />
+<a href="#" id="detach">Click to detach the datpicker from this field</a><br />
+<a href="#" id="show">Show datepicker (after you attached it)</a><br />
 <label>Attach Datepicker:</label><br />
 <input id="attachByClick" type="text" value="" class="date" />
 </p>
