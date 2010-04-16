@@ -160,9 +160,7 @@ var DatePicker = new Class({
 			// events
 			if (toggleElements) {
 				var events = {
-					'click': function(e) {
-						this.show(item,togglers[index]);
-					}.bind(this)
+					'click': this.show.bind(this,[item,togglers[index]])
 				};
 				var toggler = togglers[index]
 					.setStyle('cursor', 'pointer')
@@ -184,9 +182,7 @@ var DatePicker = new Class({
 						}
 					}.bind(this)	
 									,
-					'focus': function(e){
-						this.show(item);
-					}.bind(this)
+					'focus': this.show.bind(this,[item])
 				};
 				
 				item.addEvents(events).store('datepicker:events',events);
