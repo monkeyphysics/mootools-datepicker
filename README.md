@@ -38,7 +38,7 @@ How to use
 
 ### Options
 
-Check out the options at this page: http://www.monkeyphysics.com/mootools/script/2/datepicker
+Check out the options at this page: [MonkeyPhysics datepicker](http://www.monkeyphysics.com/mootools/script/2/datepicker)
 
 - toggle: (*element*,*string*,*array*) Toggle your datepicker by clicking another element. 
 
@@ -119,5 +119,3 @@ This plugin supports MooTools.lang, so you can use the datepicker in your own la
 
 #### Note
 If you use more than one language on your page, things might get messed up (for example Date Parsing)
-
-For more options: checkout [MonkeyPhysics datepicker](http://www.monkeyphysics.com/mootools/script/2/datepicker)
