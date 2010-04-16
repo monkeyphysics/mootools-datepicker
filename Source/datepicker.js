@@ -272,7 +272,7 @@ var DatePicker = new Class({
     
 		this.addEvent('close', function() {frame.destroy()});
 		
-		if(this.options.draggable) {
+		if(this.dragger) {
 			this.dragger.addEvent('drag', function() {
 				var coords = this.picker.getCoordinates();
 				frame.setStyles({left: coords.left, top: coords.top});
