@@ -26,6 +26,7 @@ window.addEvent('domready',function(){
 		debugElmt.set('text',txt);
 	}
 	
+	// Events and vista skin
 	new DatePicker($$('.demo_vista'), {
 		pickerClass: 'datepicker_vista',
 		onShow: function(){
@@ -44,11 +45,16 @@ window.addEvent('domready',function(){
 			debug('onPrevious');
 		}
 	});
+	
+	// Dashboard skin
 	new DatePicker($$('.demo_dashboard'), { pickerClass: 'datepicker_dashboard' });
+	
+	// jQuery UI skin
 	new DatePicker($$('.demo_jqui'), { pickerClass: 'datepicker_jqui', positionOffset: { x: 0, y: 5 } });
 
 //	MooTools.lang.setLanguage("nl-NL");
 	
+	// MooTools.lang support
 	new DatePicker('i18n', {
 		positionOffset: { x: 0, y: 5 },
 		format: '%d-%m-%Y'
@@ -70,7 +76,21 @@ window.addEvent('domready',function(){
 		dp.show('attachByClick');
 	});
 	
+	// Min max date
+	new DatePicker('minMax',{
+		minDate: '03/05/2009',
+		maxDate: '04/05/2010'
+	});
 	
+	// Toggle
+	new DatePicker('toggle',{
+		toggle: 'toggler' 
+	});
+	
+	new DatePicker('time',{
+		timePicker: true,
+		timePickerOnly: true
+	});
 
 });
 	
@@ -124,6 +144,22 @@ window.addEvent('domready',function(){
 <input id="attachByClick" type="text" value="" class="date" />
 </p>
 
+<p>
+<label>Min and Max Date:</label><br />
+<input id="minMax" type="text" value="" class="date" />
+</p>
+
+<p>
+<label>Toggler:</label><br />
+<input id="toggle" type="text" value="" class="date" />
+<a href="#" id="toggler">Toggle</a>
+</p>
+
+
+<p>
+<label>Time Picker:</label><br />
+<input id="time" type="text" value="" class="date" />
+</p>
 
 </body>
 </html>
