@@ -245,7 +245,7 @@ var DatePicker = new Class({
 			this.d = this.options.minDate;
 		
 		this.input = input;
-		var d = (toggler ? toggler : input).getCoordinates();
+		var d = (toggler ? document.id(toggler) : input).getCoordinates();
 		var position = {
 			left: d.left + this.options.positionOffset.x,
 			top: d.top + d.height + this.options.positionOffset.y
