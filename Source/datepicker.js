@@ -87,7 +87,8 @@ var DatePicker = new Class({
 		positionOffset: { x: 0, y: 0 },
 		minDate: null, // Date object or a string
 		maxDate: null, // same as minDate
-		toggleElements: null,
+		toggleElements: null, // deprecated
+		toggle: null,
 		draggable: true/*,
 
 		// i18n
@@ -104,6 +105,7 @@ var DatePicker = new Class({
 	},
 	
 	initialize: function(attachTo, options) {
+		// MooTools.lang
 		this.setOptions({
 			days: MooTools.lang.get('Date', 'days'),
 			months: MooTools.lang.get('Date', 'months'),
@@ -111,7 +113,11 @@ var DatePicker = new Class({
 		});
 		this.setOptions(options);
 		
-		this.attach(attachTo, this.options.toggleElements);
+		// Support for deprecated toggleElements
+		if(this.options.toggleElements) this.toggle = document.getElements(this.toggleElements);
+		
+		this.attach(attachTo, this.options.toggle);
+		
 		if (this.options.timePickerOnly) {
 			this.options.timePicker = true;
 			this.options.startView = 'time';
@@ -126,7 +132,6 @@ var DatePicker = new Class({
 		}
 		if (this.options.maxDate) {
 			if(!(this.options.maxnDate instanceof Date)) this.options.maxDate = Date.parse(this.options.maxDate);
-			console.log(this.options.maxDate);
 			this.options.maxDate.setHours(23);
 			this.options.maxDate.setMinutes(59);
 			this.options.maxDate.setSeconds(59);
@@ -161,7 +166,10 @@ var DatePicker = new Class({
 			// events
 			if (toggle && togglers) {
 				var events = {
-					'click': this.show.bind(this,[item,togglers[index]])
+					'click': function(e){
+						if (e) e.stop();
+						this.show(item, togglers[index]);
+					}.bind(this)
 				};
 				var toggler = togglers[index]
 					.setStyle('cursor', 'pointer')
@@ -207,6 +215,8 @@ var DatePicker = new Class({
 	
 	show: function(input,toggler,timestamp) {
 		input = document.id(input);
+		// Cannot show the picker if its not attached
+		if(!input.retrieve('datepicker')) return;
 		
 		// Determin the date that should be opened
 		if (timestamp) {
