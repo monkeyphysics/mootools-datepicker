@@ -12,9 +12,65 @@ this great plugin. Also thanks to MadmanMonty, marfillaster and eerne for their 
 How to use
 ----------
 
-	#JS
-	new DatePicker(input-target-selector [, options-object]);
+## Initialize
 
+### Syntax
+
+	#JS
+	var dp = new DatePicker([element, options]);
+
+### Arguments
+
+1. element: (*element*,*string*,*array*, optional) The element(s) to attach the datepicker to
+2. options: (*object*, optional) The options object
+
+### Examples
+
+	#JS
+	new DatePicker('inputField');
+	
+	new DatePicker($$('input.date'));
+	
+	new DatePicker(document.id('inputField'),{
+		timePicker: true,
+		pickerClass: 'datepicker_jqui'		
+	});
+
+## DatePicker.attach
+
+A method to attach the datepicker to input field(s)
+
+### Syntax
+
+	#JS
+	dp.attach(element[,toggle]);
+	
+### Arguments
+
+1. element: (*element*,*string*,*array*) The element to attach the datepicker to 
+2. toggle: (*element*,*string*,*array*, optional) If you want to use a toggle element
+
+## DatePicker.detach
+
+### Syntax
+
+	#JS
+	dp.detach(element);
+	
+### Arguments
+
+1. element: (*element*,*string*,*array*) The element to detach the datepicker from
+
+## DatePicker.show
+
+## Syntax 
+
+	#JS
+	dp.show(element[,toggle,timestamp])
+
+1. element: (*element*,*string*) The input field 
+2. toggle: (*element,*string*, optional) The toggle element
+3. timestamp: (*Date*,*number*, optional) A date object or a timestamp.
 where the input-target-selector naturally is a MooTools selector (eg. .datepickers or #great_picker). The datepicker will be effective for all selected input elements. Usage examples are given at the bottom of this document.
 
 ### MooTools.lang
