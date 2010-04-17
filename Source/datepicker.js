@@ -197,7 +197,7 @@ var DatePicker = new Class({
 						} else if (e.key == "tab") {
 							this.close(null, true);
 						} else {
-							e.stop(e);
+							e.stop();
 						}
 					}.bind(this),
 					'focus': this.show.bind(this,[item])
@@ -235,8 +235,12 @@ var DatePicker = new Class({
 		if (timestamp) {
 			this.d = new Date(timestamp);
 		} else {		
-			var value = input.retrieve('datepicker:value') || input.get('value');
-			this.d = value ? Date.parse(value) : new Date();
+			this.d = input.retrieve('datepicker:value') || input.get('value');
+			if(!this.d){
+				this.d = new Date();
+			}else if(!this.d instanceof Date){
+				this.d = Date.parse(this.d);
+			}
 		}
 		// Min/max date
 		if (this.options.maxDate && this.d > this.options.maxDate) 
