@@ -238,7 +238,7 @@ var DatePicker = new Class({
 			this.d = input.retrieve('datepicker:value') || input.get('value');
 			if(!this.d){
 				this.d = new Date();
-			}else if(!this.d instanceof Date){
+			}else if(!(this.d instanceof Date)){
 				this.d = Date.parse(this.d);
 			}
 		}
