@@ -138,7 +138,7 @@ var DatePicker = new Class({
 			this.options.maxDate.setSeconds(59);
 		}
 
-		document.addEvent('mousedown', this.close.bind(this));
+//		document.addEvent('mousedown', this.close.bindWithEvent(this));
 	},
 	
 	attach: function(attachTo, toggle) {
@@ -694,7 +694,7 @@ var DatePicker = new Class({
 	select: function(values) {
 		this.choice = $merge(this.choice, values);
 		var d = Date.fromObject(this.choice);
-		this.input.set('value', this.d.format(this.options.format))
+		this.input.set('value', d.format(this.options.format))
 			.store('datepicker:value',d);
 		this.fireEvent('select', d);
 		
