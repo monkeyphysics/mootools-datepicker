@@ -44,6 +44,8 @@ Check out the options at this page: [MonkeyPhysics datepicker](http://www.monkey
 
 #### Note
 - toggleElements is deprecated, use toggle instead
+- You only have to set *format* if you do not want to use the same format defined by MooTools.lang
+- if you use a custom format, be sure you use [Date.defineParser()](http://mootools.net/docs/more/Native/Date#Date:defineParser) otherwise your default date will not parse correctly
 
 ### Events
 
@@ -118,4 +120,4 @@ This plugin supports MooTools.lang, so you can use the datepicker in your own la
 	new DatePicker('.demo');
 
 #### Note
-If you use more than one language on your page, things might get messed up (for example Date Parsing)
+- If you use more than one language on your page, things might get messed up (for example Date Parsing)
