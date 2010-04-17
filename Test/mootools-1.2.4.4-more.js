@@ -781,6 +781,185 @@ Element.implement({
 /*
 ---
 
+script: Drag.Move.js
+
+description: A Drag extension that provides support for the constraining of draggables to containers and droppables.
+
+license: MIT-style license
+
+authors:
+- Valerio Proietti
+- Tom Occhinno
+- Jan Kassens
+- Aaron Newton
+- Scott Kyle
+
+requires:
+- core:1.2.4/Element.Dimensions
+- /Drag
+
+provides: [Drag.Move]
+
+...
+*/
+
+Drag.Move = new Class({
+
+	Extends: Drag,
+
+	options: {/*
+		onEnter: $empty(thisElement, overed),
+		onLeave: $empty(thisElement, overed),
+		onDrop: $empty(thisElement, overed, event),*/
+		droppables: [],
+		container: false,
+		precalculate: false,
+		includeMargins: true,
+		checkDroppables: true
+	},
+
+	initialize: function(element, options){
+		this.parent(element, options);
+		element = this.element;
+		
+		this.droppables = $$(this.options.droppables);
+		this.container = document.id(this.options.container);
+		
+		if (this.container && $type(this.container) != 'element')
+			this.container = document.id(this.container.getDocument().body);
+		
+		var styles = element.getStyles('left', 'top', 'position');
+		if (styles.left == 'auto' || styles.top == 'auto')
+			element.setPosition(element.getPosition(element.getOffsetParent()));
+		
+		if (styles.position == 'static')
+			element.setStyle('position', 'absolute');
+
+		this.addEvent('start', this.checkDroppables, true);
+
+		this.overed = null;
+	},
+
+	start: function(event){
+		if (this.container) this.options.limit = this.calculateLimit();
+		
+		if (this.options.precalculate){
+			this.positions = this.droppables.map(function(el){
+				return el.getCoordinates();
+			});
+		}
+		
+		this.parent(event);
+	},
+	
+	calculateLimit: function(){
+		var offsetParent = this.element.getOffsetParent(),
+			containerCoordinates = this.container.getCoordinates(offsetParent),
+			containerBorder = {},
+			elementMargin = {},
+			elementBorder = {},
+			containerMargin = {},
+			offsetParentPadding = {};
+
+		['top', 'right', 'bottom', 'left'].each(function(pad){
+			containerBorder[pad] = this.container.getStyle('border-' + pad).toInt();
+			elementBorder[pad] = this.element.getStyle('border-' + pad).toInt();
+			elementMargin[pad] = this.element.getStyle('margin-' + pad).toInt();
+			containerMargin[pad] = this.container.getStyle('margin-' + pad).toInt();
+			offsetParentPadding[pad] = offsetParent.getStyle('padding-' + pad).toInt();
+		}, this);
+
+		var width = this.element.offsetWidth + elementMargin.left + elementMargin.right,
+			height = this.element.offsetHeight + elementMargin.top + elementMargin.bottom,
+			left = 0,
+			top = 0,
+			right = containerCoordinates.right - containerBorder.right - width,
+			bottom = containerCoordinates.bottom - containerBorder.bottom - height;
+
+		if (this.options.includeMargins){
+			left += elementMargin.left;
+			top += elementMargin.top;
+		} else {
+			right += elementMargin.right;
+			bottom += elementMargin.bottom;
+		}
+		
+		if (this.element.getStyle('position') == 'relative'){
+			var coords = this.element.getCoordinates(offsetParent);
+			coords.left -= this.element.getStyle('left').toInt();
+			coords.top -= this.element.getStyle('top').toInt();
+			
+			left += containerBorder.left - coords.left;
+			top += containerBorder.top - coords.top;
+			right += elementMargin.left - coords.left;
+			bottom += elementMargin.top - coords.top;
+			
+			if (this.container != offsetParent){
+				left += containerMargin.left + offsetParentPadding.left;
+				top += (Browser.Engine.trident4 ? 0 : containerMargin.top) + offsetParentPadding.top;
+			}
+		} else {
+			left -= elementMargin.left;
+			top -= elementMargin.top;
+			
+			if (this.container == offsetParent){
+				right -= containerBorder.left;
+				bottom -= containerBorder.top;
+			} else {
+				left += containerCoordinates.left + containerBorder.left;
+				top += containerCoordinates.top + containerBorder.top;
+			}
+		}
+		
+		return {
+			x: [left, right],
+			y: [top, bottom]
+		};
+	},
+
+	checkAgainst: function(el, i){
+		el = (this.positions) ? this.positions[i] : el.getCoordinates();
+		var now = this.mouse.now;
+		return (now.x > el.left && now.x < el.right && now.y < el.bottom && now.y > el.top);
+	},
+
+	checkDroppables: function(){
+		var overed = this.droppables.filter(this.checkAgainst, this).getLast();
+		if (this.overed != overed){
+			if (this.overed) this.fireEvent('leave', [this.element, this.overed]);
+			if (overed) this.fireEvent('enter', [this.element, overed]);
+			this.overed = overed;
+		}
+	},
+
+	drag: function(event){
+		this.parent(event);
+		if (this.options.checkDroppables && this.droppables.length) this.checkDroppables();
+	},
+
+	stop: function(event){
+		this.checkDroppables();
+		this.fireEvent('drop', [this.element, this.overed, event]);
+		this.overed = null;
+		return this.parent(event);
+	}
+
+});
+
+Element.implement({
+
+	makeDraggable: function(options){
+		var drag = new Drag.Move(this, options);
+		this.store('dragger', drag);
+		return drag;
+	}
+
+});
+
+
+/*
+---
+
 script: Date.English.US.js
 
 description: Date messages for US English.
@@ -843,146 +1022,4 @@ MooTools.lang.set('en-US', 'Date', {
 	yearUntil: '1 year from now',
 	yearsUntil: '{delta} years from now'
 
-});
-
-
-/*
----
-
-script: Date.Dutch.js
-
-description: Date messages in Dutch.
-
-license: MIT-style license
-
-authors:
-- Lennart Pilon
-
-requires:
-- /Lang
-- /Date
-
-provides: [Date.Dutch]
-
-...
-*/
-
-MooTools.lang.set('nl-NL', 'Date', {
-
-	months: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'],
-	days: ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag'],
-	//culture's date order: DD/MM/YYYY
-	dateOrder: ['date', 'month', 'year'],
-
-	AM: 'AM',
-	PM: 'PM',
-
-	shortDate: '%d/%m/%Y',
-	shortTime: '%H:%M',
-
-	/* Date.Extras */
-	ordinal: 'e',
-
-	lessThanMinuteAgo: 'minder dan een minuut geleden',
-	minuteAgo: 'ongeveer een minuut geleden',
-	minutesAgo: 'minuten geleden',
-	hourAgo: 'ongeveer een uur geleden',
-	hoursAgo: 'ongeveer {delta} uur geleden',
-	dayAgo: '{delta} dag geleden',
-	daysAgo: 'dagen geleden',
-	weekAgo: 'een week geleden',
-	weeksAgo: '{delta} weken geleden',
-	monthAgo: 'een maand geleden',
-	monthsAgo: '{delta} maanden geleden',
-	yearAgo: 'een jaar geleden',
-	yearsAgo: '{delta} jaar geleden',
-	lessThanMinuteUntil: 'minder dan een minuut vanaf nu',
-	minuteUntil: 'ongeveer een minuut vanaf nu',
-	minutesUntil: '{delta} minuten vanaf nu',
-	hourUntil: 'ongeveer een uur vanaf nu',
-	hoursUntil: 'ongeveer {delta} uur vanaf nu',
-	dayUntil: '1 dag vanaf nu',
-	daysUntil: '{delta} dagen vanaf nu',
-	weekAgo: 'een week geleden',
-	weeksAgo: '{delta} weken geleden',
-	monthAgo: 'een maand geleden',
-	monthsAgo: '{delta} maanden geleden',
-	yearthAgo: 'een jaar geleden',
-	yearsAgo: '{delta} jaar geleden',
-
-	weekUntil: 'over een week',
-	weeksUntil: 'over {delta} weken',
-	monthUntil: 'over een maand',
-	monthsUntil: 'over {delta} maanden',
-	yearUntil: 'over een jaar',
-	yearsUntil: 'over {delta} jaar' 
-
-});
-
-/*
----
-
-script: Date.German.js
-
-description: Date messages for German.
-
-license: MIT-style license
-
-authors:
-- Christoph Pojer
-- Frank Rossi
-- Ulrich Petri
-- Fabian Beiner
-
-requires:
-- /Lang
-- /Date
-
-provides: [Date.German]
-
-...
-*/
-
-MooTools.lang.set('de-DE', 'Date', {
-
-	months: ['Januar', 'Februar', 'M&auml;rz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-	days: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
-	//culture's date order: MM/DD/YYYY
-	dateOrder: [ 'date', 'month', 'year', '.'],
-
-	AM: 'vormittags',
-	PM: 'nachmittags',
-
-	shortDate: '%d.%m.%Y',
-	shortTime: '%H:%M',
-
-	/* Date.Extras */
-	ordinal: '.',
-
-	lessThanMinuteAgo: 'Vor weniger als einer Minute',
-	minuteAgo: 'Vor einer Minute',
-	minutesAgo: 'Vor {delta} Minuten',
-	hourAgo: 'Vor einer Stunde',
-	hoursAgo: 'Vor {delta} Stunden',
-	dayAgo: 'Vor einem Tag',
-	daysAgo: 'Vor {delta} Tagen',
-	weekAgo: 'Vor einer Woche',
-	weeksAgo: 'Vor {delta} Wochen',
-	monthAgo: 'Vor einem Monat',
-	monthsAgo: 'Vor {delta} Monaten',
-	yearAgo: 'Vor einem Jahr',
-	yearsAgo: 'Vor {delta} Jahren',
-	lessThanMinuteUntil: 'In weniger als einer Minute',
-	minuteUntil: 'In einer Minute',
-	minutesUntil: 'In {delta} Minuten',
-	hourUntil: 'In ca. einer Stunde',
-	hoursUntil: 'In ca. {delta} Stunden',
-	dayUntil: 'In einem Tag',
-	daysUntil: 'In {delta} Tagen',
-	weekUntil: 'In einer Woche',
-	weeksUntil: 'In {delta} Wochen',
-	monthUntil: 'In einem Monat',
-	monthsUntil: 'In {delta} Monaten',
-	yearUntil: 'In einem Jahr',
-	yearsUntil: 'In {delta} Jahren'
 });
