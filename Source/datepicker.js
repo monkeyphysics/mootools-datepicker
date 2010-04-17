@@ -138,7 +138,7 @@ var DatePicker = new Class({
 			this.options.maxDate.setSeconds(59);
 		}
 
-//		document.addEvent('mousedown', this.close.bindWithEvent(this));
+		document.addEvent('mousedown', this.close.bindWithEvent(this));
 	},
 	
 	attach: function(attachTo, toggle) {
