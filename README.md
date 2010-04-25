@@ -1,5 +1,5 @@
 MooTools-DatePicker
-===============
+===================
 
 Smoothly animating, very configurable and easy to install.
 No Ajax, pure Javascript. 4 skins available out of the box.
@@ -11,6 +11,10 @@ this great plugin. Also thanks to MadmanMonty, marfillaster and eerne for their 
 
 How to use
 ----------
+
+Below you will find a description and some docs how you can use the datepicker.
+Also note that this version (1.50beta1) is not final yet, but it should work well.
+If you find anything, please create a ticket at github or fork and fix it!
 
 ## Initialize
 
