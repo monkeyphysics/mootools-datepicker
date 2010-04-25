@@ -46,6 +46,7 @@ Check out the options at this page: [MonkeyPhysics datepicker](http://www.monkey
 - toggleElements is deprecated, use toggle instead
 - You only have to set *format* if you do not want to use the same format defined by MooTools.lang
 - if you use a custom format, be sure you use [Date.defineParser()](http://mootools.net/docs/more/Native/Date#Date:defineParser) otherwise your default date will not parse correctly
+- Carefull with draggable, it caused some trouble for me, but works great on the Test page.
 
 ### Events
 
