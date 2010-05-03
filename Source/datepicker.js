@@ -730,7 +730,7 @@ Date.extend({
 		d.setDate(1);
 		['year', 'month', 'day', 'hours', 'minutes', 'seconds'].each(function(type) {
 			var v = values[type];
-			if (!$chk(v)) return;
+			if (!v && v !== 0) return;
 			switch (type) {
 				case 'day': d.setDate(v); break;
 				case 'month': d.setMonth(v); break;
