@@ -172,12 +172,7 @@ var DatePicker = new Class({
 				var events = {
 					'click': function(e){
 						if (e) e.stop();
-						var open = false;
-						if (!this.retrieve('datepicker:open')) {
-							self.show(item, togglers[index]);
-							open = true;
-						}
-						this.store('datepicker:open',open);
+						self.show(item, togglers[index]);
 					}
 					
 				};
