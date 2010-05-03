@@ -181,7 +181,6 @@ var DatePicker = new Class({
 					.addEvents(events);
 				item.store('datepicker:toggler',toggler)
 					.store('datepicker:events',events);
-					
 			} else {
 				var events = {
 					'keydown': function(e){
@@ -235,6 +234,9 @@ var DatePicker = new Class({
 				this.d = new Date();
 			}else if(!(this.d instanceof Date)){
 				this.d = Date.parse(this.d);
+			}
+			if(String(this.d) == 'Invalid Date') {
+			    this.d = new Date();
 			}
 		}
 		// Min/max date
