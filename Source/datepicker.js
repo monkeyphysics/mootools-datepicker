@@ -420,12 +420,6 @@ var DatePicker = new Class({
 					e.target.focus();
 					e.stop();
 				}.bind(this),
-				keydown: function(e) {
-					if (e.key == "tab") {
-						this.picker.getElement('.minutes').focus();
-						e.stop();
-					}
-				}.bind(this),
 				mousewheel: function(e) {
 					var i = e.target, v = i.get('value').toInt();
 					i.focus();
@@ -447,12 +441,6 @@ var DatePicker = new Class({
 				click: function(e) {
 					e.target.focus();
 					e.stop();
-				}.bind(this),
-				keydown: function(e) {
-					if (e.key == "tab") {
-						this.picker.getElement('.ok').focus();
-						e.stop();
-					}
 				}.bind(this),
 				mousewheel: function(e) {
 					var i = e.target, v = i.get('value').toInt();
