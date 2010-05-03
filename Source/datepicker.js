@@ -235,9 +235,7 @@ var DatePicker = new Class({
 			}else if(!(this.d instanceof Date)){
 				this.d = Date.parse(this.d);
 			}
-			if(String(this.d) == 'Invalid Date') {
-			    this.d = new Date();
-			}
+			if(this.d.isValid()) this.d = new Date();
 		}
 		// Min/max date
 		if (this.options.maxDate && this.d > this.options.maxDate) 
@@ -716,7 +714,12 @@ Date.implement({
 			minutes: this.getMinutes(),
 			seconds: this.getSeconds()
 		};
+	},
+	
+	isValid: function(){
+		return !!(this.getDate() && this.getMonth() && this.getYear())
 	}
+	
 });
 
 Date.extend({
