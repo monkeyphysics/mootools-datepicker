@@ -174,7 +174,6 @@ var DatePicker = new Class({
 						if (e) e.stop();
 						self.show(item, togglers[index]);
 					}
-					
 				};
 				var toggler = togglers[index]
 					.setStyle('cursor', 'pointer')
