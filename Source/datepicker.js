@@ -242,12 +242,12 @@ var DatePicker = new Class({
 			}else if(!(this.d instanceof Date)){
 				this.d = Date.parse(this.d);
 			}
-			if(!this.d.isValid()) this.d = new Date();
 		}
+		if(!this.d.isValid()) this.d = new Date();
 		// Min/max date
-		if (this.options.maxDate && this.d > this.options.maxDate) 
+		if (this.options.maxDate && this.options.maxDate.isValid() && this.d > this.options.maxDate) 
 			this.d = this.options.maxDate;
-		if (this.options.minDate && this.d < this.options.minDate) 
+		if (this.options.minDate && this.options.minDate.isValid() && this.d < this.options.minDate) 
 			this.d = this.options.minDate;
 		
 		this.input = input;
