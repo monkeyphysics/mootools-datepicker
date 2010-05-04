@@ -151,7 +151,15 @@ var DatePicker = new Class({
 			var togglers = $type(toggle) == 'array' ? toggle : [document.id(toggle)];
 			document.addEvents({
 				'keydown': function(e) {
-					if (e.key == "tab") this.close(null, true);
+					var target = document.id(e.target);
+					if (
+						e.key == "tab" && 
+						!target.hasClass('hour') &&
+						!target.hasClass('minutes') &&
+						!target.hasClass('ok')
+					){
+						this.close(null, true);
+					}
 				}.bind(this)
 			});
 		};
