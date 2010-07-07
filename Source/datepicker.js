@@ -417,7 +417,7 @@ var DatePicker = new Class({
 		if (this.options.timePickerOnly) {
 			this.picker.getElement('.titleText').set('text', 'Select a time');
 		} else {
-			this.picker.getElement('.titleText').set('text', this.d.format('j M, Y'));
+			this.picker.getElement('.titleText').set('text', this.d.format('%d %B, %Y'));
 		}
 		
 		new Element('input', { type: 'text', 'class': 'hour' })
