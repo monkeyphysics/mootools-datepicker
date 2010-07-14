@@ -89,13 +89,16 @@ var DatePicker = new Class({
 		maxDate: null, // same as minDate
 		toggleElements: null, // deprecated
 		toggle: null,
-		draggable: true/*,
+		draggable: true,
+		timeWheelStep: 1 // 10,15,20,30
+		/*,
 
 		// i18n
 		months: null,
 		days: null,
 		format: null,
 		selectTimeTitle: null,
+		timeConfirmButton: null,
 
 
 		// and some event hooks:
@@ -112,7 +115,8 @@ var DatePicker = new Class({
 			days: MooTools.lang.get('Date', 'days'),
 			months: MooTools.lang.get('Date', 'months'),
 			format: MooTools.lang.get('Date', 'shortDate'),
-			selectTimeTitle : MooTools.lang.get('DatePicker', 'select_a_time')
+			selectTimeTitle : MooTools.lang.get('DatePicker', 'select_a_time'),
+			timeConfirmButton : MooTools.lang.get('DatePicker', 'time_confirm_button')
 		});
 
 
@@ -421,7 +425,7 @@ var DatePicker = new Class({
 
 		this.picker.getElement('.titleText').set('text', this.options.timePickerOnly ? this.options.selectTimeTitle : this.d.format('%d %B, %Y'));
 
-		new Element('input', { type: 'text', 'class': 'hour' })
+		new Element('input', { type: 'text', 'class': 'hour', 'title': MooTools.lang.get('DatePicker','use_mouse_wheel')})
 			.set('value', this.leadZero(this.d.getHours()))
 			.addEvents({
 				click: function(e) {
@@ -443,8 +447,8 @@ var DatePicker = new Class({
 			.set('maxlength', 2)
 			.inject(container);
 
-		new Element('input', { type: 'text', 'class': 'minutes' })
-			.set('value', this.leadZero(this.d.getMinutes()))
+		new Element('input', { type: 'text', 'class': 'minutes', 'title': MooTools.lang.get('DatePicker','use_mouse_wheel') })
+			.set('value', this.leadZero( (this.d.getMinutes()/this.options.timeWheelStep).round() * this.options.timeWheelStep ))
 			.addEvents({
 				click: function(e) {
 					e.target.focus();
@@ -454,10 +458,12 @@ var DatePicker = new Class({
 					var i = e.target, v = i.get('value').toInt();
 					i.focus();
 					if (e.wheel > 0) {
-						v = (v < 59) ? v + 1 : 0;
+						v = (v < 59) ? v + this.options.timeWheelStep : 0;
 					} else {
-						v = (v > 0) ? v - 1 : 59;
+						v = (v > 0) ? v - this.options.timeWheelStep : (60-this.options.timeWheelStep);
 					}
+					if (v == 60) v = 0;
+
 					i.set('value', this.leadZero(v));
 					e.stop();
 				}.bind(this)
@@ -467,7 +473,7 @@ var DatePicker = new Class({
 
 		new Element('div', { 'class': 'separator' }).set('text', ':').inject(container);
 
-		new Element('input', { type: 'submit', value: 'OK', 'class': 'ok' })
+		new Element('input', { type: 'submit', value: this.options.timeConfirmButton, 'class': 'ok' })
 			.addEvents({
 				click: function(e) {
 					e.stop();
@@ -768,8 +774,12 @@ Date.extend({
  */
 MooTools.lang.set('en-US', 'DatePicker', {
 	select_a_time:'Select a time'
+	,use_mouse_wheel:'Use mouse wheel to quick change value'
+	,time_confirm_button:'OK'
 });
 
 MooTools.lang.set('cs-CZ', 'DatePicker', {
 	select_a_time:'Vyberte čas'
+	,use_mouse_wheel:'Použijte kolečko myši k rychlé změně hodnoty'
+	,time_confirm_button:'Potvrď'
 });
