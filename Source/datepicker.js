@@ -772,7 +772,7 @@ Date.extend({
  */
 MooTools.lang.set('en-US', 'DatePicker', {
 	select_a_time: 'Select a time',
-	use_mouse_wheel: 'Use mouse wheel to quick change value',
+	use_mouse_wheel: 'Use the mouse wheel to quickly change value',
 	time_confirm_button: 'OK'
 });
 
