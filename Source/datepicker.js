@@ -418,12 +418,12 @@ var DatePicker = new Class({
 		this.newContents = new Element('div', { styles: { position: 'absolute', top: 0, left: 0, width: this.bodysize.x, height: this.bodysize.y }}).inject(this.slider);
 	},
 
-	renderTime: function() {
+	renderTime: function(){
 		var container = new Element('div', { 'class': 'time' }).inject(this.newContents);
 
 		this.picker.getElement('.titleText').set('text', this.options.timePickerOnly ? this.options.selectTimeTitle : this.d.format('%d %B, %Y'));
 
-		new Element('input', { type: 'text', 'class': 'hour', 'title': MooTools.lang.get('DatePicker','use_mouse_wheel')})
+		new Element('input', { type: 'text', 'class': 'hour', 'title': MooTools.lang.get('DatePicker', 'use_mouse_wheel')})
 			.set('value', this.leadZero(this.d.getHours()))
 			.addEvents({
 				click: function(e) {
@@ -445,7 +445,7 @@ var DatePicker = new Class({
 			.set('maxlength', 2)
 			.inject(container);
 
-		new Element('input', { type: 'text', 'class': 'minutes', 'title': MooTools.lang.get('DatePicker','use_mouse_wheel') })
+		new Element('input', { type: 'text', 'class': 'minutes', 'title': MooTools.lang.get('DatePicker', 'use_mouse_wheel') })
 			.set('value', this.leadZero( (this.d.getMinutes()/this.options.timeWheelStep).round() * this.options.timeWheelStep ))
 			.addEvents({
 				click: function(e) {
@@ -771,13 +771,19 @@ Date.extend({
  *
  */
 MooTools.lang.set('en-US', 'DatePicker', {
-	select_a_time:'Select a time'
-	,use_mouse_wheel:'Use mouse wheel to quick change value'
-	,time_confirm_button:'OK'
+	select_a_time: 'Select a time',
+	use_mouse_wheel: 'Use mouse wheel to quick change value',
+	time_confirm_button: 'OK'
+});
+
+MooTools.lang.set('nl-NL', 'DatePicker', {
+	select_a_time: 'Selecteer een tijd',
+	use_mouse_wheel: 'Gebruik uw scrollwiel om door de tijd te scrollen',
+	time_confirm_button: 'OK'
 });
 
 MooTools.lang.set('cs-CZ', 'DatePicker', {
-	select_a_time:'Vyberte čas'
-	,use_mouse_wheel:'Použijte kolečko myši k rychlé změně hodnoty'
-	,time_confirm_button:'Potvrď'
+	select_a_time: 'Vyberte čas',
+	use_mouse_wheel: 'Použijte kolečko myši k rychlé změně hodnoty',
+	time_confirm_button: 'Potvrď'
 });
