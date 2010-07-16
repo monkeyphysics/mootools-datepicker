@@ -126,3 +126,11 @@ This plugin supports MooTools.lang, so you can use the datepicker in your own la
 
 #### Note
 - If you use more than one language on your page, things might get messed up (for example Date Parsing)
+
+Breaking Changes since 1.16 (monkeyphysics)
+-------------------------------------------
+
+- mootools-datepicker is using MooTools More Date and Lang. So its using its notation for formatting dates. See: http://www.mootools.net/docs/more/Native/Date
+- Because the above change, the format and unformat methods have been abandoned. 
+- The dateFromObject and dateToObject methods are now respectively Date:toObject (`new Date('2010/07/16').toObject();`) and Date.fromObject (`Date.fromObject({year: '....'});` )
+
