@@ -119,7 +119,7 @@ var DatePicker = new Class({
 		}
 		
 		// Support for deprecated toggleElements
-		if(this.options.toggleElements) this.toggle = document.getElements(this.toggleElements);
+		if(this.options.toggleElements) this.options.toggle = document.getElements(this.options.toggleElements);
 		
 		this.attach(attachTo, this.options.toggle);
 		
@@ -133,9 +133,7 @@ var DatePicker = new Class({
 		}
 		if (this.options.maxDate) {
 			if(!(this.options.maxnDate instanceof Date)) this.options.maxDate = Date.parse(this.options.maxDate);
-			this.options.maxDate.setHours(23);
-			this.options.maxDate.setMinutes(59);
-			this.options.maxDate.setSeconds(59);
+			this.options.maxDate = new Date( +this.options.maxDate + (24*60*60 - 1) * 1000 );
 		}
 
 		document.addEvent('mousedown', this.close.bindWithEvent(this));
