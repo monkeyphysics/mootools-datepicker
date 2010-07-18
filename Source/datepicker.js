@@ -69,7 +69,6 @@ var DatePicker = new Class({
 	oldContents: null, // used in animating from-view to new-view
 	newContents: null, // used in animating from-view to new-view
 	input: null,       // original input element (used for input/output)
-	visual: null,      // visible input (used for rendering)
 
 	options: {
 		pickerClass: 'datepicker',
@@ -284,7 +283,7 @@ var DatePicker = new Class({
 	close: function(e, force) {
 		if (!document.id(this.picker)) return;
 		if($type(e) != 'event') force = true;
-		var clickOutside = e && e.target != this.picker && !this.picker.hasChild(e.target) && e.target != this.visual;
+		var clickOutside = e && e.target != this.picker && !this.picker.hasChild(e.target);
 		if (force || clickOutside) {
 			if (this.options.useFadeInOut) {
 				this.picker.set('tween', { duration: this.options.animationDuration / 2, onComplete: this.destroy.bind(this) }).tween('opacity', 1, 0);
