@@ -449,8 +449,18 @@ var DatePicker = new Class({
 
 		this.picker.getElement('.titleText').set('html', this.options.timePickerOnly ? this.options.selectTimeTitle : this.d.format('%d %B, %Y'));
 
-		new Element('input', {type: 'text', 'class': 'hour', 'title': MooTools.lang.get('DatePicker', 'use_mouse_wheel')})
-			.set('value', this.leadZero(this.d.getHours()))
+		// Init Values for minutes & hours
+		var initMinutes = (this.d.getMinutes() / this.options.timeWheelStep).round() * this.options.timeWheelStep,
+			initHours = this.d.getHours();
+
+		if (initMinutes >= 60){
+			initMinutes = 0;
+			initHours = initHours + 1;
+			if (initHours > 23) initHours = 0;
+		}
+
+		new Element('input', { type: 'text', 'class': 'hour', 'title': MooTools.lang.get('DatePicker', 'use_mouse_wheel')})
+			.set('value', this.leadZero(initHours) )
 			.addEvents({
 				click: function(e){
 					e.target.focus();
@@ -471,8 +481,8 @@ var DatePicker = new Class({
 			.set('maxlength', 2)
 			.inject(container);
 
-		new Element('input', {type: 'text', 'class': 'minutes', 'title': MooTools.lang.get('DatePicker', 'use_mouse_wheel')})
-			.set('value', this.leadZero((this.d.getMinutes() / this.options.timeWheelStep).round() * this.options.timeWheelStep))
+		new Element('input', { type: 'text', 'class': 'minutes', 'title': MooTools.lang.get('DatePicker', 'use_mouse_wheel')})
+			.set('value', this.leadZero(initMinutes))
 			.addEvents({
 				click: function(e){
 					e.target.focus();
