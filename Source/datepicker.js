@@ -738,6 +738,7 @@ var DatePicker = new Class({
 		this.input.set('value', d.format(this.options.format))
 			.store('datepicker:value', d.strftime());
 		this.fireEvent('select', d);
+		this.input.fireEvent('change'); // call input onChange event
 
 		this.close(null, true);
 	},
