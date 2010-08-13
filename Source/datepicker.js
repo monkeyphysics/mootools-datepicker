@@ -460,7 +460,7 @@ var DatePicker = new Class({
 		}
 
 		new Element('input', { type: 'text', 'class': 'hour', 'title': MooTools.lang.get('DatePicker', 'use_mouse_wheel')})
-			.set('value', this.leadZero(initHours) )
+			.set('value', this.leadZero(initHours))
 			.addEvents({
 				click: function(e){
 					e.target.focus();
@@ -523,17 +523,19 @@ var DatePicker = new Class({
 
 		this.picker.getElement('.titleText').set('html', this.options.months[month] + ' ' + this.d.getFullYear());
 
-		this.d.setDate(1);
-		while (this.d.getDay() != this.options.startDay){
-			this.d.setDate(this.d.getDate() - 1);
-		}
+		var date = this.d.clone();
+
+		date.setDate(1);
+		while (date.getDay() != this.options.startDay)
+			date.setDate(date.getDate() - 1);
+
 
 		var container = new Element('div', {'class': 'days'}).inject(this.newContents);
 		var titles = new Element('div', {'class': 'titles'}).inject(container);
-		var d, i, classes, e, weekcontainer;
+		var day, i, classes, e, weekcontainer;
 
-		for (d = this.options.startDay; d < (this.options.startDay + 7); d++){
-			new Element('div', {'class': 'title day day' + (d % 7)}).set('text', this.options.days[(d % 7)].substring(0, this.options.dayShort)).inject(titles);
+		for (day = this.options.startDay; day < (this.options.startDay + 7); day++){
+			new Element('div', {'class': 'title day day' + (day % 7)}).set('text', this.options.days[(day % 7)].substring(0, this.options.dayShort)).inject(titles);
 		}
 
 		var available = false;
@@ -543,20 +545,20 @@ var DatePicker = new Class({
 		for (i = 0; i < 42; i++){
 			classes = [];
 			classes.push('day');
-			classes.push('day' + this.d.getDay());
-			if (this.d.toDateString() == t) classes.push('today');
-			if (this.d.toDateString() == currentChoice) classes.push('selected');
-			if (this.d.getMonth() != month) classes.push('otherMonth');
+			classes.push('day' + date.getDay());
+			if (date.toDateString() == t) classes.push('today');
+			if (date.toDateString() == currentChoice) classes.push('selected');
+			if (date.getMonth() != month) classes.push('otherMonth');
 
 			if (i % 7 == 0){
 				weekcontainer = new Element('div', {'class': 'week week' + (Math.floor(i / 7))}).inject(container);
 			}
 
-			e = new Element('div', {'class': classes.join(' ')}).set('text', this.d.getDate()).inject(weekcontainer);
+			e = new Element('div', {'class': classes.join(' ')}).set('text', date.getDate()).inject(weekcontainer);
 			if (this.limited('date')){
 				e.addClass('unavailable');
 				if (available){
-					if (month == this.d.getMonth() || this.d.getDate() == 1){
+					if (month == date.getMonth() || date.getDate() == 1){
 						this.limit.right = true;
 					}
 				} else {
@@ -566,16 +568,16 @@ var DatePicker = new Class({
 				available = true;
 				e.addEvent('click', function(d){
 					if (this.options.timePicker){
-						this.d.setDate(d.day);
-						this.d.setMonth(d.month);
+						date.setDate(d.day);
+						date.setMonth(d.month);
 						this.mode = 'time';
 						this.render('fade');
 					} else {
 						this.select(d);
 					}
-				}.pass([{day: this.d.getDate(), month: this.d.getMonth(), year: this.d.getFullYear()}], this));
+				}.pass([{day: date.getDate(), month: date.getMonth(), year: date.getFullYear()}], this));
 			}
-			this.d.setDate(this.d.getDate() + 1);
+			date.setDate(date.getDate() + 1);
 		}
 		if (!available) this.limit.right = true;
 	},
