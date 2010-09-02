@@ -242,7 +242,7 @@ var DatePicker = new Class({
 		if (timestamp){
 			this.d = new Date(timestamp);
 		} else {
-			this.d = input.retrieve('datepicker:value') || input.get('value');
+			this.d = input.get('value');
 			if (!this.d){
 				this.d = new Date();
 			} else if (!(this.d instanceof Date)){
