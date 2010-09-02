@@ -159,7 +159,7 @@ var DatePicker = new Class({
 				'keydown': function(e){
 					var target = document.id(e.target);
 					if (
-						e.key == "tab" &&
+						e.key == 'tab' &&
 						!target.hasClass('hour') &&
 						!target.hasClass('minutes') &&
 						!target.hasClass('ok')
@@ -198,10 +198,10 @@ var DatePicker = new Class({
 				var events = {
 					'keydown': function(e){
 						// prevent the user from typing in the field
-						if (this.options.allowEmpty && (e.key == "delete" || e.key == "backspace")){
+						if (this.options.allowEmpty && (e.key == 'delete' || e.key == 'backspace')){
 							item.set('value', '');
 							this.close(null, true);
-						} else if (e.key == "tab"){
+						} else if (e.key == 'tab'){
 							this.close(null, true);
 						} else {
 							e.stop();
@@ -391,7 +391,7 @@ var DatePicker = new Class({
 			this.slider.setStyle('left', -this.bodysize.x).tween('left', -this.bodysize.x, 0);
 		} else if (fx == 'fade'){
 			this.slider.setStyle('left', 0);
-			this.oldContents.setStyle('left', 0).set('tween', { duration: this.options.animationDuration / 2}).tween('opacity', 1, 0);
+			this.oldContents.setStyle('left', 0).set('tween', {duration: this.options.animationDuration / 2}).tween('opacity', 1, 0);
 			this.newContents.setStyles({opacity: 0, left: 0}).set('tween', {duration: this.options.animationDuration}).tween('opacity', 0, 1);
 		}
 	},
@@ -491,8 +491,8 @@ var DatePicker = new Class({
 			this.d.setDate(this.d.getDate() - 1);
 		}
 
-		var container = new Element('div', { 'class': 'days' }).inject(this.newContents);
-		var titles = new Element('div', { 'class': 'titles' }).inject(container);
+		var container = new Element('div', {'class': 'days'}).inject(this.newContents);
+		var titles = new Element('div', {'class': 'titles'}).inject(container);
 		var d, i, classes, e, weekcontainer;
 
 		for (d = this.options.startDay; d < (this.options.startDay + 7); d++){
