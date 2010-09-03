@@ -242,7 +242,7 @@ var DatePicker = new Class({
 		if (timestamp){
 			this.d = new Date(timestamp);
 		} else {
-			this.d = input.get('value');
+			this.d = input.retrieve('datepicker:value') || input.get('value');
 			if (!this.d){
 				this.d = new Date();
 			} else if (!(this.d instanceof Date)){
@@ -697,7 +697,7 @@ var DatePicker = new Class({
 		this.choice = $merge(this.choice, values);
 		var d = Date.fromObject(this.choice);
 		this.input.set('value', d.format(this.options.format))
-			.store('datepicker:value', d);
+			.store('datepicker:value', d.strftime());
 		this.fireEvent('select', d);
 
 		this.close(null, true);
