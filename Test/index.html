@@ -50,7 +50,11 @@ window.addEvent('domready',function(){
 	new DatePicker($$('.demo_dashboard'), { pickerClass: 'datepicker_dashboard' });
 	
 	// jQuery UI skin
-	new DatePicker($$('.demo_jqui'), { pickerClass: 'datepicker_jqui', positionOffset: { x: 0, y: 5 } });
+	new DatePicker($$('.demo_jqui'), {
+		pickerClass: 'datepicker_jqui',
+		positionOffset: {x: 0, y: 5},
+		format: '%d.%m.%Y %H:%M:%S'
+	});
 
 //	MooTools.lang.setLanguage("nl-NL");
 	
