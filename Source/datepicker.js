@@ -420,7 +420,7 @@ var DatePicker = new Class({
 	renderTime: function(){
 		var container = new Element('div', {'class': 'time'}).inject(this.newContents);
 
-		this.picker.getElement('.titleText').set('text', this.options.timePickerOnly ? this.options.selectTimeTitle : this.d.format('%d %B, %Y'));
+		this.picker.getElement('.titleText').set('html', this.options.timePickerOnly ? this.options.selectTimeTitle : this.d.format('%d %B, %Y'));
 
 		new Element('input', {type: 'text', 'class': 'hour', 'title': MooTools.lang.get('DatePicker', 'use_mouse_wheel')})
 			.set('value', this.leadZero(this.d.getHours()))
@@ -484,7 +484,7 @@ var DatePicker = new Class({
 	renderMonth: function(){
 		var month = this.d.getMonth();
 
-		this.picker.getElement('.titleText').set('text', this.options.months[month] + ' ' + this.d.getFullYear());
+		this.picker.getElement('.titleText').set('html', this.options.months[month] + ' ' + this.d.getFullYear());
 
 		this.d.setDate(1);
 		while (this.d.getDay() != this.options.startDay){
