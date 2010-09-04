@@ -140,7 +140,7 @@ var DatePicker = new Class({
 			if (!(this.options.minDate instanceof Date)) this.options.minDate = Date.parse(this.options.minDate);
 		}
 		if (this.options.maxDate){
-			if (!(this.options.maxnDate instanceof Date)) this.options.maxDate = Date.parse(this.options.maxDate);
+			if (!(this.options.maxDate instanceof Date)) this.options.maxDate = Date.parse(this.options.maxDate);
 			this.options.maxDate = new Date( +this.options.maxDate + ((24 * 60 * 60) - 1) * 1000 );
 		}
 
@@ -252,9 +252,9 @@ var DatePicker = new Class({
 		if (!this.d.isValid()) this.d = new Date();
 		// Min/max date
 		if (this.options.maxDate && this.options.maxDate.isValid() && this.d > this.options.maxDate)
-			this.d = this.options.maxDate;
+			this.d = this.options.maxDate.clone();
 		if (this.options.minDate && this.options.minDate.isValid() && this.d < this.options.minDate)
-			this.d = this.options.minDate;
+			this.d = this.options.minDate.clone();
 
 		this.input = input;
 		var d = (toggler ? document.id(toggler) : input).getCoordinates();
