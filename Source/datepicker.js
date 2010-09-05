@@ -223,7 +223,8 @@ var DatePicker = new Class({
 		elems.each(function(item){
 			// Only when the datepicker is attached
 			if (!item.retrieve('datepicker')) return;
-
+			item.store('datepicker', false);
+			
 			var toggler = item.retrieve('datepicker:toggler');
 			var events = item.retrieve('datepicker:events');
 			// Detach the Events
