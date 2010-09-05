@@ -5,3 +5,5 @@ category: Widgets
 tags: [Datepicker,Calendar]
 demo: http://www.aryweb.nl/projects/mootools-datepicker/
 docs: http://github.com/arian/mootools-datepicker/blob/master/README.md
+sources:
+  - "Source/datepicker.js"
