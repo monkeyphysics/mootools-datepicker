@@ -1,5 +1,8 @@
 /*
 ---
+
+name: Datepicker
+
 description: MooTools Datepicker class
 
 authors:
@@ -13,11 +16,16 @@ license:
   - Attribution-Share Alike 3.0 Unported
 
 requires:
-  core/1.2.4: '*'
-  more/1.2.4.4: [Date,MooTools.lang]
+  - Core/Class.Extras
+  - Core/Browser
+  - Core/Element.Event
+  - Core/Element.Style
+  - Core/Element.Dimensions
+  - Core/Fx.Tween
+  - More/Date
+  - More/MooTools.lang
 
-provides:
-  - [DatePicker]
+provides: [DatePicker]
 
 ...
 */
