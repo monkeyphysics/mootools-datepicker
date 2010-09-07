@@ -13,7 +13,7 @@ authors:
   - eerne (Enrique Erne)
 
 license:
-  - Attribution-Share Alike 3.0 Unported
+  - MIT License
 
 requires:
   - Core/Class.Extras
@@ -47,8 +47,7 @@ provides: [DatePicker]
  *
  * --
  *
- * Some Rights Reserved
- * http://creativecommons.org/licenses/by-sa/3.0/
+ * MIT License
  *
  */
 
