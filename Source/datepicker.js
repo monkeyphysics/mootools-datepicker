@@ -33,7 +33,6 @@ provides: [DatePicker]
 
 /**
  * datepicker.js - MooTools Datepicker class
- * @version 1.19
  *
  * by MonkeyPhysics.com
  *
@@ -135,7 +134,7 @@ var DatePicker = new Class({
 
 		// Support for deprecated toggleElements
 		if (this.options.toggleElements) this.options.toggle = document.getElements(this.options.toggleElements);
-		
+
 		this.attach(attachTo, this.options.toggle);
 
 		if (this.options.timePickerOnly){
@@ -231,7 +230,7 @@ var DatePicker = new Class({
 			// Only when the datepicker is attached
 			if (!item.retrieve('datepicker')) return;
 			item.store('datepicker', false);
-			
+
 			var toggler = item.retrieve('datepicker:toggler');
 			var events = item.retrieve('datepicker:events');
 			// Detach the Events
@@ -243,6 +242,7 @@ var DatePicker = new Class({
 
 	show: function(input, toggler, timestamp){
 		input = document.id(input);
+
 		// Cannot show the picker if its not attached
 		if (!input.retrieve('datepicker')) return;
 
