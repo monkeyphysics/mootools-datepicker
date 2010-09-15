@@ -115,20 +115,20 @@ var DatePicker = new Class({
 	},
 
 	initialize: function(attachTo, options){
+		var localeGet = MooTools.lang.get;
 		// MooTools.lang
 		this.setOptions({
-			days: MooTools.lang.get('Date', 'days'),
-			months: MooTools.lang.get('Date', 'months'),
-			format: MooTools.lang.get('Date', 'shortDate'),
-			selectTimeTitle : MooTools.lang.get('DatePicker', 'select_a_time'),
-			timeConfirmButton : MooTools.lang.get('DatePicker', 'time_confirm_button')
+			days: localeGet('Date', 'days'),
+			months: localeGet('Date', 'months'),
+			format: localeGet('Date', 'shortDate'),
+			selectTimeTitle: localeGet('DatePicker', 'select_a_time'),
+			timeConfirmButton: localeGet('DatePicker', 'time_confirm_button')
 		});
-
 
 		var oldFormat = this.options.format;
 		this.setOptions(options);
 		if (this.options.timePicker && this.options.format == oldFormat){
-			var timeFormat = MooTools.lang.get('Date', 'shortTime');
+			var timeFormat = localeGet('Date', 'shortTime');
 			this.options.format = this.options.timePickerOnly ? timeFormat : this.options.format + ' ' + timeFormat;
 		}
 
@@ -150,12 +150,14 @@ var DatePicker = new Class({
 			this.options.maxDate = new Date( +this.options.maxDate + ((24 * 60 * 60) - 1) * 1000 );
 		}
 
-		document.addEvent('mousedown', this.close.bindWithEvent(this));
+		document.addEvent('mousedown', function(event){
+			this.close.call(this, event);
+		}.bind(this));
 	},
 
 	attach: function(attachTo, toggle){
 
-		//dont bother trying to attach when not set
+		//don't bother trying to attach when not set
 		if (!attachTo) return;
 
 		// toggle the datepicker through a separate element?
@@ -213,7 +215,7 @@ var DatePicker = new Class({
 							e.stop();
 						}
 					}.bind(this),
-					'focus': this.show.bind(this,[item])
+					'focus': this.show.pass(item, this)
 				};
 
 				item.addEvents(events).store('datepicker:events', events);
@@ -414,7 +416,9 @@ var DatePicker = new Class({
 		var titlecontainer = new Element('div', {'class': 'title'}).inject(h);
 		new Element('div', {'class': 'previous'}).addEvent('click', this.previous.bind(this)).set('text', '«').inject(h);
 		new Element('div', {'class': 'next'}).addEvent('click', this.next.bind(this)).set('text', '»').inject(h);
-		new Element('div', {'class': 'closeButton'}).addEvent('click', this.close.bindWithEvent(this, true)).set('text', 'x').inject(h);
+		new Element('div', {'class': 'closeButton'}).addEvent('click', function(event){
+			this.close.call(this, event, true);
+		}.bind(this)).set('text', 'x').inject(h);
 		new Element('span', {'class': 'titleText'}).addEvent('click', this.zoomOut.bind(this)).inject(titlecontainer);
 
 		var b = new Element('div', {'class': 'body'}).inject(this.picker);
@@ -535,7 +539,7 @@ var DatePicker = new Class({
 				}
 			} else {
 				available = true;
-				e.addEvent('click', function(e, d){
+				e.addEvent('click', function(d){
 					if (this.options.timePicker){
 						this.d.setDate(d.day);
 						this.d.setMonth(d.month);
@@ -544,7 +548,7 @@ var DatePicker = new Class({
 					} else {
 						this.select(d);
 					}
-				}.bindWithEvent(this, {day: this.d.getDate(), month: this.d.getMonth(), year: this.d.getFullYear()}));
+				}.pass([{day: this.d.getDate(), month: this.d.getMonth(), year: this.d.getFullYear()}], this));
 			}
 			this.d.setDate(this.d.getDate() + 1);
 		}
@@ -570,8 +574,9 @@ var DatePicker = new Class({
 		var container = new Element('div', {'class': 'months'}).inject(this.newContents);
 
 		for (i = 0; i <= 11; i++){
-			e = new Element('div', {'class': 'month month' + (i + 1) + (i == month && thisyear ? ' today' : '') + (i == this.choice.month && selectedyear ? ' selected' : '')})
-			.set('text', this.options.monthShort ? this.options.months[i].substring(0, this.options.monthShort) : this.options.months[i]).inject(container);
+			e = new Element('div', {
+				'class': 'month month' + (i + 1) + (i == month && thisyear ? ' today' : '') + (i == this.choice.month && selectedyear ? ' selected' : '')
+			}).set('text', this.options.monthShort ? this.options.months[i].substring(0, this.options.monthShort) : this.options.months[i]).inject(container);
 
 			if (this.limited('month')){
 				e.addClass('unavailable');
@@ -579,12 +584,11 @@ var DatePicker = new Class({
 				else this.limit.left = true;
 			} else {
 				available = true;
-				e.addEvent('click', function(e, d){
-					this.d.setDate(1);
-					this.d.setMonth(d);
+				e.addEvent('click', function(d){
+					this.d.set({date: 1, month: d});
 					this.mode = 'month';
 					this.render('fade');
-				}.bindWithEvent(this, i));
+				}.pass(i, this));
 			}
 			this.d.increment('month', 1);
 			this.d.set('date', this.d.get('lastdayofmonth'));
@@ -618,11 +622,11 @@ var DatePicker = new Class({
 				else this.limit.left = true;
 			} else {
 				available = true;
-				e.addEvent('click', function(e, d){
+				e.addEvent('click', function(d){
 					this.d.setFullYear(d);
 					this.mode = 'year';
 					this.render('fade');
-				}.bindWithEvent(this, y));
+				}.pass(y, this));
 			}
 			this.d.setFullYear(this.d.getFullYear() + 1);
 		}
