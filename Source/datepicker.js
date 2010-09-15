@@ -55,7 +55,7 @@ var DatePicker = new Class({
 	Implements: [Options, Events],
 
 	// working date, which we will keep modifying to render the calendars
-	d: '',
+	/*d: null,*/
 
 	// just so that we need not request it over and over
 	today: '',
@@ -70,11 +70,11 @@ var DatePicker = new Class({
 	limit: {},
 
 	// element references:
-	picker: null,      // main datepicker container
+	/*picker: null,      // main datepicker container
 	slider: null,      // slider that contains both oldContents and newContents, used to animate between 2 different views
 	oldContents: null, // used in animating from-view to new-view
 	newContents: null, // used in animating from-view to new-view
-	input: null,       // original input element (used for input/output)
+	input: null,*/       // original input element (used for input/output)
 
 	options: {
 		pickerClass: 'datepicker',
@@ -90,10 +90,10 @@ var DatePicker = new Class({
 		useFadeInOut: !Browser.Engine.trident, // dont animate fade-in/fade-out for IE
 		startView: 'month', // allowed values: {time, month, year, decades}
 		positionOffset: {x: 0, y: 0},
-		minDate: null, // Date object or a string
+		/*minDate: null, // Date object or a string
 		maxDate: null, // same as minDate
 		toggleElements: null, // deprecated
-		toggle: null,
+		toggle: null,*/
 		draggable: true,
 		timeWheelStep: 1 // 10,15,20,30
 		/*,
