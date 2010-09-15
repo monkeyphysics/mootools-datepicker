@@ -115,8 +115,8 @@ var DatePicker = new Class({
 	},
 
 	initialize: function(attachTo, options){
+		// Localization
 		var localeGet = MooTools.lang.get;
-		// MooTools.lang
 		this.setOptions({
 			days: localeGet('Date', 'days'),
 			months: localeGet('Date', 'months'),
@@ -125,9 +125,9 @@ var DatePicker = new Class({
 			timeConfirmButton: localeGet('DatePicker', 'time_confirm_button')
 		});
 
-		var oldFormat = this.options.format;
+		var defaultFormat = this.options.format;
 		this.setOptions(options);
-		if (this.options.timePicker && this.options.format == oldFormat){
+		if (this.options.timePicker && this.options.format == defaultFormat){
 			var timeFormat = localeGet('Date', 'shortTime');
 			this.options.format = this.options.timePickerOnly ? timeFormat : this.options.format + ' ' + timeFormat;
 		}
@@ -159,7 +159,7 @@ var DatePicker = new Class({
 	attach: function(attachTo, toggle){
 
 		//don't bother trying to attach when not set
-		if (!attachTo) return;
+		if (!attachTo) return this;
 
 		// toggle the datepicker through a separate element?
 		if (toggle){
@@ -177,7 +177,7 @@ var DatePicker = new Class({
 					}
 				}.bind(this)
 			});
-		};
+		}
 
 		// see what is being attached and get an array suitable for it
 		var elems = $type(attachTo) == 'array' ? attachTo : [document.id(attachTo)];
@@ -237,7 +237,7 @@ var DatePicker = new Class({
 			var toggler = item.retrieve('datepicker:toggler');
 			var events = item.retrieve('datepicker:events');
 			// Detach the Events
-			(toggler ? toggler : item).removeEvents(events);
+			(toggler || item).removeEvents(events);
 		});
 
 		return this;
@@ -261,6 +261,7 @@ var DatePicker = new Class({
 			}
 		}
 		if (!this.d.isValid()) this.d = new Date();
+
 		// Min/max date
 		if (this.options.maxDate && this.options.maxDate.isValid() && this.d > this.options.maxDate)
 			this.d = this.options.maxDate.clone();
@@ -268,10 +269,10 @@ var DatePicker = new Class({
 			this.d = this.options.minDate.clone();
 
 		this.input = input;
-		var d = (toggler ? document.id(toggler) : input).getCoordinates();
+		var inputCoords = (document.id(toggler) || input).getCoordinates();
 		var position = {
-			left: d.left + this.options.positionOffset.x,
-			top: d.top + d.height + this.options.positionOffset.y
+			left: inputCoords.left + this.options.positionOffset.x,
+			top: inputCoords.top + inputCoords.height + this.options.positionOffset.y
 		};
 		this.fireEvent('show');
 
@@ -279,7 +280,10 @@ var DatePicker = new Class({
 		this.choice = this.d.toObject();
 		this.mode = (this.options.startView == 'time' && !this.options.timePicker) ? 'month' : this.options.startView;
 		this.render();
-		this.position({x: position.left, y: position.top});
+		this.position({
+			x: position.left,
+			y: position.top
+		});
 
 		if (this.options.draggable && $type(this.picker.makeDraggable) == 'function'){
 			this.dragger = this.picker.makeDraggable();
@@ -292,12 +296,16 @@ var DatePicker = new Class({
 	},
 
 	close: function(e, force){
-		if (!document.id(this.picker)) return;
+		if (!document.id(this.picker)) return this;
 		if ($type(e) != 'event') force = true;
+
 		var clickOutside = e && e.target != this.picker && !this.picker.hasChild(e.target);
 		if (force || clickOutside){
 			if (this.options.useFadeInOut){
-				this.picker.set('tween', {duration: this.options.animationDuration / 2, onComplete: this.destroy.bind(this)}).tween('opacity', 1, 0);
+				this.picker.set('tween', {
+					duration: this.options.animationDuration / 2,
+					onComplete: this.destroy.bind(this)
+				}).fade(0);
 			} else {
 				this.destroy();
 			}
@@ -319,7 +327,7 @@ var DatePicker = new Class({
 				left: coords.left, top: coords.top
 			}
 		}).inject(document.body);
-		this.frame.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
+		frame.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
 
 		this.addEvent('close', function(){frame.destroy()});
 
@@ -331,18 +339,21 @@ var DatePicker = new Class({
 		}
 	},
 
-	position: function(p){
-		var w = window.getSize(),
-			s = window.getScroll(),
-			d = this.picker.getSize(),
-			max_y = (w.y + s.y) - d.y,
-			max_x = (w.x + s.x) - d.x,
-			i = this.input.getCoordinates();
+	position: function(position){
+		var size = window.getSize(),
+			scroll = window.getScroll(),
+			pickerSize = this.picker.getSize(),
+			max_y = (size.y + scroll.y) - pickerSize.y,
+			max_x = (size.x + scroll.x) - pickerSize.x,
+			inputCoords = this.input.getCoordinates();
 
-		if (p.x > max_x) p.x = i.right - this.options.positionOffset.x - d.x;
-		if (p.y > max_y) p.y = i.top - this.options.positionOffset.y - d.y;
+		if (position.x > max_x) position.x = inputCoords.right - this.options.positionOffset.x - pickerSize.x;
+		if (position.y > max_y) position.y = inputCoords.top - this.options.positionOffset.y - pickerSize.y;
 
-		this.picker.setStyles({left: p.x, top: p.y});
+		this.picker.setStyles({
+			left: position.x,
+			top: position.y
+		});
 	},
 
 	render: function(fx){
@@ -350,9 +361,9 @@ var DatePicker = new Class({
 			this.constructPicker();
 		} else {
 			// swap contents so we can fill the newContents again and animate
-			var o = this.oldContents;
+			var old = this.oldContents;
 			this.oldContents = this.newContents;
-			this.newContents = o;
+			this.newContents = old;
 			this.newContents.empty();
 		}
 
@@ -383,9 +394,7 @@ var DatePicker = new Class({
 
 		// if ever the opacity is set to '0' it was only to have us fade it in here
 		// refer to the constructPicker() function, which instantiates the picker at opacity 0 when fading is desired
-		if (this.picker.getStyle('opacity') == 0){
-			this.picker.tween('opacity', 0, 1);
-		}
+		if (this.picker.getStyle('opacity') == 0) this.picker.fade(1);
 
 		// animate
 		if (fx) this.fx(fx);
@@ -408,9 +417,14 @@ var DatePicker = new Class({
 	},
 
 	constructPicker: function(){
-		this.picker = new Element('div', {'class': this.options.pickerClass}).inject(document.body);
+		this.picker = new Element('div', {
+			'class': this.options.pickerClass
+		}).inject(document.body);
+
 		if (this.options.useFadeInOut){
-			this.picker.setStyle('opacity', 0).set('tween', {duration: this.options.animationDuration});
+			this.picker.setStyle('opacity', 0).set('tween', {
+				duration: this.options.animationDuration
+			});
 		}
 
 		var h = new Element('div', {'class': 'header'}).inject(this.picker);
@@ -734,10 +748,6 @@ Date.implement({
 			minutes: this.getMinutes(),
 			seconds: this.getSeconds()
 		};
-	},
-
-	isValid: function(){
-		return !isNaN(this);
 	}
 
 });
