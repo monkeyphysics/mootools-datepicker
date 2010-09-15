@@ -147,7 +147,8 @@ var DatePicker = new Class({
 		}
 		if (this.options.maxDate){
 			if (!(this.options.maxDate instanceof Date)) this.options.maxDate = Date.parse(this.options.maxDate);
-			this.options.maxDate = new Date( +this.options.maxDate + ((24 * 60 * 60) - 1) * 1000 );
+			// Include the maxDate day
+			this.options.maxDate.increment('day', 1);
 		}
 
 		document.addEvent('mousedown', function(event){
