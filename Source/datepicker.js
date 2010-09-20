@@ -152,7 +152,14 @@ var DatePicker = new Class({
 		}
 
 		document.addEvent('mousedown', function(event){
-			this.close.call(this, event);
+			if (
+				!(this.elems && this.elems.contains(event.target)) &&
+				this.picker &&
+				event.target != this.picker &&
+				!this.picker.hasChild(event.target)
+			){
+				this.close.call(this);
+			}
 		}.bind(this));
 	},
 
@@ -173,14 +180,14 @@ var DatePicker = new Class({
 						!target.hasClass('minutes') &&
 						!target.hasClass('ok')
 					){
-						this.close(null, true);
+						this.close();
 					}
 				}.bind(this)
 			});
 		}
 
 		// see what is being attached and get an array suitable for it
-		var elems = $type(attachTo) == 'array' ? attachTo : [document.id(attachTo)];
+		var elems = this.elems = $type(attachTo) == 'array' ? attachTo : [document.id(attachTo)];
 
 		// attach functionality to the inputs
 		elems.each(function(item, index){
@@ -192,12 +199,10 @@ var DatePicker = new Class({
 			// events
 			if (toggle && togglers){
 				var self = this;
-				var events = {
-					'click': function(e){
-						if (e) e.stop();
-						self.show(item, togglers[index]);
-					}
-				};
+				var events = {'click': function(e){
+					if (e) e.stop();
+					self.show(item, togglers[index]);
+				}};
 				var toggler = togglers[index]
 					.setStyle('cursor', 'pointer')
 					.addEvents(events);
@@ -209,9 +214,9 @@ var DatePicker = new Class({
 						// prevent the user from typing in the field
 						if (this.options.allowEmpty && (e.key == 'delete' || e.key == 'backspace')){
 							item.set('value', '');
-							this.close(null, true);
+							this.close();
 						} else if (e.key == 'tab'){
-							this.close(null, true);
+							this.close();
 						} else {
 							e.stop();
 						}
@@ -295,20 +300,16 @@ var DatePicker = new Class({
 		return this;
 	},
 
-	close: function(e, force){
+	close: function(){
 		if (!document.id(this.picker)) return this;
-		if ($type(e) != 'event') force = true;
 
-		var clickOutside = e && e.target != this.picker && !this.picker.hasChild(e.target);
-		if (force || clickOutside){
-			if (this.options.useFadeInOut){
-				this.picker.set('tween', {
-					duration: this.options.animationDuration / 2,
-					onComplete: this.destroy.bind(this)
-				}).fade(0);
-			} else {
-				this.destroy();
-			}
+		if (this.options.useFadeInOut){
+			this.picker.set('tween', {
+				duration: this.options.animationDuration / 2,
+				onComplete: this.destroy.bind(this)
+			}).fade(0);
+		} else {
+			this.destroy();
 		}
 
 		return this;
@@ -432,7 +433,7 @@ var DatePicker = new Class({
 		new Element('div', {'class': 'previous'}).addEvent('click', this.previous.bind(this)).set('text', '«').inject(h);
 		new Element('div', {'class': 'next'}).addEvent('click', this.next.bind(this)).set('text', '»').inject(h);
 		new Element('div', {'class': 'closeButton'}).addEvent('click', function(event){
-			this.close.call(this, event, true);
+			this.close.call(this);
 		}.bind(this)).set('text', 'x').inject(h);
 		new Element('span', {'class': 'titleText'}).addEvent('click', this.zoomOut.bind(this)).inject(titlecontainer);
 
@@ -740,7 +741,7 @@ var DatePicker = new Class({
 		this.fireEvent('select', d);
 		this.input.fireEvent('change'); // call input onChange event
 
-		this.close(null, true);
+		this.close();
 	},
 
 	leadZero: function(v){
