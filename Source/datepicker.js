@@ -171,19 +171,17 @@ var DatePicker = new Class({
 		// toggle the datepicker through a separate element?
 		if (toggle){
 			var togglers = $type(toggle) == 'array' ? toggle : [document.id(toggle)];
-			document.addEvents({
-				'keydown': function(e){
-					var target = document.id(e.target);
-					if (
-						e.key == 'tab' &&
-						!target.hasClass('hour') &&
-						!target.hasClass('minutes') &&
-						!target.hasClass('ok')
-					){
-						this.close();
-					}
-				}.bind(this)
-			});
+			document.addEvent('keydown', function(event){
+				var target = document.id(event.target);
+				if (
+					event.key == 'tab' &&
+					!target.hasClass('hour') &&
+					!target.hasClass('minutes') &&
+					!target.hasClass('ok')
+				){
+					this.close();
+				}
+			}.bind(this));
 		}
 
 		// see what is being attached and get an array suitable for it
@@ -199,7 +197,7 @@ var DatePicker = new Class({
 			// events
 			if (toggle && togglers){
 				var self = this;
-				var events = {'click': function(e){
+				var events = {click: function(e){
 					if (e) e.stop();
 					self.show(item, togglers[index]);
 				}};
@@ -210,7 +208,7 @@ var DatePicker = new Class({
 					.store('datepicker:events', events);
 			} else {
 				var events = {
-					'keydown': function(e){
+					keydown: function(e){
 						// prevent the user from typing in the field
 						if (this.options.allowEmpty && (e.key == 'delete' || e.key == 'backspace')){
 							item.set('value', '');
@@ -221,7 +219,8 @@ var DatePicker = new Class({
 							e.stop();
 						}
 					}.bind(this),
-					'focus': this.show.pass(item, this)
+					focus: this.show.pass(item, this),
+					click: this.show.pass(item, this)
 				};
 
 				item.addEvents(events).store('datepicker:events', events);
@@ -284,6 +283,7 @@ var DatePicker = new Class({
 		this.today = new Date();
 		this.choice = this.d.toObject();
 		this.mode = (this.options.startView == 'time' && !this.options.timePicker) ? 'month' : this.options.startView;
+
 		this.render();
 		this.position({
 			x: position.left,
@@ -303,14 +303,8 @@ var DatePicker = new Class({
 	close: function(){
 		if (!document.id(this.picker)) return this;
 
-		if (this.options.useFadeInOut){
-			this.picker.set('tween', {
-				duration: this.options.animationDuration / 2,
-				onComplete: this.destroy.bind(this)
-			}).fade(0);
-		} else {
-			this.destroy();
-		}
+		if (this.options.useFadeInOut) this.picker.fade(0);
+		else this.destroy();
 
 		return this;
 	},
@@ -393,9 +387,7 @@ var DatePicker = new Class({
 		// restore working date
 		this.d = startDate;
 
-		// if ever the opacity is set to '0' it was only to have us fade it in here
-		// refer to the constructPicker() function, which instantiates the picker at opacity 0 when fading is desired
-		if (this.picker.getStyle('opacity') == 0) this.picker.fade(1);
+		this.picker.fade(1);
 
 		// animate
 		if (fx) this.fx(fx);
@@ -424,7 +416,11 @@ var DatePicker = new Class({
 
 		if (this.options.useFadeInOut){
 			this.picker.setStyle('opacity', 0).set('tween', {
-				duration: this.options.animationDuration
+				duration: this.options.animationDuration,
+				link: 'cancel',
+				onComplete: function(){
+					if (this.picker.getStyle('opacity') < 1) this.destroy();
+				}.bind(this)
 			});
 		}
 
