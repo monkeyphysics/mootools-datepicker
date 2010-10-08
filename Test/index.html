@@ -98,6 +98,11 @@ window.addEvent('domready',function(){
 		timePickerOnly: true
 	});
 
+	// Date and Time
+	new DatePicker('dateandtime',{
+		timePicker: true
+	});
+
 	// Date object as max/minDate
 	new DatePicker('date_object_options', {
 		minDate: new Date('03/05/2010'),
@@ -184,6 +189,10 @@ window.addEvent('domready',function(){
 <input id="time" type="text" value="" class="date" />
 </p>
 
+<p>
+<label>Date and Time Picker:</label><br />
+<input id="dateandtime" type="text" value="" class="date" />
+</p>
 
 <p>
 <label>Date Object as min/max date option:</label><br />
