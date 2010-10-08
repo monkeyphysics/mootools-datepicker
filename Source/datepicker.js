@@ -11,6 +11,7 @@ authors:
   - MadmanMonty (Chris Baxter)
   - marfillaster (Ken Marfilla)
   - eerne (Enrique Erne)
+  - Chemix
 
 license:
   - MIT License
@@ -565,8 +566,6 @@ var DatePicker = new Class({
 				available = true;
 				e.addEvent('click', function(d){
 					if (this.options.timePicker){
-						date.setDate(d.day);
-						date.setMonth(d.month);
 						this.d.setDate(d.day);
 						this.d.setMonth(d.month);
 						this.mode = 'time';
