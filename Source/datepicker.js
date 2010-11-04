@@ -24,7 +24,7 @@ requires:
   - Core/Element.Dimensions
   - Core/Fx.Tween
   - More/Date
-  - More/MooTools.lang
+  - More/Locale
 
 provides: [DatePicker]
 
@@ -186,7 +186,7 @@ var DatePicker = new Class({
 
 		// see what is being attached and get an array suitable for it
 		var elemsType = typeOf(attachTo);
-		var elems = this.elems = elemsType == 'array' || elemsType == 'elements' ? attachTo : [document.id(attachTo)];
+		var elems = this.elems = (elemsType == 'array' || elemsType == 'elements') ? attachTo : [document.id(attachTo)];
 
 		// attach functionality to the inputs
 		elems.each(function(item, index){
@@ -325,7 +325,9 @@ var DatePicker = new Class({
 		}).inject(document.body);
 		frame.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
 
-		this.addEvent('close', function(){frame.destroy()});
+		this.addEvent('close', function(){
+			frame.destroy()
+		});
 
 		if (this.dragger){
 			this.dragger.addEvent('drag', function(){
@@ -411,9 +413,7 @@ var DatePicker = new Class({
 	},
 
 	constructPicker: function(){
-		this.picker = new Element('div', {
-			'class': this.options.pickerClass
-		}).inject(document.body);
+		this.picker = new Element('div.' + this.options.pickerClass).inject(document.body);
 
 		if (this.options.useFadeInOut){
 			this.picker.setStyle('opacity', 0).set('tween', {
@@ -425,25 +425,53 @@ var DatePicker = new Class({
 			});
 		}
 
-		var h = new Element('div', {'class': 'header'}).inject(this.picker);
-		var titlecontainer = new Element('div', {'class': 'title'}).inject(h);
-		new Element('div', {'class': 'previous'}).addEvent('click', this.previous.bind(this)).set('text', '«').inject(h);
-		new Element('div', {'class': 'next'}).addEvent('click', this.next.bind(this)).set('text', '»').inject(h);
-		new Element('div', {'class': 'closeButton'}).addEvent('click', function(event){
+		var header = new Element('div.header').inject(this.picker);
+		var titlecontainer = new Element('div.title').inject(header);
+		new Element('div.previous[text=«]').addEvent('click', this.previous.bind(this)).inject(header);
+		new Element('div.next[text=»]').addEvent('click', this.next.bind(this)).inject(header);
+		new Element('div.closeButton[text=x]').addEvent('click', function(event){
 			this.close.call(this);
-		}.bind(this)).set('text', 'x').inject(h);
-		new Element('span', {'class': 'titleText'}).addEvent('click', this.zoomOut.bind(this)).inject(titlecontainer);
+		}.bind(this)).inject(header);
+		new Element('span.titleText').addEvent('click', this.zoomOut.bind(this)).inject(titlecontainer);
 
-		var b = new Element('div', {'class': 'body'}).inject(this.picker);
-		this.bodysize = b.getSize();
-		this.slider = new Element('div', {styles: {position: 'absolute', top: 0, left: 0, width: 2 * this.bodysize.x, height: this.bodysize.y}})
-					.set('tween', {duration: this.options.animationDuration, transition: Fx.Transitions.Quad.easeInOut}).inject(b);
-		this.oldContents = new Element('div', {styles: {position: 'absolute', top: 0, left: this.bodysize.x, width: this.bodysize.x, height: this.bodysize.y}}).inject(this.slider);
-		this.newContents = new Element('div', {styles: {position: 'absolute', top: 0, left: 0, width: this.bodysize.x, height: this.bodysize.y}}).inject(this.slider);
+		var body = new Element('div.body').inject(this.picker);
+		this.bodysize = body.getSize();
+		this.slider = new Element('div', {
+			styles: {
+				position: 'absolute',
+				top: 0,
+				left: 0,
+				width: 2 * this.bodysize.x,
+				height: this.bodysize.y
+			}
+		}).set('tween', {
+			duration: this.options.animationDuration,
+			transition: Fx.Transitions.Quad.easeInOut
+		}).inject(body);
+
+		this.oldContents = new Element('div', {
+			styles: {
+				position: 'absolute',
+				top: 0,
+				left: this.bodysize.x,
+				width: this.bodysize.x,
+				height: this.bodysize.y
+			}
+		}).inject(this.slider);
+
+		this.newContents = new Element('div', {
+			styles: {
+				position: 'absolute',
+				top: 0,
+				left: 0,
+				width: this.bodysize.x,
+				height: this.bodysize.y
+			}
+		}).inject(this.slider);
 	},
 
 	renderTime: function(){
-		var container = new Element('div', {'class': 'time'}).inject(this.newContents);
+		var container = new Element('div.time').inject(this.newContents);
 
 		this.picker.getElement('.titleText').set('html', this.options.timePickerOnly ? this.options.selectTimeTitle : this.d.format('%d %B, %Y'));
 
@@ -457,63 +485,62 @@ var DatePicker = new Class({
 			if (initHours > 23) initHours = 0;
 		}
 
-		new Element('input', { type: 'text', 'class': 'hour', 'title': Locale.get('DatePicker.use_mouse_wheel')})
-			.set('value', this.leadZero(initHours))
-			.addEvents({
+		var hoursInput = new Element('input.hour[type=text]', {
+			title: Locale.get('DatePicker.use_mouse_wheel'),
+			value: this.leadZero(initHours),
+			events: {
 				click: function(e){
 					e.target.focus();
 					e.stop();
-				}.bind(this),
-				mousewheel: function(e){
-					var i = e.target, v = i.get('value').toInt();
-					i.focus();
-					if (e.wheel > 0){
-						v = (v < 23) ? v + 1 : 0;
-					} else {
-						v = (v > 0) ? v - 1 : 23;
-					}
-					i.set('value', this.leadZero(v));
-					e.stop();
+				},
+				mousewheel: function(event){
+					event.stop();
+					var value = hoursInput.get('value').toInt();
+					hoursInput.focus();
+					if (event.wheel > 0) value = (value < 23) ? value + 1 : 0;
+					else  value = (value > 0) ? value - 1 : 23;
+					hoursInput.set('value', this.leadZero(value));
 				}.bind(this)
-			})
-			.set('maxlength', 2)
-			.inject(container);
+			},
+			maxlength: 2
+		}).inject(container);
 
-		new Element('input', { type: 'text', 'class': 'minutes', 'title': Locale.get('DatePicker.use_mouse_wheel')})
-			.set('value', this.leadZero(initMinutes))
-			.addEvents({
+		var minutesInput = new Element('input.minutes[type=text]', {
+			title: Locale.get('DatePicker.use_mouse_wheel'),
+			value: this.leadZero(initMinutes),
+			events: {
 				click: function(e){
 					e.target.focus();
 					e.stop();
-				}.bind(this),
-				mousewheel: function(e){
-					var i = e.target, v = i.get('value').toInt();
-					i.focus();
-					if (e.wheel > 0){
-						v = (v < 59) ? v + this.options.timeWheelStep : 0;
-					} else {
-						v = (v > 0) ? v - this.options.timeWheelStep : (60-this.options.timeWheelStep);
-					}
-					if (v == 60) v = 0;
-
-					i.set('value', this.leadZero(v));
-					e.stop();
+				},
+				mousewheel: function(event){
+					event.stop();
+					var value = minutesInput.get('value').toInt();
+					minutesInput.focus();
+					if (event.wheel > 0) value = (value < 59) ? value + this.options.timeWheelStep : 0;
+					else value = (value > 0) ? value - this.options.timeWheelStep : (60 - this.options.timeWheelStep);
+					if (value == 60) value = 0;
+					minutesInput.set('value', this.leadZero(value));
 				}.bind(this)
-			})
-			.set('maxlength', 2)
-			.inject(container);
+			},
+			maxlength: 2
+		}).inject(container);
 
-		new Element('div', {'class': 'separator'}).set('text', ':').inject(container);
+		new Element('div.separator[text=:]').inject(container);
 
-		new Element('input', {type: 'submit', value: this.options.timeConfirmButton, 'class': 'ok'})
-			.addEvents({
-				click: function(e){
-					e.stop();
-					this.select(Object.merge({}, this.d.toObject(), {hours: this.picker.getElement('.hour').get('value').toInt(), minutes: this.picker.getElement('.minutes').get('value').toInt()}));
+		new Element('input.ok[type=submit]', {
+			value: this.options.timeConfirmButton,
+			events: {
+				click: function(event){
+					event.stop();
+					this.select(Object.merge({}, this.d.toObject(), {
+						hours: hoursInput.get('value').toInt(),
+						minutes: minutesInput.get('value').toInt()
+					}));
 				}.bind(this)
-			})
-			.set('maxlength', 2)
-			.inject(container);
+			},
+			maxlength: 2
+		}).inject(container);
 	},
 
 	renderMonth: function(){
@@ -524,21 +551,21 @@ var DatePicker = new Class({
 		var date = this.d.clone();
 
 		date.setDate(1);
-		while (date.getDay() != this.options.startDay)
-			date.setDate(date.getDate() - 1);
+		while (date.getDay() != this.options.startDay) date.setDate(date.getDate() - 1);
 
-
-		var container = new Element('div', {'class': 'days'}).inject(this.newContents);
-		var titles = new Element('div', {'class': 'titles'}).inject(container);
-		var day, i, classes, e, weekcontainer;
+		var container = new Element('div.days').inject(this.newContents),
+			titles = new Element('div.titles').inject(container),
+			day, i, classes, e, weekcontainer;
 
 		for (day = this.options.startDay; day < (this.options.startDay + 7); day++){
-			new Element('div', {'class': 'title day day' + (day % 7)}).set('text', this.options.days[(day % 7)].substring(0, this.options.dayShort)).inject(titles);
+			new Element('div.title.day.day' + (day % 7), {
+				text: this.options.days[(day % 7)].substring(0, this.options.dayShort)
+			}).inject(titles);
 		}
 
-		var available = false;
-		var t = this.today.toDateString();
-		var currentChoice = Date.fromObject(this.choice).toDateString();
+		var available = false,
+			t = this.today.toDateString(),
+			currentChoice = Date.fromObject(this.choice).toDateString();
 
 		for (i = 0; i < 42; i++){
 			classes = [];
@@ -549,10 +576,13 @@ var DatePicker = new Class({
 			if (date.getMonth() != month) classes.push('otherMonth');
 
 			if (i % 7 == 0){
-				weekcontainer = new Element('div', {'class': 'week week' + (Math.floor(i / 7))}).inject(container);
+				weekcontainer = new Element('div.week.week' + (Math.floor(i / 7))).inject(container);
 			}
 
-			e = new Element('div', {'class': classes.join(' ')}).set('text', date.getDate()).inject(weekcontainer);
+			e = new Element('div', {
+				'class': classes.join(' '),
+				text: date.getDate()
+			}).inject(weekcontainer);
 			if (this.limited('date', date)){
 				e.addClass('unavailable');
 				if (available){
@@ -581,9 +611,9 @@ var DatePicker = new Class({
 	},
 
 	renderYear: function(){
-		var month = this.today.getMonth();
-		var thisyear = this.d.getFullYear() == this.today.getFullYear();
-		var selectedyear = this.d.getFullYear() == this.choice.year;
+		var month = this.today.getMonth(),
+			thisyear = (this.d.getFullYear() == this.today.getFullYear()),
+			selectedyear = (this.d.getFullYear() == this.choice.year);
 
 		this.picker.getElement('.titleText').set('text', this.d.getFullYear());
 		this.d.setMonth(0);
@@ -594,14 +624,14 @@ var DatePicker = new Class({
 			this.d.increment('month', 1);
 		}
 		this.d.set('date', this.d.get('lastdayofmonth'));
-		var i, e;
-		var available = false;
-		var container = new Element('div', {'class': 'months'}).inject(this.newContents);
+		var i, e,
+			available = false,
+			container = new Element('div.months').inject(this.newContents);
 
 		for (i = 0; i <= 11; i++){
-			e = new Element('div', {
-				'class': 'month month' + (i + 1) + (i == month && thisyear ? ' today' : '') + (i == this.choice.month && selectedyear ? ' selected' : '')
-			}).set('text', this.options.monthShort ? this.options.months[i].substring(0, this.options.monthShort) : this.options.months[i]).inject(container);
+			e = new Element('div.month.month' + (i + 1) + (i == month && thisyear ? '.today' : '') + (i == this.choice.month && selectedyear ? '.selected' : ''), {
+				text: this.options.monthShort ? this.options.months[i].substring(0, this.options.monthShort) : this.options.months[i]
+			}).inject(container);
 
 			if (this.limited('month', this.d)){
 				e.addClass('unavailable');
@@ -629,9 +659,9 @@ var DatePicker = new Class({
 
 		this.picker.getElement('.titleText').set('text', this.d.getFullYear() + '-' + (this.d.getFullYear() + this.options.yearsPerPage - 1));
 
-		var i, y, e;
-		var available = false;
-		var container = new Element('div', {'class': 'years'}).inject(this.newContents);
+		var i, y, e,
+			available = false,
+			container = new Element('div.years').inject(this.newContents);
 
 		if (this.options.minDate && this.d.getFullYear() <= this.options.minDate.getFullYear()){
 			this.limit.left = true;
@@ -639,7 +669,9 @@ var DatePicker = new Class({
 
 		for (i = 0; i < this.options.yearsPerPage; i++){
 			y = this.d.getFullYear();
-			e = new Element('div', {'class': 'year year' + i + (y == this.today.getFullYear() ? ' today' : '') + (y == this.choice.year ? ' selected' : '') }).set('text', y).inject(container);
+			e = new Element('div.year.year' + i + (y == this.today.getFullYear() ? '.today' : '') + (y == this.choice.year ? '.selected' : ''), {
+				text: y
+			}).inject(container);
 
 			if (this.limited('year', this.d)){
 				e.addClass('unavailable');
@@ -664,8 +696,8 @@ var DatePicker = new Class({
 	},
 
 	limited: function(type, date){
-		var cs = this.options.minDate;
-		var ce = this.options.maxDate;
+		var cs = this.options.minDate,
+			ce = this.options.maxDate;
 		if (!cs && !ce) return false;
 
 		switch (type){
@@ -684,17 +716,20 @@ var DatePicker = new Class({
 	},
 
 	allowZoomOut: function(){
-		if (this.mode == 'time' && this.options.timePickerOnly) return false;
-		if (this.mode == 'decades') return false;
-		if (this.mode == 'year' && !this.options.yearPicker) return false;
-		return true;
+		return !(
+			(this.mode == 'time' && this.options.timePickerOnly) ||
+			(this.mode == 'decades') ||
+			(this.mode == 'year' && !this.options.yearPicker)
+		);
 	},
 
 	zoomOut: function(){
 		if (!this.allowZoomOut()) return;
+
 		if (this.mode == 'year') this.mode = 'decades';
 		else if (this.mode == 'time') this.mode = 'month';
 		else this.mode = 'year';
+
 		this.render('fade');
 	},
 
@@ -741,8 +776,8 @@ var DatePicker = new Class({
 		this.close();
 	},
 
-	leadZero: function(v){
-		return v < 10 ? '0' + v : v;
+	leadZero: function(value){
+		return value < 10 ? '0' + value : value;
 	}
 
 });
