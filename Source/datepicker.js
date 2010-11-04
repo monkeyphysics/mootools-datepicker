@@ -553,7 +553,7 @@ var DatePicker = new Class({
 			}
 
 			e = new Element('div', {'class': classes.join(' ')}).set('text', date.getDate()).inject(weekcontainer);
-			if (this.limited('date')){
+			if (this.limited('date', date)){
 				e.addClass('unavailable');
 				if (available){
 					if (month == date.getMonth() || date.getDate() == 1){
@@ -590,7 +590,7 @@ var DatePicker = new Class({
 		if (this.options.minDate){
 			this.d.decrement('month', 1);
 			this.d.set('date', this.d.get('lastdayofmonth'));
-			if (this.limited('month')) this.limit.left = true;
+			if (this.limited('month', this.d)) this.limit.left = true;
 			this.d.increment('month', 1);
 		}
 		this.d.set('date', this.d.get('lastdayofmonth'));
@@ -603,7 +603,7 @@ var DatePicker = new Class({
 				'class': 'month month' + (i + 1) + (i == month && thisyear ? ' today' : '') + (i == this.choice.month && selectedyear ? ' selected' : '')
 			}).set('text', this.options.monthShort ? this.options.months[i].substring(0, this.options.monthShort) : this.options.months[i]).inject(container);
 
-			if (this.limited('month')){
+			if (this.limited('month', this.d)){
 				e.addClass('unavailable');
 				if (available) this.limit.right = true;
 				else this.limit.left = true;
@@ -641,7 +641,7 @@ var DatePicker = new Class({
 			y = this.d.getFullYear();
 			e = new Element('div', {'class': 'year year' + i + (y == this.today.getFullYear() ? ' today' : '') + (y == this.choice.year ? ' selected' : '') }).set('text', y).inject(container);
 
-			if (this.limited('year')){
+			if (this.limited('year', this.d)){
 				e.addClass('unavailable');
 				if (available) this.limit.right = true;
 				else this.limit.left = true;
@@ -663,23 +663,23 @@ var DatePicker = new Class({
 		}
 	},
 
-	limited: function(type){
+	limited: function(type, date){
 		var cs = this.options.minDate;
 		var ce = this.options.maxDate;
 		if (!cs && !ce) return false;
 
 		switch (type){
 			case 'year':
-				return (cs && this.d.getFullYear() < this.options.minDate.getFullYear()) || (ce && this.d.getFullYear() > this.options.maxDate.getFullYear());
+				return (cs && date.getFullYear() < this.options.minDate.getFullYear()) || (ce && date.getFullYear() > this.options.maxDate.getFullYear());
 
 			case 'month':
 				// todo: there has got to be an easier way...?
-				var ms = ('' + this.d.getFullYear() + this.leadZero(this.d.getMonth())).toInt();
+				var ms = ('' + date.getFullYear() + this.leadZero(date.getMonth())).toInt();
 				return cs && ms < ('' + this.options.minDate.getFullYear() + this.leadZero(this.options.minDate.getMonth())).toInt()
 					|| ce && ms > ('' + this.options.maxDate.getFullYear() + this.leadZero(this.options.maxDate.getMonth())).toInt()
 
 			case 'date':
-				return (cs && this.d < this.options.minDate) || (ce && this.d > this.options.maxDate);
+				return (cs && date < this.options.minDate) || (ce && date > this.options.maxDate);
 		}
 	},
 
