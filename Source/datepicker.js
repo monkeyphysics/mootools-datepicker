@@ -315,7 +315,7 @@ var DatePicker = new Class({
 	shim: function(){
 		var coords = this.picker.setStyle('zIndex', 1000).getCoordinates();
 		var frame = this.frame = new Element('iframe', {
-			src: 'javascript:false;document.write("");',
+			src: 'javascript:false;document.write("");document.close()',
 			styles: {
 				position: 'absolute',
 				zIndex: 999,
@@ -326,7 +326,7 @@ var DatePicker = new Class({
 		frame.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0)';
 
 		this.addEvent('close', function(){
-			frame.destroy()
+			if (frame && frame.destroy) frame.destroy()
 		});
 
 		if (this.dragger){
