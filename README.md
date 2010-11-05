@@ -4,16 +4,17 @@ MooTools-DatePicker
 Smoothly animating, very configurable and easy to install.
 No Ajax, pure Javascript. 4 skins available out of the box.
 
-This is a port of [MonkeyPhysics datepicker](http://www.monkeyphysics.com/mootools/script/2/datepicker) so thank him for the 
+This is a port of [MonkeyPhysics datepicker](http://www.monkeyphysics.com/mootools/script/2/datepicker) so thank him for the
 this great plugin. Also thanks to MadmanMonty, marfillaster and eerne for their changes
 
 ![Screenshot](http://github.com/arian/mootools-datepicker/raw/master/screenshot.png)
+
+As of version 1.60 the datepicker will only work with MooTools 1.3.
 
 How to use
 ----------
 
 Below you will find a description and some docs how you can use the datepicker.
-Also note that this version (1.50beta1) is not final yet, but it should work well.
 If you find anything, please create a ticket at github or fork and fix it!
 
 ## Initialize
@@ -32,23 +33,23 @@ If you find anything, please create a ticket at github or fork and fix it!
 
 	#JS
 	new DatePicker('inputField');
-	
+
 	new DatePicker($$('input.date'));
-	
+
 	new DatePicker(document.id('inputField'),{
 		timePicker: true,
-		pickerClass: 'datepicker_jqui'		
+		pickerClass: 'datepicker_jqui'
 	});
 
 ### Options
 
 Check out the options at this page: [MonkeyPhysics datepicker](http://www.monkeyphysics.com/mootools/script/2/datepicker)
 
-- toggle: (*element*,*string*,*array*) Toggle your datepicker by clicking another element. 
+- toggle: (*element*,*string*,*array*) Toggle your datepicker by clicking another element.
 
 #### Note
 - toggleElements is deprecated, use toggle instead
-- You only have to set *format* if you do not want to use the same format defined by MooTools.lang
+- You only have to set *format* if you do not want to use the same format defined by MooTools More `Locale`
 - if you use a custom format, be sure you use [Date.defineParser()](http://mootools.net/docs/more/Native/Date#Date:defineParser) otherwise your default date will not parse correctly
 - Carefull with draggable, it caused some trouble for me, but works great on the Test page.
 
@@ -69,10 +70,10 @@ A method to attach the datepicker to input field(s)
 
 	#JS
 	dp.attach(element[,toggle]);
-	
+
 ### Arguments
 
-1. element: (*element*,*string*,*array*) The element to attach the datepicker to 
+1. element: (*element*,*string*,*array*) The element to attach the datepicker to
 2. toggle: (*element*,*string*,*array*, optional) If you want to use a toggle element
 
 ## DatePicker.detach
@@ -83,7 +84,7 @@ Detach the picker from the input field
 
 	#JS
 	dp.detach(element);
-	
+
 ### Arguments
 
 1. element: (*element*,*string*,*array*) The element to detach the datepicker from
@@ -92,20 +93,20 @@ Detach the picker from the input field
 
 A method to show the datepicker manually
 
-### Syntax 
+### Syntax
 
 	#JS
 	dp.show(element[,toggle,timestamp])
 
 ### Arguments
 
-1. element: (*element*,*string*) The input field 
+1. element: (*element*,*string*) The input field
 2. toggle: (*element,*string*, optional) The toggle element (the picker will use the position of the toggle element)
 3. timestamp: (*Date*,*number*, optional) A date object or a timestamp.
 
 ## DatePicker.close
 
-A method to close the picker. You do not need link this to a link or something (because if you click anywhere but the picker, it will already close), 
+A method to close the picker. You do not need link this to a link or something (because if you click anywhere but the picker, it will already close),
 This method is there to close the picker for example with a delay, or an Ajax Event or something.
 
 ### Syntax
@@ -116,12 +117,12 @@ This method is there to close the picker for example with a delay, or an Ajax Ev
 
 
 
-## MooTools.lang
+## MooTools Locale
 
-This plugin supports MooTools.lang, so you can use the datepicker in your own language.
+This plugin supports MooTools Locale, so you can use the datepicker in your own language.
 
 	#JS
-	MooTools.lang.setLanguage("nl-NL");
+	Locale.use('nl-NL');
 	new DatePicker('.demo');
 
 #### Note
@@ -130,7 +131,7 @@ This plugin supports MooTools.lang, so you can use the datepicker in your own la
 Breaking Changes since 1.16 (monkeyphysics)
 -------------------------------------------
 
-- mootools-datepicker is using MooTools More Date and Lang. So its using its notation for formatting dates. See: http://www.mootools.net/docs/more/Native/Date
-- Because the above change, the format and unformat methods have been abandoned. 
-- The dateFromObject and dateToObject methods are now respectively Date:toObject (`new Date('2010/07/16').toObject();`) and Date.fromObject (`Date.fromObject({year: '....'});` )
+- mootools-datepicker is using MooTools More Date and Lang. So it's using its notation for formatting dates. See: http://www.mootools.net/docs/more/Types/Date
+- Because the above change, the format and unformat methods have been abandoned.
+- The `dateFromObject` and `dateToObject` methods are now respectively `Date:toObject` (`new Date('2010/07/16').toObject();`) and `Date.fromObject` (`Date.fromObject({year: '....'});` )
 

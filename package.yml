@@ -1,6 +1,6 @@
 name: MooTools-DatePicker
 author: astolwijk
-current: 1.50b5
+current: 1.60
 category: Widgets
 tags: [Datepicker,Calendar]
 demo: http://www.aryweb.nl/projects/mootools-datepicker/
@@ -9,5 +9,6 @@ copyright: "&copy; [MonkeyPhysics.com](http://monkeyphysics.com)"
 license: MIT
 web: "[aryweb.nl/projects/mootools-datepicker](http://www.aryweb.nl/projects/mootools-datepicker/)"
 description: MooTools Datepicker class
+
 sources:
   - "Source/datepicker.js"
