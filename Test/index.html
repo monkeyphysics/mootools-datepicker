@@ -11,10 +11,19 @@
 <link  href="../Source/datepicker_jqui/datepicker_jqui.css" rel="stylesheet" type="text/css" media="screen" />
 <link  href="../Source/datepicker_vista/datepicker_vista.css" rel="stylesheet" type="text/css" media="screen" />
 
-
+<!--
 <script src="mootools-core.js" type="text/javascript"></script>
 <script src="mootools-more.js" type="text/javascript"></script>
 <script src="../Source/datepicker.js" type="text/javascript"></script>
+-->
+
+	<script src="mootools-core.js" type="text/javascript"></script>
+	<script src="mootools-more.js" type="text/javascript"></script>
+	<script src="../Source/Locale.en-US.DatePicker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Attach.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Date.js" type="text/javascript"></script>
+
 
 <script type="text/javascript">
 <!--
@@ -55,15 +64,6 @@ window.addEvent('domready',function(){
 		positionOffset: {x: 0, y: 5},
 		format: '%d.%m.%Y %H:%M:%S'
 	});
-
-//	MooTools.lang.setLanguage("nl-NL");
-
-	// MooTools.lang support
-	new DatePicker('i18n', {
-		positionOffset: { x: 0, y: 5 },
-		format: '%d-%m-%Y'
-	});
-
 
 	// Attach the datepicker manually
 	var dp = new DatePicker();
@@ -160,11 +160,6 @@ window.addEvent('domready',function(){
 <p>
 <label>Datepicker with jQuery UI skin:</label><br />
 <input name="date_B" type="text" value="" class="date demo_jqui" />
-</p>
-
-<p>
-<label>Datepicker basic (CSS only) With localisation (Dutch):</label><br />
-<input id="i18n" type="text" value="23-09-2010" class="date" />
 </p>
 
 <p>

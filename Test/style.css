@@ -48,8 +48,8 @@ h2 {
 	-webkit-box-shadow: 1px 1px 5px #CCC;
 	-moz-box-shadow: 1px 1px 5px #DDD;
 	box-shadow: 1px 1px 5px #333;
-	border: 1px solid #CCC;	
-	font-size: 1.6em;	
+	border: 1px solid #CCC;
+	font-size: 1.6em;
 	margin: 30px 0 10px 0;
 	background: #E9E9E9;
 }
@@ -69,7 +69,7 @@ h3 {
 }
 
 h2, h3 {
-	color: #fd9800;	
+	color: #fd9800;
 	text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
 }
 
@@ -88,7 +88,7 @@ code {
 }
 
 .docs h3 {
-	background: #E9E9E9;	
+	background: #E9E9E9;
 	border-bottom: 1px solid #CCC;
 	padding: 5px;
 	font-size: 1.4em;
