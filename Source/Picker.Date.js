@@ -16,8 +16,8 @@ this.DatePicker = Picker.Date = new Class({
 	Extends: Picker.Attach,
 
 	options: {
-		minDate: new Date('3/4/2010'), // Date object or a string
-		maxDate: new Date('3/4/2011'), // same as minDate
+//		minDate: new Date('3/4/2010'), // Date object or a string
+//		maxDate: new Date('3/4/2011'), // same as minDate
 //		format: null,
 
 		timePicker: false,
