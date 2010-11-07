@@ -1,5 +1,5 @@
 // MooTools: the javascript framework.
-// Load this file's selection again by visiting: http://mootools.net/more-rc/1abeaf16bbb99a75bdf89e2f8cb4f09c 
+// Load this file's selection again by visiting: http://mootools.net/more/1abeaf16bbb99a75bdf89e2f8cb4f09c 
 // Or build this file again with packager using: packager build More/Date More/Drag More/Drag.Move
 /*
 ---
@@ -30,8 +30,8 @@ provides: [MooTools.More]
 */
 
 MooTools.More = {
-	'version': '1.3.0.1rc1',
-	'build': '361dd6c3755b66898e9e0ee5d55c343188b619b7'
+	'version': '1.3.0.1',
+	'build': '6dce99bed2792dffcbbbb4ddc15a1fb9a41994b5'
 };
 
 
@@ -58,6 +58,12 @@ provides: [Object.Extras]
 ...
 */
 
+(function(){
+
+var defined = function(value){
+	return value != null;
+};
+
 Object.extend({
 
 	getFromPath: function(source, key){
@@ -70,11 +76,9 @@ Object.extend({
 	},
 
 	cleanValues: function(object, method){
-		if (!method) method = function(obj){
-			return obj != null;
-		};
-		for (key in object){
-			if (!method(object[key])) delete object[key];
+		method = method || defined;
+		for (key in object) if (!method(object[key])){
+			delete object[key];
 		}
 		return object;
 	},
@@ -86,13 +90,15 @@ Object.extend({
 
 	run: function(object){
 		var args = Array.slice(arguments, 1);
-		for (key in object){
-			if (typeOf(object[key]) == 'function') object[key].apply(object, args);
+		for (key in object) if (object[key].apply){
+			object[key].apply(object, args);
 		}
 		return object;
 	}
 
 });
+
+})();
 
 
 /*
@@ -218,7 +224,12 @@ Locale.Set = new Class({
 
 	get: function(key, args, _base){
 		var value = Object.getFromPath(this.sets, key);
-		if (value != null) return Type.isFunction(value) ? value.apply(null, Array.from(args)) : value;
+		if (value != null){
+			var type = typeOf(value);
+			if (type == 'function') value = value.apply(null, Array.from(args));
+			else if (type == 'object') value = Object.clone(value);
+			return value;
+		}
 
 		// get value of inherited locales
 		var index = key.indexOf('.'),
@@ -830,6 +841,7 @@ requires:
   - Core/Options
   - Core/Element.Event
   - Core/Element.Style
+  - Core/Element.Dimensions
   - /MooTools.More
 
 provides: [Drag]
@@ -925,10 +937,19 @@ var Drag = new Class({
 			y: options.modifiers.y == 'top' && styles.top == 'auto' && !isNaN(styles.bottom.toInt()) && (options.modifiers.y = 'bottom')
 		};
 
-		for (var z in options.modifiers){
+		var z, coordinates;
+		for (z in options.modifiers){
 			if (!options.modifiers[z]) continue;
 
-			if (options.style) this.value.now[z] = (this.element.getStyle(options.modifiers[z]) || 0).toInt();
+			var style = this.element.getStyle(options.modifiers[z]);
+
+			// Some browsers (IE and Opera) don't always return pixels.
+			if (style && !style.match(/px$/)){
+				if (!coordinates) coordinates = this.element.getCoordinates(this.element.getOffsetParent());
+				style = coordinates[options.modifiers[z]];
+			}
+
+			if (options.style) this.value.now[z] = (style || 0).toInt();
 			else this.value.now[z] = this.element[options.modifiers[z]];
 
 			if (options.invert) this.value.now[z] *= -1;
@@ -1095,16 +1116,18 @@ Drag.Move = new Class({
 		if (this.container && typeOf(this.container) != 'element')
 			this.container = document.id(this.container.getDocument().body);
 
-		if (this.options.modifiers.x == "left" && this.options.modifiers.y == "top"){
-			var parentStyles,
-				parent = element.getOffsetParent();
-			var styles = element.getStyles('left', 'top');
-			if (parent && styles.left == 'auto' || styles.top == 'auto'){
-				element.setPosition(element.getPosition(parent));
+		if (this.options.style){
+			if (this.options.modifiers.x == "left" && this.options.modifiers.y == "top"){
+				var parentStyles,
+					parent = element.getOffsetParent();
+				var styles = element.getStyles('left', 'top');
+				if (parent && (styles.left == 'auto' || styles.top == 'auto')){
+					element.setPosition(element.getPosition(parent));
+				}
 			}
-		}
 
-		if (element.getStyle('position') == 'static') element.setStyle('position', 'absolute');
+			if (element.getStyle('position') == 'static') element.setStyle('position', 'absolute');
+		}
 
 		this.addEvent('start', this.checkDroppables, true);
 		this.overed = null;
