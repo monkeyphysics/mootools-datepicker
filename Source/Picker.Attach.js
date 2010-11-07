@@ -119,6 +119,9 @@ Picker.Attach = new Class({
 			var toggleIndex = self.toggles.indexOf(element);
 			if (toggleIndex != -1) delete self.toggles[toggleIndex];
 
+			var inputIndex = self.inputs.indexOf(element);
+			if (toggleIndex != -1) delete self.inputs[inputIndex];
+
 		});
 		return this;
 	},
