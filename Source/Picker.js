@@ -69,7 +69,7 @@ var Picker = new Class({
 		this.pickersize = picker.getSize();
 		picker.setStyle('display', 'none');
 
-		var slider = this.slider = new Element('div', {
+		var slider = this.slider = new Element('div.slider', {
 			styles: {
 				position: 'absolute',
 				top: 0,
