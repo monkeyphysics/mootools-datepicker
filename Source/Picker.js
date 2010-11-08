@@ -1,7 +1,7 @@
 /*
 ---
 name: Picker
-description: Creates a Picker
+description: Creates a Picker, which can be used for anything
 authors: Arian Stolwijk
 requires: [Core/Element.Dimensions, Core/Fx.Tween, Core/Fx.Transitions]
 provides: Picker

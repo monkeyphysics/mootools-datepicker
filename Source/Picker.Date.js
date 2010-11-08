@@ -1,9 +1,9 @@
 /*
 ---
 name: Picker.Date
-description: Creates a Datepicker
+description: Creates a DatePicker, can be used for picking years/months/days and time, or all of them
 authors: Arian Stolwijk
-requires: [Picker.Attach, Locale.en-US.DatePicker, More/Locale, More/Date]
+requires: [Picker, Picker.Attach, Locale.en-US.DatePicker, More/Locale, More/Date]
 provides: Picker.Date
 ...
 */
@@ -15,10 +15,10 @@ this.DatePicker = Picker.Date = new Class({
 
 	Extends: Picker.Attach,
 
-	options: {
-//		minDate: new Date('3/4/2010'), // Date object or a string
-//		maxDate: new Date('3/4/2011'), // same as minDate
-//		format: null,
+	options: {/*
+		minDate: new Date('3/4/2010'), // Date object or a string
+		maxDate: new Date('3/4/2011'), // same as minDate
+		format: null,*/
 
 		timePicker: false,
 		timePickerOnly: false, // deprecated, use onlyView = 'time'
