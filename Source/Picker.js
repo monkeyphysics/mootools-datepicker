@@ -151,8 +151,8 @@ var Picker = new Class({
 
 	close: function(noFx){
 		if (this.opened == false) return this;
-		this.fireEvent('close');
 		this.opened = false;
+		this.fireEvent('close');
 		if (this.options.useFadeInOut && !noFx){
 			this.picker.fade('out').get('tween').chain(function(){
 				this.fireEvent('hide');
