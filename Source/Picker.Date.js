@@ -85,11 +85,12 @@ this.DatePicker = Picker.Date = new Class({
 			}
 			this.date = new Date()
 			if (input){
-				this.date = Date.parse(input.get('value'));
-				if (this.date == null || !this.date.isValid()){
+				var date = Date.parse(input.get('value'));
+				if (date == null || !date.isValid()){
 					var storeDate = input.retrieve('datepicker:value');
-					if (storeDate) this.date = Date.parse(storeDate);
+					if (storeDate) date = Date.parse(storeDate);
 				}
+				if (date != null && date.isValid()) this.date = date;
 			}
 			this.input = input;
 		}.bind(this), true);
@@ -123,11 +124,11 @@ this.DatePicker = Picker.Date = new Class({
 		var content = renderers.years(
 			options,
 			date.clone(),
+			this.date.clone(),
 			function(date){
 				if (options.pickOnly == 'years') this.select(date);
 				else this.renderMonths(date, 'fade');
-			}.bind(this),
-			this.date.clone()
+			}.bind(this)
 		);
 
 		this.setContent(content.content, fx);
@@ -157,11 +158,11 @@ this.DatePicker = Picker.Date = new Class({
 		var content = renderers.months(
 			options,
 			date.clone(),
+			this.date.clone(),
 			function(date){
 				if (options.pickOnly == 'months') this.select(date);
 				else this.renderDays(date, 'fade');
-			}.bind(this),
-			this.date.clone()
+			}.bind(this)
 		);
 
 		this.setContent(content.content, fx);
@@ -194,11 +195,11 @@ this.DatePicker = Picker.Date = new Class({
 		var content = renderers.days(
 			options,
 			date.clone(),
+			this.date.clone(),
 			function(date){
 				if (options.pickOnly == 'days' || !options.timePicker) this.select(date)
 				else this.renderTime(date, 'fade');
-			}.bind(this),
-			this.date.clone()
+			}.bind(this)
 		);
 
 		this.setContent(content.content, fx);
@@ -233,10 +234,10 @@ this.DatePicker = Picker.Date = new Class({
 		var content = renderers.time(
 			options,
 			date.clone(),
+			this.date.clone(),
 			function(date){
 				this.select(date);
-			}.bind(this),
-			this.date.clone()
+			}.bind(this)
 		);
 
 		this.setContent(content.content, fx);
@@ -271,7 +272,7 @@ this.DatePicker = Picker.Date = new Class({
 
 var renderers = {
 
-	years: function(options, date, fn, currentDate){
+	years: function(options, date, currentDate, fn){
 
 		var limit = {left: false, right: false},
 			available = false,
@@ -316,7 +317,7 @@ var renderers = {
 		};
 	},
 
-	months: function(options, date, fn, currentDate){
+	months: function(options, date, currentDate, fn){
 
 		var today = new Date(),
 			month = today.get('month'),
@@ -365,7 +366,7 @@ var renderers = {
 		};
 	},
 
-	days: function(options, date, fn, currentDate){
+	days: function(options, date, currentDate, fn){
 
 		var month = date.get('month'),
 			available = false,
@@ -432,7 +433,7 @@ var renderers = {
 		};
 	},
 
-	time: function(options, date, fn){
+	time: function(options, date, currentDate, fn){
 
 		var container = new Element('div.time'),
 			// Init Values for minutes & hours
