@@ -70,8 +70,8 @@ this.DatePicker = Picker.Date = new Class({
 		}
 
 		if (!options.format){
-			if (options.pickOnly != 'time') options.format = Locale.get('Date.shortDate');
-			if (options.timePicker) options.format = options.format + (options.format ? ' ' : '') + Locale.get('Date.shortTime');
+			options.format = (options.pickOnly != 'time') ? Locale.get('Date.shortDate') : '';
+			if (options.timePicker) options.format = (options.format) + (options.format ? ' ' : '') + Locale.get('Date.shortTime');
 		}
 
 		// This is where we store the selected date
