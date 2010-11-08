@@ -63,12 +63,12 @@ var Picker = new Class({
 		// Build the body of the picker
 		var body = this.body = new Element('div.body').inject(picker);
 
-		// oldContents and newContents are used to slide from the old content to a new one.
 		var bodysize = this.bodysize = body.getSize();
 
 		this.pickersize = picker.getSize();
 		picker.setStyle('display', 'none');
 
+		// oldContents and newContents are used to slide from the old content to a new one.
 		var slider = this.slider = new Element('div.slider', {
 			styles: {
 				position: 'absolute',
