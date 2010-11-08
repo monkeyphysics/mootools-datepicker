@@ -435,18 +435,12 @@ var renderers = {
 
 		var container = new Element('div.time'),
 			// Init Values for minutes & hours
-			initMinutes = (date.get('minutes') / options.timeWheelStep).round() * options.timeWheelStep,
+			initMinutes = date.get('minutes'),
 			initHours = date.get('hours');
-
-		if (initMinutes >= 60){
-			initMinutes = 0;
-			initHours = initHours + 1;
-			if (initHours > 23) initHours = 0;
-		}
 
 		var hoursInput = new Element('input.hour[type=text]', {
 			title: Locale.get('DatePicker.use_mouse_wheel'),
-			value: pad(initHours, 2),
+			value: date.format('%H'),
 			events: {
 				click: function(e){
 					e.target.focus();
@@ -454,11 +448,12 @@ var renderers = {
 				},
 				mousewheel: function(event){
 					event.stop();
-					var value = hoursInput.get('value').toInt();
 					hoursInput.focus();
+					var value = hoursInput.get('value').toInt();
 					if (event.wheel > 0) value = (value < 23) ? value + 1 : 0;
 					else  value = (value > 0) ? value - 1 : 23;
-					hoursInput.set('value', pad(value, 2));
+					date.set('hours', value);
+					hoursInput.set('value', date.format('%H'));
 				}.bind(this)
 			},
 			maxlength: 2
@@ -466,7 +461,7 @@ var renderers = {
 
 		var minutesInput = new Element('input.minutes[type=text]', {
 			title: Locale.get('DatePicker.use_mouse_wheel'),
-			value: pad(initMinutes, 2),
+			value: date.format('%M'),
 			events: {
 				click: function(e){
 					e.target.focus();
@@ -474,12 +469,13 @@ var renderers = {
 				},
 				mousewheel: function(event){
 					event.stop();
-					var value = minutesInput.get('value').toInt();
 					minutesInput.focus();
-					if (event.wheel > 0) value = (value < 59) ? value + options.timeWheelStep : 0;
-					else value = (value > 0) ? value - options.timeWheelStep : (60 - options.timeWheelStep);
+					var value = minutesInput.get('value').toInt();
+					if (event.wheel > 0) value = (value < 59) ? (value + options.timeWheelStep) : 0;
+					else value = (value > 0) ? (value - options.timeWheelStep) : (60 - options.timeWheelStep);
 					if (value == 60) value = 0;
-					minutesInput.set('value', pad(value, 2));
+					date.set('minutes', value);
+					minutesInput.set('value', date.format('%M'));
 				}.bind(this)
 			},
 			maxlength: 2
@@ -510,12 +506,6 @@ var renderers = {
 
 Picker.Date.defineRenderer = function(name, fn){
 	renderers[name] = fn;
-};
-
-
-var pad = function(what, length, string){
-	if (!string) string = '0';
-	return new Array(length - String(what).length + 1).join(string) + what;
 };
 
 
