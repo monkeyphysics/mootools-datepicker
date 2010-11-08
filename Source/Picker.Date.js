@@ -83,11 +83,13 @@ this.DatePicker = Picker.Date = new Class({
 				var index = this.toggles.indexOf(element);
 				if (this.inputs[index]) input = this.inputs[index];
 			}
-			if (input) this.date = Date.parse(input.get('value'));
-			if (this.date == null || !this.date.isValid()){
-				var storeDate = input.retrieve('datepicker:value');
-				if (storeDate) this.date = Date.parse(storeDate);
-				else this.date = new Date();
+			this.date = new Date()
+			if (input){
+				this.date = Date.parse(input.get('value'));
+				if (this.date == null || !this.date.isValid()){
+					var storeDate = input.retrieve('datepicker:value');
+					if (storeDate) this.date = Date.parse(storeDate);
+				}
 			}
 			this.input = input;
 		}.bind(this), true);
