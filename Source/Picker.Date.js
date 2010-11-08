@@ -472,9 +472,11 @@ var renderers = {
 	time: function(options, date, currentDate, fn){
 
 		var container = new Element('div.time'),
-			// Init Values for minutes & hours
-			initMinutes = date.get('minutes'),
-			initHours = date.get('hours');
+			// make sure that the minutes are timeWheelStep * k
+			initMinutes = (date.get('minutes') / options.timeWheelStep).round() * options.timeWheelStep
+
+		if (initMinutes >= 60) initMinutes = 0;
+		date.set('minutes', initMinutes);
 
 		var hoursInput = new Element('input.hour[type=text]', {
 			title: Locale.get('DatePicker.use_mouse_wheel'),
@@ -488,8 +490,8 @@ var renderers = {
 					event.stop();
 					hoursInput.focus();
 					var value = hoursInput.get('value').toInt();
-					if (event.wheel > 0) value = (value < 23) ? value + 1 : 0;
-					else  value = (value > 0) ? value - 1 : 23;
+					value = (event.wheel > 0) ? ((value < 23) ? value + 1 : 0)
+						: ((value > 0) ? value - 1 : 23)
 					date.set('hours', value);
 					hoursInput.set('value', date.format('%H'));
 				}.bind(this)
@@ -509,9 +511,9 @@ var renderers = {
 					event.stop();
 					minutesInput.focus();
 					var value = minutesInput.get('value').toInt();
-					if (event.wheel > 0) value = (value < 59) ? (value + options.timeWheelStep) : 0;
-					else value = (value > 0) ? (value - options.timeWheelStep) : (60 - options.timeWheelStep);
-					if (value == 60) value = 0;
+					value = (event.wheel > 0) ? ((value < 59) ? (value + options.timeWheelStep) : 0)
+						: ((value > 0) ? (value - options.timeWheelStep) : (60 - options.timeWheelStep));
+					if (value >= 60) value = 0;
 					date.set('minutes', value);
 					minutesInput.set('value', date.format('%M'));
 				}.bind(this)
@@ -580,5 +582,13 @@ var isLimited = function(type, date, minDate, maxDate){
 	);
 
 };
+
+
+// Parse times
+Date.defineParsers(
+	'%H:%M%p', // "11:05pm"
+	'%H:%M %p', // "11:05 pm"
+	'%H:%M' // "11:05"
+);
 
 })();
