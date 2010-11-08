@@ -183,17 +183,19 @@ var Picker = new Class({
 			y = elementCoords.top;
 		}
 		var offset = this.options.positionOffset,
-			scrollSize = document.getScrollSize(),
+			scroll = document.getScroll(),
+			size = document.getSize(),
 			pickersize = this.pickersize;
+
 		var position = {
 			left: x + offset.x,
 			top: y + offset.y
 		};
 
+		if ((position.left + pickersize.x) > (size.x + scroll.x)) position.left = (size.x + scroll.x) - pickersize.x;
+		if ((position.top + pickersize.y) > (size.y + scroll.y)) position.top = (size.y + scroll.y) - pickersize.y;
 		if (position.left < 0) position.left = 0;
 		if (position.top < 0) position.top = 0;
-		if ((position.left + pickersize.x) > scrollSize.x) position.left = scrollSize.x - pickersize.x;
-		if ((position.top + pickersize.y) > scrollSize.y) position.top = scrollSize.y - pickersize.y;
 
 		this.picker.setStyles(position);
 		if (this.shim) this.shim.position();
