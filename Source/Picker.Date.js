@@ -190,7 +190,7 @@ this.DatePicker = Picker.Date = new Class({
 
 		var options = this.options;
 
-		this.setTitle(Locale.get('Date.months_abbr')[date.get('month')] + ' ' + date.get('year'));
+		this.setTitle(date.format('%b %Y'));
 
 		var content = renderers.days(
 			options,
