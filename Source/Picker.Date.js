@@ -540,10 +540,10 @@ var isLimited = function(type, date, minDate, maxDate){
 
 	if (type == 'month'){
 		// todo: there has got to be an easier way...?
-		var ms = ('' + date.get('year') + pad(date.get('month'), 2)).toInt();
+		var ms = date.format('%Y%m').toInt();
 		return (
-			(minDate && ms < ('' + minDate.get('year') + pad(minDate.get('month'), 2)).toInt()) ||
-			(maxDate && ms > ('' + maxDate.get('year') + pad(maxDate.get('month'), 2)).toInt())
+			(minDate && ms < minDate.format('%Y%m').toInt()) ||
+			(maxDate && ms > maxDate.format('%Y%m').toInt())
 		);
 	}
 
