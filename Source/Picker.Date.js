@@ -392,20 +392,18 @@ var renderers = {
 
 
 		for (i = 0; i < 42; i++){
-			classes = [];
-			classes.push('day');
-			classes.push('day' + date.getDay());
-			var dateString = date.toDateString();
-			if (dateString == todayString) classes.push('today');
-			if (dateString == currentString) classes.push('selected');
-			if (date.get('month') != month) classes.push('otherMonth');
 
 			if (i % 7 == 0){
 				weekcontainer = new Element('div.week.week' + (Math.floor(i / 7))).inject(container);
 			}
 
-			e = new Element('div', {
-				'class': classes.join(' '),
+			var dateString = date.toDateString();
+			var classes = '.day.day' + date.get('day');
+			if (dateString == todayString) classes += '.today';
+			if (dateString == currentString) classes += '.selected';
+			if (date.get('month') != month) classes += '.otherMonth';
+
+			e = new Element('div' + classes, {
 				text: date.getDate()
 			}).inject(weekcontainer);
 
