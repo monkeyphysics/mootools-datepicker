@@ -69,7 +69,10 @@ this.DatePicker = Picker.Date = new Class({
 			this.options.maxDate = Date.parse(options.maxDate).increment('day', 1);
 		}
 
-		if (!options.format) options.format = Locale.get('Date.' + ((options.pickOnly == 'time') ? 'shortTime' : 'shortDate'));
+		if (!options.format){
+			if (options.pickOnly != 'time') options.format = Locale.get('Date.shortDate');
+			if (options.timePicker) options.format = options.format + (options.format ? ' ' : '') + Locale.get('Date.shortTime');
+		}
 
 		// This is where we store the selected date
 		this.date = limitDate(new Date(), options.minDate, options.maxDate);
