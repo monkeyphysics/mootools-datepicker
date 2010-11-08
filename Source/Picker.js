@@ -106,27 +106,25 @@ var Picker = new Class({
 		}).inject(slider);
 
 		// IFrameShim for select fields in IE
-		var shim = this.shim = new IframeShim(this.picker);
+		var shim = this.shim = window['IframeShim'] ? new IframeShim(this.picker) : null;
 
 		// Dragging
 		if (options.draggable && typeOf(picker.makeDraggable) == 'function'){
-			this.dragger = picker.makeDraggable({
-				onDrag: function(){
-					shim.position();
-				}
-			});
+			this.dragger = picker.makeDraggable(shim ? {
+				onDrag: shim.position.bind(shim)
+			}: null);
 			picker.setStyle('cursor', 'move');
 		}
 
 		this.addEvent('open', function(){
-			this.picker.setStyle('display', 'block');
-			this.shim.show.delay(1, this.shim);
-		}.bind(this), true);
+			picker.setStyle('display', 'block');
+			if (shim) shim.show();
+		}, true);
 
 		this.addEvent('hide', function(){
-			this.picker.setStyle('display', 'none');
-			this.shim.hide();
-		}.bind(this), true);
+			picker.setStyle('display', 'none');
+			if (shim) shim.hide();
+		}, true);
 
 	},
 
@@ -174,7 +172,7 @@ var Picker = new Class({
 
 	destroy: function(){
 		this.picker.destroy();
-		this.shim.destroy();
+		if (this.shim) this.shim.destroy();
 	},
 
 	position: function(x, y){
@@ -201,7 +199,7 @@ var Picker = new Class({
 		if ((position.top + pickersize.y) > scrollSize.y) position.top = scrollSize.y - pickersize.y;
 
 		this.picker.setStyles(position);
-		this.shim.position();
+		if (this.shim) this.shim.position();
 		return this;
 	},
 
