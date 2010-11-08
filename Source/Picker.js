@@ -268,7 +268,7 @@ var Picker = new Class({
 	setTitleEvent: function(fn){
 		this.titleText.removeEvents('click');
 		if (fn) this.titleText.addEvent('click', fn);
-		this.titleText.setStyle('cursor', fn ? 'pointer' : 'none');
+		this.titleText.setStyle('cursor', fn ? 'pointer' : '');
 		return this;
 	}
 
