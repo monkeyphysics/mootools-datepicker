@@ -81,7 +81,7 @@ var Picker = new Class({
 				height: bodysize.y
 			}
 		}).set('tween', {
-			duration: this.options.animationDuration,
+			duration: options.animationDuration,
 			transition: Fx.Transitions.Quad.easeInOut
 		}).inject(body);
 
@@ -105,18 +105,18 @@ var Picker = new Class({
 			}
 		}).inject(slider);
 
-		// Dragging
-		if (this.options.draggable && typeOf(this.picker.makeDraggable) == 'function'){
-			this.dragger = this.picker.makeDraggable({
-				onDrag: function(){
-					this.shim.position();
-				}.bind(this)
-			});
-			this.picker.setStyle('cursor', 'move');
-		}
-
 		// IFrameShim for select fields in IE
-		this.shim = new IframeShim(this.picker);
+		var shim = this.shim = new IframeShim(this.picker);
+
+		// Dragging
+		if (options.draggable && typeOf(picker.makeDraggable) == 'function'){
+			this.dragger = picker.makeDraggable({
+				onDrag: function(){
+					shim.position();
+				}
+			});
+			picker.setStyle('cursor', 'move');
+		}
 
 		this.addEvent('open', function(){
 			this.picker.setStyle('display', 'block');
