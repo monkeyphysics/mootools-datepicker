@@ -102,7 +102,7 @@ this.DatePicker = Picker.Date = new Class({
 			var view = this.currentView,
 				cap = view.capitalize();
 			if (this['render' + cap]){
-				this['render' + cap](this.date);
+				this['render' + cap](this.date.clone());
 				this.currentView = view;
 			}
 		}.bind(this));
