@@ -57,9 +57,6 @@ var Picker = new Class({
 			.addEvent('click', this.close.pass(false, this))
 			.inject(header);
 
-		this.previous = new Element('div.previous[html=&#171;]').inject(header);
-		this.next = new Element('div.next[html=&#187;]').inject(header);
-
 		var title = this.title = new Element('div.title').inject(header);
 		this.titleText = new Element('div.titleText').inject(title);
 
@@ -271,33 +268,6 @@ var Picker = new Class({
 		if (fn) this.titleText.addEvent('click', fn);
 		this.titleText.setStyle('cursor', fn ? 'pointer' : 'none');
 		return this;
-	},
-
-	hidePrevious: function($next, $show){
-		this[$next ? 'next' : 'previous'].setStyle('display', $show ? 'block' : 'none');
-		return this;
-	},
-
-	showPrevious: function($next){
-		return this.hidePrevious($next, true);
-	},
-
-	setPreviousEvent: function(fn, $next){
-		this[$next ? 'next' : 'previous'].removeEvents('click');
-		if (fn) this[$next ? 'next' : 'previous'].addEvent('click', fn);
-		return this;
-	},
-
-	hideNext: function(){
-		return this.hidePrevious(true);
-	},
-
-	showNext: function(){
-		return this.showPrevious(true);
-	},
-
-	setNextEvent: function(fn){
-		return this.setPreviousEvent(fn, true);
 	}
 
 });

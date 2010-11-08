@@ -109,6 +109,44 @@ this.DatePicker = Picker.Date = new Class({
 
 	},
 
+	// Control the previous and next elements
+
+	constructPicker: function(){
+		this.parent();
+
+		this.previous = new Element('div.previous[html=&#171;]').inject(this.header);
+		this.next = new Element('div.next[html=&#187;]').inject(this.header);
+	},
+
+	hidePrevious: function($next, $show){
+		this[$next ? 'next' : 'previous'].setStyle('display', $show ? 'block' : 'none');
+		return this;
+	},
+
+	showPrevious: function($next){
+		return this.hidePrevious($next, true);
+	},
+
+	setPreviousEvent: function(fn, $next){
+		this[$next ? 'next' : 'previous'].removeEvents('click');
+		if (fn) this[$next ? 'next' : 'previous'].addEvent('click', fn);
+		return this;
+	},
+
+	hideNext: function(){
+		return this.hidePrevious(true);
+	},
+
+	showNext: function(){
+		return this.showPrevious(true);
+	},
+
+	setNextEvent: function(fn){
+		return this.setPreviousEvent(fn, true);
+	},
+
+	// Render the Pickers
+
 	renderYears: function(date, fx){
 
 		var options = this.options;
