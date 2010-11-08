@@ -43,9 +43,9 @@ var Picker = new Class({
 			styles: {opacity: 0, left: 0, top: 0}
 		}).inject(options.inject || document.body);
 
-		if (this.options.useFadeInOut){
-			this.picker.set('tween', {
-				duration: this.options.animationDuration,
+		if (options.useFadeInOut){
+			picker.set('tween', {
+				duration: options.animationDuration,
 				link: 'cancel'
 			});
 		}
@@ -106,7 +106,7 @@ var Picker = new Class({
 		}).inject(slider);
 
 		// IFrameShim for select fields in IE
-		var shim = this.shim = window['IframeShim'] ? new IframeShim(this.picker) : null;
+		var shim = this.shim = window['IframeShim'] ? new IframeShim(picker) : null;
 
 		// Dragging
 		if (options.draggable && typeOf(picker.makeDraggable) == 'function'){
