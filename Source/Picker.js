@@ -40,7 +40,7 @@ var Picker = new Class({
 
 		var picker = this.picker = new Element('div', {
 			'class': options.pickerClass,
-			styles: {opacity: 0, left: 0, top: 0}
+			styles: {left: 0, top: 0}
 		}).inject(options.inject || document.body);
 
 		if (options.useFadeInOut){
@@ -63,17 +63,12 @@ var Picker = new Class({
 		// Build the body of the picker
 		var body = this.body = new Element('div.body').inject(picker);
 
-		var bodysize = this.bodysize = body.getSize();
-		picker.setStyle('display', 'none');
-
 		// oldContents and newContents are used to slide from the old content to a new one.
 		var slider = this.slider = new Element('div.slider', {
 			styles: {
 				position: 'absolute',
 				top: 0,
-				left: 0,
-				width: 2 * bodysize.x,
-				height: bodysize.y
+				left: 0
 			}
 		}).set('tween', {
 			duration: options.animationDuration,
@@ -83,10 +78,7 @@ var Picker = new Class({
 		this.oldContents = new Element('div', {
 			styles: {
 				position: 'absolute',
-				top: 0,
-				left: bodysize.x,
-				width: bodysize.x,
-				height: bodysize.y
+				top: 0
 			}
 		}).inject(slider);
 
@@ -94,9 +86,7 @@ var Picker = new Class({
 			styles: {
 				position: 'absolute',
 				top: 0,
-				left: 0,
-				width: bodysize.x,
-				height: bodysize.y
+				left: 0
 			}
 		}).inject(slider);
 
@@ -121,6 +111,11 @@ var Picker = new Class({
 			if (shim) shim.hide();
 		}, true);
 
+		// Hide the picker
+		picker.setStyles({
+			display: 'none',
+			opacity: 0
+		});
 	},
 
 	open: function(noFx){
@@ -171,20 +166,20 @@ var Picker = new Class({
 	},
 
 	position: function(x, y){
+		var offset = this.options.positionOffset,
+			scroll = document.getScroll(),
+			size = document.getSize(),
+			pickersize = this.picker.getSize();
+
 		if (typeOf(x) == 'element'){
 			var element = x,
 				where = y || this.options.pickerPosition;
 
 			var elementCoords = element.getCoordinates();
-			x = (where == 'left') ? x = elementCoords.left - this.bodysize.x
+			x = (where == 'left') ? x = elementCoords.left - this.pickersize.x
 				: elementCoords.right
 			y = elementCoords.top;
 		}
-
-		var offset = this.options.positionOffset,
-			scroll = document.getScroll(),
-			size = document.getSize(),
-			pickersize = this.picker.getSize();
 
 		x += offset.x;
 		y += offset.y;
@@ -202,6 +197,23 @@ var Picker = new Class({
 		return this;
 	},
 
+	setBodySize: function(){
+		var bodysize = this.bodysize = this.body.getSize();
+		this.slider.setStyles({
+			width: 2 * bodysize.x,
+			height: bodysize.y
+		});
+		this.oldContents.setStyles({
+			left: bodysize.x,
+			width: bodysize.x,
+			height: bodysize.y
+		});
+		this.newContents.setStyles({
+			width: bodysize.x,
+			height: bodysize.y
+		});
+	},
+
 	setContent: function(){
 		var content = Array.from(arguments), fx;
 
@@ -217,6 +229,8 @@ var Picker = new Class({
 		var type = typeOf(content);
 		if (['string', 'number'].contains(type)) this.newContents.set('text', content);
 		else this.newContents.adopt(content);
+
+		this.setBodySize();
 
 		if (fx){
 			this.fx(fx);
