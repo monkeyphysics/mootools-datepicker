@@ -539,8 +539,7 @@ var renderers = {
 					});
 					fn(date);
 				}.bind(this)
-			},
-			maxlength: 2
+			}
 		}).inject(container);
 
 		return {content: container};
