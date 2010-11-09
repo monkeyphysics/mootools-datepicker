@@ -64,8 +64,6 @@ var Picker = new Class({
 		var body = this.body = new Element('div.body').inject(picker);
 
 		var bodysize = this.bodysize = body.getSize();
-
-		this.pickersize = picker.getSize();
 		picker.setStyle('display', 'none');
 
 		// oldContents and newContents are used to slide from the old content to a new one.
@@ -182,22 +180,24 @@ var Picker = new Class({
 				: elementCoords.right
 			y = elementCoords.top;
 		}
+
 		var offset = this.options.positionOffset,
 			scroll = document.getScroll(),
 			size = document.getSize(),
-			pickersize = this.pickersize;
+			pickersize = this.picker.getSize();
 
-		var position = {
-			left: x + offset.x,
-			top: y + offset.y
-		};
+		x += offset.x;
+		y += offset.y;
 
-		if ((position.left + pickersize.x) > (size.x + scroll.x)) position.left = (size.x + scroll.x) - pickersize.x;
-		if ((position.top + pickersize.y) > (size.y + scroll.y)) position.top = (size.y + scroll.y) - pickersize.y;
-		if (position.left < 0) position.left = 0;
-		if (position.top < 0) position.top = 0;
+		if ((x + pickersize.x) > (size.x + scroll.x)) x = (size.x + scroll.x) - pickersize.x;
+		if ((y + pickersize.y) > (size.y + scroll.y)) y = (size.y + scroll.y) - pickersize.y;
+		if (x < 0) x = 0;
+		if (y < 0) y = 0;
 
-		this.picker.setStyles(position);
+		this.picker.setStyles({
+			left: x,
+			top: y
+		});
 		if (this.shim) this.shim.position();
 		return this;
 	},
