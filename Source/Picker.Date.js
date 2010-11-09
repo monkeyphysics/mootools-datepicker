@@ -60,6 +60,8 @@ this.DatePicker = Picker.Date = new Class({
 			}
 		});
 
+		options.canAlwaysGoUp = options.canAlwaysGoUp ? Array.from(options.canAlwaysGoUp) : [];
+
 		// Set the min and max dates as Date objects
 		if (options.minDate && (!(options.minDate instanceof Date))){
 			options.minDate = Date.parse(options.minDate);
