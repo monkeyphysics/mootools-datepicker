@@ -40,7 +40,12 @@ var Picker = new Class({
 
 		var picker = this.picker = new Element('div', {
 			'class': options.pickerClass,
-			styles: {left: 0, top: 0}
+			styles: {
+				left: 0,
+				top: 0,
+				display: 'none',
+				opacity: 0
+			}
 		}).inject(options.inject || document.body);
 
 		if (options.useFadeInOut){
@@ -111,11 +116,6 @@ var Picker = new Class({
 			if (shim) shim.hide();
 		}, true);
 
-		// Hide the picker
-		picker.setStyles({
-			display: 'none',
-			opacity: 0
-		});
 	},
 
 	open: function(noFx){
