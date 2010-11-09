@@ -68,6 +68,11 @@ Currently the following languages are supported
 - cs-CZ
   
 
+You can set the current language with:
+
+	#JS
+	Locale.use('nl-NL');
+
 
 Class: DatePicker
 -----------------
@@ -301,18 +306,5 @@ Sets the Picker title text.
 
 1. text: (*string*) The text which will be set into the title.
 
-
-
-## MooTools Locale
-
-This plugin supports MooTools Locale, so you can use the datepicker in your own language.
-
-	#JS
-	Locale.use('nl-NL');
-	new DatePicker('.demo');
-
-
-#### Note
-- If you use more than one language on your page, things might get messed up (for example Date Parsing)
 
 
