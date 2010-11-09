@@ -17,7 +17,8 @@
 	window.addEvent('domready', function(){
 		myPicker = new Picker.Date($$('input'), {
 			pickOnly: 'months',
-			format: '%B'
+			format: '%B',
+			canAlwaysGoUp: false
 		});
 	});
 

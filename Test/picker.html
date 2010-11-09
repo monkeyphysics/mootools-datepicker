@@ -14,7 +14,7 @@
 	window.addEvent('domready', function(){
 
 		// sorry for the global, but this is easier debugging with the console!
-		myPicker = new Picker();
+		myPicker = new Picker().position(200, 200);
 
 		$('open').addEvent('click', function(e){
 			e.stop();
