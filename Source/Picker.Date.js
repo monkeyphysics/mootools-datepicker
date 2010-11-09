@@ -16,6 +16,8 @@ this.DatePicker = Picker.Date = new Class({
 	Extends: Picker.Attach,
 
 	options: {/*
+		onSelect: function(date){},
+
 		minDate: new Date('3/4/2010'), // Date object or a string
 		maxDate: new Date('3/4/2011'), // same as minDate
 		format: null,*/
@@ -27,12 +29,10 @@ this.DatePicker = Picker.Date = new Class({
 		yearPicker: true,
 		yearsPerPage: 20,
 
-		monthPicker: true,
 		startDay: 1, // Sunday (0) through Saturday (6) - be aware that this may affect your layout, since the days on the right might have a different margin
 
-		allowEmpty: true,
 		startView: 'days', // allowed values: {time, days, months, years}
-		pickOnly: false, // 'year', 'month', 'day', 'time'
+		pickOnly: false, // 'years', 'months', 'days', 'time'
 		canAlwaysGoUp: ['months', 'days']
 	},
 
