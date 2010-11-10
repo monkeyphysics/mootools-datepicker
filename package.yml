@@ -17,3 +17,4 @@ sources:
   - "Source/Locale.en-US.DatePicker.js"
   - "Source/Locale.cs-CZ.DatePicker.js"
   - "Source/Locale.nl-NL.DatePicker.js"
+  - "Source/Locale.ru-RU.DatePicker.js"
