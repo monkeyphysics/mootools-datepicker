@@ -24,7 +24,7 @@ var Picker = new Class({
 		animationDuration: 400,
 		useFadeInOut: true,
 		positionOffset: {x: 0, y: 0},
-		pickerPosition: 'right',
+		pickerPosition: 'bottom',
 		draggable: true,
 		showOnInit: true
 	},
@@ -176,13 +176,17 @@ var Picker = new Class({
 				where = y || this.options.pickerPosition;
 
 			var elementCoords = element.getCoordinates();
-			x = (where == 'left') ? x = elementCoords.left - this.pickersize.x
+
+			x = (where == 'left') ? elementCoords.left - pickersize.x
+				: (where == 'bottom' || where == 'top') ? elementCoords.left
 				: elementCoords.right
-			y = elementCoords.top;
+			y = (where == 'bottom') ? elementCoords.bottom
+				: (where == 'top') ? elementCoords.top - pickersize.y
+				: elementCoords.top;
 		}
 
-		x += offset.x;
-		y += offset.y;
+		x += offset.x * ((where && where == 'left') ? -1 : 1);
+		y += offset.y * ((where && where == 'top') ? -1: 1);
 
 		if ((x + pickersize.x) > (size.x + scroll.x)) x = (size.x + scroll.x) - pickersize.x;
 		if ((y + pickersize.y) > (size.y + scroll.y)) y = (size.y + scroll.y) - pickersize.y;

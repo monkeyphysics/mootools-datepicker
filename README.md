@@ -4,7 +4,7 @@ MooTools-DatePicker
 MooTools DatePicker is a nice modular and themable DatePicker. It has many features and options, such as
 year, month, day or timepicker only modes, min and max dates, Localization and a lot more.
 
-This Plugin makes use of MooTools' Locale and Date plugins in MooTools More, to provide a localized 
+This Plugin makes use of MooTools' Locale and Date plugins in MooTools More, to provide a localized
 datepicker, as well as easy formatting and parsing Dates.
 
 This DatePicker is a fork of the original [MonkeyPhysics DatePicker](http://www.monkeyphysics.com/mootools/script/2/datepicker),
@@ -20,8 +20,8 @@ How to use
 Below you will find a description and some docs how you can use the datepicker.
 If you find any weird things, please create a ticket at github or fork and fix it!
 
-The DatePicker consists out of three layers, a Picker class, which can be used to create  any form of Picker, a Picker.Attach class, 
-which handles stuff like attaching the Picker to a input or anchor element. Finally there is the DatePicker class, which you'll probably 
+The DatePicker consists out of three layers, a Picker class, which can be used to create  any form of Picker, a Picker.Attach class,
+which handles stuff like attaching the Picker to a input or anchor element. Finally there is the DatePicker class, which you'll probably
 use. Every option of the Picker or Picker.Attach classes can be used in the DatePicker class.
 
 Basic Example
@@ -66,7 +66,7 @@ Currently the following languages are supported
 - en-US
 - nl-NL
 - cs-CZ
-  
+
 
 You can set the current language with:
 
@@ -87,12 +87,12 @@ Class: DatePicker
 1. element: (*element*, *string*, *array*) The element(s) to attach the datepicker to
 2. options: (*object*, optional) The options object
 
-### Options: 
+### Options:
 
 All the options of the Picker and Picker.Attach classes, and:
 
-- minDate: (*Date instance*, *string*, defaults to `null`) Minimum date allowed to pick. Blocks anything before. 
-- maxDate: (*Date instance*, *string*, defaults to `null`) Maximum date allowed to pick. Blocks anything after. 
+- minDate: (*Date instance*, *string*, defaults to `null`) Minimum date allowed to pick. Blocks anything before.
+- maxDate: (*Date instance*, *string*, defaults to `null`) Maximum date allowed to pick. Blocks anything after.
 - format: (*string*, defaults to the default localized format) The format to output into the input field. Uses [Date.format](http://mootools.net/docs/more/Types/Date#Date:format)
 - timePicker: (*boolean*, defaults to 1 `false`) Enable/disable timepicker functionality. Hours/Minutes values can be changed using the scrollwheel.
 - timeWheelStep: (*number*, defaults to `1`) The number of minutes the minutes field will change in the timepicker when using the scrollwheel, for example 5, 10, 15. The value will always be k * timeWheelStep.
@@ -190,7 +190,7 @@ This is a generic Picker Class, which is used for the basic things, like positio
 - anitmationDuration: (*number*, defaults to `400`) Duration of the slide/fade animations in milliseconds.
 - useFadeInOut: (*boolean*, defaults to `true`) Whether to fade-in/out the datepicker popup. You might want to set this to `false` in IE.
 - positionOffset: (*object*, defaults to `{x: 0, y: 0}`) Allows you to tweak the position at which the datepicker appears, relative to the input element. Formatted as an object with x and y properties. Values can be negative.
-- pickerPosition: (*string*, defaults to `right`) If the picker is positioned relative to an element, you can choose to position it left or right.
+- pickerPosition: (*string*, defaults to `bottom`) If the picker is positioned relative to an element, you can choose to position it top, bottom, left or right.
 - draggable: (*boolean*, defaults to `true`) Will make the picker draggable, if Drag from MooTools More is included.
 
 #### Events:
@@ -277,7 +277,7 @@ Positions the Picker.
 Or
 
 1. myElement - (*element*) A element the Picker should be positioned relative to.
-2. where - (*string*, optional) Position the Picker `left` or `right` to the element.  
+2. where - (*string*, optional) Position the Picker `left` or `right` to the element.
 
 
 ### Picker Method: setContent
