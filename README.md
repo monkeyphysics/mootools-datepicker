@@ -66,7 +66,7 @@ Currently the following languages are supported
 - en-US
 - nl-NL
 - cs-CZ
-
+- ru-RU
 
 You can set the current language with:
 
