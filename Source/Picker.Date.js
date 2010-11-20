@@ -63,12 +63,13 @@ this.DatePicker = Picker.Date = new Class({
 		options.canAlwaysGoUp = options.canAlwaysGoUp ? Array.from(options.canAlwaysGoUp) : [];
 
 		// Set the min and max dates as Date objects
-		if (options.minDate && (!(options.minDate instanceof Date))){
-			options.minDate = Date.parse(options.minDate);
+		if (options.minDate){
+			if (!(options.minDate instanceof Date)) options.minDate = Date.parse(options.minDate);
+			options.minDate.clearTime();
 		}
-		if (options.maxDate && (!(options.maxDate instanceof Date))){
-			// Include the maxDate day
-			this.options.maxDate = Date.parse(options.maxDate).increment('day', 1);
+		if (options.maxDate){
+			if (!(options.maxDate instanceof Date)) options.maxDate = Date.parse(options.maxDate);
+			options.maxDate.clearTime();
 		}
 
 		if (!options.format){

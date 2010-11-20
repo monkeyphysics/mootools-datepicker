@@ -17,6 +17,7 @@
 
 	window.addEvent('domready', function(){
 		var myInput = $('myInput').set('value', new Date().format('%x')),
+			myInput2 = $('myInput2').set('value', new Date().format('%x')),
 			min = new Date().decrement('month', 2).decrement('day', 10),
 			max = new Date().increment('month', 2).increment('day', 20);
 
@@ -26,6 +27,11 @@
 		new Picker.Date(myInput, {
 			minDate: min,
 			maxDate: max
+		});
+
+		new Picker.Date(myInput2, {
+			minDate: min.format('%x'),
+			maxDate: max.format('%x')
 		});
 	});
 
@@ -42,9 +48,14 @@
 	</p>
 
 	<p>
-		Input:
-		<input type="text" value="02/08/1991" id="myInput">
+		Input:<br />
+		<input type="text" id="myInput">
 	</p>
+	<p>
+		Input (option is set as string):<br />
+		<input type="text" id="myInput2">
+	</p>
+
 
 
 </body>
