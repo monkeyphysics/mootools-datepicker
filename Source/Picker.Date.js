@@ -158,9 +158,7 @@ this.DatePicker = Picker.Date = new Class({
 		var options = this.options;
 
 		// start neatly at interval (eg. 1980 instead of 1987)
-		while (date.get('year') % options.yearsPerPage > 0){
-			date.decrement('year', 1);
-		}
+		while (date.get('year') % options.yearsPerPage > 0) date.decrement('year', 1);
 
 		var year = date.get('year');
 		this.setTitle(year + '-' + (year + options.yearsPerPage - 1));
@@ -334,9 +332,7 @@ var renderers = {
 			var classes = '.year.year' + i;
 			if (y == today.get('year')) classes += '.today';
 			if (y == currentDate.get('year')) classes += '.selected';
-			e = new Element('div' + classes, {
-				text: y
-			}).inject(container);
+			e = new Element('div' + classes, {text: y}).inject(container);
 
 			if (isLimited('year', date, options.minDate, options.maxDate)){
 				e.addClass('unavailable');
@@ -387,9 +383,7 @@ var renderers = {
 			var classes = '.month.month' + (i + 1);
 			if (i == month && thisyear) classes += '.today';
 			if (i == currentDate.get('month') && selectedyear) classes += '.selected';
-			e = new Element('div' + classes, {
-				text: months[i]
-			}).inject(container);
+			e = new Element('div' + classes, {text: months[i]}).inject(container);
 
 			if (isLimited('month', date, options.minDate, options.maxDate)){
 				e.addClass('unavailable');
@@ -447,19 +441,12 @@ var renderers = {
 			if (dateString == currentString) classes += '.selected';
 			if (date.get('month') != month) classes += '.otherMonth';
 
-			e = new Element('div' + classes, {
-				text: date.getDate()
-			}).inject(weekcontainer);
+			e = new Element('div' + classes, {text: date.getDate()}).inject(weekcontainer);
 
 			if (isLimited('date', date, options.minDate, options.maxDate)){
 				e.addClass('unavailable');
-				if (available){
-					if (month == date.getMonth() || date.getDate() == 1){
-						limit.right = true;
-					}
-				} else {
-					limit.left = true;
-				}
+				if (available && (month == date.get('month') || date.get('date') == 1)) limit.right = true;
+				else limit.left = true;
 			} else {
 				available = true;
 				e.addEvent('click', fn.pass(date.clone()));
@@ -531,16 +518,14 @@ var renderers = {
 
 		new Element('input.ok[type=submit]', {
 			value: Locale.get('DatePicker.time_confirm_button'),
-			events: {
-				click: function(event){
-					event.stop();
-					date.set({
-						hours: hoursInput.get('value').toInt(),
-						minutes: minutesInput.get('value').toInt()
-					});
-					fn(date);
-				}.bind(this)
-			}
+			events: {click: function(event){
+				event.stop();
+				date.set({
+					hours: hoursInput.get('value').toInt(),
+					minutes: minutesInput.get('value').toInt()
+				});
+				fn(date.clone());
+			}}
 		}).inject(container);
 
 		return {content: container};
@@ -551,6 +536,7 @@ var renderers = {
 
 Picker.Date.defineRenderer = function(name, fn){
 	renderers[name] = fn;
+	return this;
 };
 
 
@@ -591,9 +577,7 @@ var isLimited = function(type, date, minDate, maxDate){
 
 // Parse times
 Date.defineParsers(
-	'%H:%M%p', // "11:05pm"
-	'%H:%M %p', // "11:05 pm"
-	'%H:%M' // "11:05"
+	'%H:%M( ?%p)?' // "11:05pm", "11:05 am" and "11:05"
 );
 
 })();

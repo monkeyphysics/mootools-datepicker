@@ -102,7 +102,7 @@ var Picker = new Class({
 		if (options.draggable && typeOf(picker.makeDraggable) == 'function'){
 			this.dragger = picker.makeDraggable(shim ? {
 				onDrag: shim.position.bind(shim)
-			}: null);
+			} : null);
 			picker.setStyle('cursor', 'move');
 		}
 
@@ -126,7 +126,7 @@ var Picker = new Class({
 			this.picker.fade('in').get('tween').chain(function(){
 				this.fireEvent('show');
 			}.bind(this));
-		} else{
+		} else {
 			this.picker.setStyle('opacity', 1);
 			this.fireEvent('show');
 		}
@@ -157,7 +157,7 @@ var Picker = new Class({
 	},
 
 	toggle: function(){
-		return this[(this.opened == true ? 'close' : 'open')]();
+		return this[this.opened == true ? 'close' : 'open']();
 	},
 
 	destroy: function(){
@@ -221,7 +221,7 @@ var Picker = new Class({
 	setContent: function(){
 		var content = Array.from(arguments), fx;
 
-		if (['right', 'left', 'fade'].contains(content[1]))fx = content[1];
+		if (['right', 'left', 'fade'].contains(content[1])) fx = content[1];
 		if (content.length == 1 || fx) content = content[0];
 
 		// swap contents so we can fill the newContents again and animate
@@ -275,8 +275,6 @@ var Picker = new Class({
 	toElement: function(){
 		return this.picker;
 	},
-
-	// Control the elements in the header
 
 	setTitle: function(text){
 		this.titleText.set('text', text);
