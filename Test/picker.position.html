@@ -31,7 +31,7 @@
 		$$('#relative a').each(function(el, i){
 			el.addEvent('click', function(event){
 				event.stop();
-				myPicker.position(el, positions[i]);
+				myPicker.open().position(el, positions[i]);
 			});
 		});
 
