@@ -14,7 +14,7 @@ body {
 }
 
 body.viewer {
-	background: #EEE;	
+	background: #EEE;
 }
 
 ::selection {
@@ -46,8 +46,8 @@ h1 {
 
 h2,
 h3 {
-	color: #fd9800;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+	color: #333;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 h2 {
@@ -112,7 +112,7 @@ p > input {
 
 #menu a:hover {
 	background: #EEE;
-} 
+}
 
 #content {
 	float: left;
