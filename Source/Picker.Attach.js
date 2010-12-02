@@ -17,7 +17,7 @@ Picker.Attach = new Class({
 		onAttachedEvent: function(event){},
 
 		toggleElements: null, // deprecated
-		toggle: null,*/
+		toggle: null, // When set it deactivate toggling by clicking on the input */
 		showOnInit: false
 	},
 
@@ -75,11 +75,14 @@ Picker.Attach = new Class({
 
 			var events = {};
 			if (tag == 'input'){
-				events = {
-					focus: eventWrapper(self.open.bind(self), element),
-					keydown: eventWrapper(self.close.bind(self), element),
-					click: eventWrapper(self.open.bind(self), element)
-				};
+				// Fix in order to use togglers only
+				if (toggles.length){
+					events = {
+						focus: eventWrapper(self.open.bind(self), element),
+						keydown: eventWrapper(self.close.bind(self), element),
+						click: eventWrapper(self.open.bind(self), element)
+					};
+				}
 				self.inputs.push(element);
 			} else {
 				if (toggles.contains(element)){
