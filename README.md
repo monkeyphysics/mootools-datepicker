@@ -65,6 +65,7 @@ Currently the following languages are supported
 
 - en-US
 - de-DE
+- fr-FR
 - it-IT
 - nl-NL
 - cs-CZ
