@@ -33,7 +33,24 @@ this.DatePicker = Picker.Date = new Class({
 
 		startView: 'days', // allowed values: {time, days, months, years}
 		pickOnly: false, // 'years', 'months', 'days', 'time'
-		canAlwaysGoUp: ['months', 'days']
+		canAlwaysGoUp: ['months', 'days'],
+
+		// if you like to use your own translations
+		months_abbr: null,
+		days_abbr: null,
+		years_title: function(date, options){
+			var year = date.get('year');
+			return year + '-' + (year + options.yearsPerPage - 1);
+		},
+		months_title: function(date, options){
+			return date.get('year');
+		},
+		days_title: function(date, options){
+			return date.format('%b %Y');
+		},
+		time_title: function(date, options){
+			return (options.pickOnly == 'time') ? Locale.get('DatePicker.select_a_time') : date.format('%d %B, %Y');
+		}
 	},
 
 	initialize: function(attachTo, options){
@@ -160,8 +177,7 @@ this.DatePicker = Picker.Date = new Class({
 		// start neatly at interval (eg. 1980 instead of 1987)
 		while (date.get('year') % options.yearsPerPage > 0) date.decrement('year', 1);
 
-		var year = date.get('year');
-		this.setTitle(year + '-' + (year + options.yearsPerPage - 1));
+		this.setTitle(options.years_title(date, options));
 
 		var content = renderers.years(
 			options,
@@ -195,7 +211,7 @@ this.DatePicker = Picker.Date = new Class({
 
 		var options = this.options;
 
-		this.setTitle(date.get('year'));
+		this.setTitle(options.months_title(date, options));
 
 		var content = renderers.months(
 			options,
@@ -232,7 +248,7 @@ this.DatePicker = Picker.Date = new Class({
 
 		var options = this.options;
 
-		this.setTitle(date.format('%b %Y'));
+		this.setTitle(options.days_title(date, options));
 
 		var content = renderers.days(
 			options,
@@ -267,11 +283,9 @@ this.DatePicker = Picker.Date = new Class({
 
 	renderTime: function(date, fx){
 
-		var options = this.options,
-			title = (options.pickOnly == 'time') ?
-				Locale.get('DatePicker.select_a_time') : date.format('%d %B, %Y');
+		var options = this.options;
 
-		this.setTitle(title);
+		this.setTitle(options.time_title(date, options));
 
 		var content = renderers.time(
 			options,
@@ -366,7 +380,7 @@ var renderers = {
 			selectedyear = (date.get('year') == currentDate.get('year')),
 			container = new Element('div.months'),
 			e, available = false,
-			months = Locale.get('Date.months_abbr');
+			months = options.months_abbr || Locale.get('Date.months_abbr');
 
 		date.set('month', 0);
 		if (options.minDate){
@@ -420,7 +434,7 @@ var renderers = {
 		var container = new Element('div.days'),
 			titles = new Element('div.titles').inject(container),
 			day, i, classes, e, weekcontainer,
-			localeDaysShort = Locale.get('Date.days_abbr');
+			localeDaysShort = options.days_abbr || Locale.get('Date.days_abbr');
 
 		for (day = options.startDay; day < (options.startDay + 7); day++){
 			new Element('div.title.day.day' + (day % 7), {

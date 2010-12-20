@@ -64,6 +64,7 @@ Just include the file in your page with a script tag to use the translations.
 Currently the following languages are supported
 
 - en-US
+- de-DE
 - nl-NL
 - cs-CZ
 - ru-RU
@@ -101,6 +102,14 @@ All the options of the Picker and Picker.Attach classes, and:
 - startView: (*string*, defaults to `days`) The view that will be showed when the picker opens. The options are `time`, `days`, `months` and `years`
 - pickOnly: (*string*, defaults to `false`) If you just want to pick a year, month, day or time. The options are `time`, `days`, `months` and `years`
 - canAlwaysGoUp: (*array*, defaults to `['months', 'days']`) The views where you can click the title to go up. The options are `time`, `days`, `months` and `years`
+- months_abbr: (*array*) An array with the month name abbreviations. If nothing is set, it will automatically use MooTools Locale to get the abbreviations
+- days_abbr: (*array*) An array with the day name abbreviations. If nothing is set, it will automatically use MooTools Locale to get the abbreviations
+- years_title: (*function*, defaults to a function which returns `year + '-' + (year + options.yearsPerPage - 1)`) A function that returns the title for the yearpicker with as arguments the date object and the options object.
+- months_title: (*function*, defaults to a function which returns `date.format('%b %Y')`) A function that returns the title for the monthpicker with as arguments the date object and the options object.
+- days_title:  (*function*, defaults to a function which returns `date.format('%b %Y')`) A function that returns the title for the daypicker with as arguments the date object and the options object.
+- time_title: (*function*, defaults to a function which returns `(options.pickOnly == 'time') ?	Locale.get('DatePicker.select_a_time') : date.format('%d %B, %Y')`) A function that returns the title for the timepicker with as arguments the date object and the options object.
+
+
 
 ### Events:
 
