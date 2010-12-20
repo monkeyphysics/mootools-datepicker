@@ -15,6 +15,7 @@ sources:
   - "Source/Picker.Attach.js"
   - "Source/Picker.Date.js"
   - "Source/Locale.en-US.DatePicker.js"
+  - "Source/Locale.de-DE.DatePicker.js"
   - "Source/Locale.cs-CZ.DatePicker.js"
   - "Source/Locale.nl-NL.DatePicker.js"
   - "Source/Locale.ru-RU.DatePicker.js"
