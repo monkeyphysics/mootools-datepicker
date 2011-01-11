@@ -12,6 +12,7 @@
 
 	<link href="style.css" rel="stylesheet" />
 	<link href="../Source/datepicker.css" rel="stylesheet">
+	<link href="../Source/datepicker_vista/datepicker_vista.css" rel="stylesheet">
 
 	<script>
 
@@ -33,6 +34,24 @@
 			minDate: min.format('%x'),
 			maxDate: max.format('%x')
 		});
+
+		new Picker.Date('myInput3', {
+			pickerClass: 'datepicker_vista',
+			format: '%Y-%m-%d',
+			startView: 'days',
+			yearPicker: false,
+			minDate: '2011-1-19',
+			maxDate: '2011-3-24',
+			availableDates: {
+				2011: {
+					1: [19, 29, 31],
+					2: [14],
+					3: [5, 19, 24]
+				}
+			}
+		});
+
+
 	});
 
 	</script>
@@ -54,6 +73,10 @@
 	<p>
 		Input (option is set as string):<br />
 		<input type="text" id="myInput2">
+	</p>
+	<p>
+		Input (only a few dates are available):<br />
+		<input type="text" id="myInput3">
 	</p>
 
 
