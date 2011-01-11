@@ -192,7 +192,7 @@ this.DatePicker = Picker.Date = new Class({
 
 		// Set limits
 		var limitLeft = (options.minDate && date.get('year') <= options.minDate.get('year')),
-			limitRight = (options.maxDate && date.get('year') >= options.maxDate.get('year'));
+			limitRight = (options.maxDate && (date.get('year') + options.yearsPerPage) >= options.maxDate.get('year'));
 		this[(limitLeft ? 'hide' : 'show') + 'Previous']();
 		this[(limitRight ? 'hide' : 'show') + 'Next']();
 
@@ -223,9 +223,9 @@ this.DatePicker = Picker.Date = new Class({
 		), fx);
 
 		// Set limits
-		var ms = date.get('year'),
-			limitLeft = (options.minDate && ms <= options.minDate.get('year')),
-			limitRight = (options.maxDate && ms >= options.maxDate.get('year'));
+		var year = date.get('year'),
+			limitLeft = (options.minDate && year <= options.minDate.get('year')),
+			limitRight = (options.maxDate && year >= options.maxDate.get('year'));
 		this[(limitLeft ? 'hide' : 'show') + 'Previous']();
 		this[(limitRight ? 'hide' : 'show') + 'Next']();
 
@@ -258,9 +258,9 @@ this.DatePicker = Picker.Date = new Class({
 			}.bind(this)
 		), fx);
 
-		var ms = date.format('%Y%m').toInt(),
-			limitLeft = (options.minDate && ms <= options.minDate.format('%Y%m')),
-			limitRight = (options.maxDate && ms >= options.maxDate.format('%Y%m'));
+		var yearmonth = date.format('%Y%m').toInt(),
+			limitLeft = (options.minDate && yearmonth <= options.minDate.format('%Y%m')),
+			limitRight = (options.maxDate && yearmonth >= options.maxDate.format('%Y%m'));
 		this[(limitLeft ? 'hide' : 'show') + 'Previous']();
 		this[(limitRight ? 'hide' : 'show') + 'Next']();
 
@@ -326,18 +326,18 @@ var renderers = {
 		var limit = {left: false, right: false},
 			container = new Element('div.years'),
 			today = new Date(),
-			year, el;
+			year, element, classes;
 
 		for (var i = 0; i < options.yearsPerPage; i++){
 			year = date.get('year');
 
-			var classes = '.year.year' + i;
+			classes = '.year.year' + i;
 			if (year == today.get('year')) classes += '.today';
 			if (year == currentDate.get('year')) classes += '.selected';
-			el = new Element('div' + classes, {text: year}).inject(container);
+			element = new Element('div' + classes, {text: year}).inject(container);
 
-			if (isUnavailable('year', date, options)) el.addClass('unavailable');
-			else el.addEvent('click', fn.pass(date.clone()));
+			if (isUnavailable('year', date, options)) element.addClass('unavailable');
+			else element.addEvent('click', fn.pass(date.clone()));
 
 			date.increment('year', 1);
 		}
@@ -353,7 +353,7 @@ var renderers = {
 			selectedyear = (date.get('year') == currentDate.get('year')),
 			container = new Element('div.months'),
 			months = options.months_abbr || Locale.get('Date.months_abbr'),
-			el;
+			elelement, classes;
 
 		date.set('month', 0);
 		if (options.minDate){
@@ -366,13 +366,13 @@ var renderers = {
 
 		for (var i = 0; i <= 11; i++){
 
-			var classes = '.month.month' + (i + 1);
+			classes = '.month.month' + (i + 1);
 			if (i == month && thisyear) classes += '.today';
 			if (i == currentDate.get('month') && selectedyear) classes += '.selected';
-			el = new Element('div' + classes, {text: months[i]}).inject(container);
+			element = new Element('div' + classes, {text: months[i]}).inject(container);
 
-			if (isUnavailable('month', date, options)) el.addClass('unavailable');
-			else el.addEvent('click', fn.pass(date.clone()));
+			if (isUnavailable('month', date, options)) element.addClass('unavailable');
+			else element.addEvent('click', fn.pass(date.clone()));
 
 			date.increment('month', 1);
 			date.set('date', date.get('lastdayofmonth'));
@@ -385,17 +385,14 @@ var renderers = {
 		var month = date.get('month'),
 			limit = {left: false, right: false},
 			todayString = new Date().toDateString(),
-			currentString = currentDate.toDateString();
+			currentString = currentDate.toDateString(),
+			container = new Element('div.days'),
+			titles = new Element('div.titles').inject(container),
+			localeDaysShort = options.days_abbr || Locale.get('Date.days_abbr'),
+			day, classes, element, weekcontainer, dateString;
 
 		date.setDate(1);
-		while (date.getDay() != options.startDay){
-			date.setDate(date.getDate() - 1);
-		}
-
-		var container = new Element('div.days'),
-			titles = new Element('div.titles').inject(container),
-			day, classes, el, weekcontainer,
-			localeDaysShort = options.days_abbr || Locale.get('Date.days_abbr');
+		while (date.getDay() != options.startDay) date.setDate(date.getDate() - 1);
 
 		for (day = options.startDay; day < (options.startDay + 7); day++){
 			new Element('div.title.day.day' + (day % 7), {
@@ -409,16 +406,16 @@ var renderers = {
 				weekcontainer = new Element('div.week.week' + (Math.floor(i / 7))).inject(container);
 			}
 
-			var dateString = date.toDateString(),
-				classes = '.day.day' + date.get('day');
+			dateString = date.toDateString();
+			classes = '.day.day' + date.get('day');
 			if (dateString == todayString) classes += '.today';
 			if (dateString == currentString) classes += '.selected';
 			if (date.get('month') != month) classes += '.otherMonth';
 
-			el = new Element('div' + classes, {text: date.getDate()}).inject(weekcontainer);
+			element = new Element('div' + classes, {text: date.getDate()}).inject(weekcontainer);
 
-			if (isUnavailable('date', date, options)) el.addClass('unavailable');
-			else el.addEvent('click', fn.pass(date.clone()));
+			if (isUnavailable('date', date, options)) element.addClass('unavailable');
+			else element.addEvent('click', fn.pass(date.clone()));
 
 			date.increment('day',  1);
 		}
@@ -438,9 +435,9 @@ var renderers = {
 			title: Locale.get('DatePicker.use_mouse_wheel'),
 			value: date.format('%H'),
 			events: {
-				click: function(e){
-					e.target.focus();
-					e.stop();
+				click: function(event){
+					event.target.focus();
+					event.stop();
 				},
 				mousewheel: function(event){
 					event.stop();
