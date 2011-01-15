@@ -318,4 +318,7 @@ Sets the Picker title text.
 1. text: (*string*) The text which will be set into the title.
 
 
+License
+-------
 
+- [MIT License](http://www.opensource.org/licenses/mit-license.php)
