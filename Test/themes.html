@@ -16,6 +16,23 @@
 	<link  href="../Source/datepicker_jqui/datepicker_jqui.css" rel="stylesheet" type="text/css" media="screen" />
 	<link  href="../Source/datepicker_vista/datepicker_vista.css" rel="stylesheet" type="text/css" media="screen" />
 
+	<style>
+		.custom {
+			border: 0;
+			background: black;
+			width: 193px;
+		}
+
+		.custom .header {
+			background: black;
+		}
+
+		.custom .body {
+			background: black;
+			border: 0;
+		}
+	</style>
+
 	<script>
 
 	window.addEvent('domready', function(){
@@ -32,6 +49,10 @@
 		});
 
 		new Picker.Date('default');
+
+		new Picker.Date('custom', {
+			pickerClass: 'datepicker custom'
+		});
 
 	});
 
@@ -65,6 +86,11 @@
 	<p>
 		<label for="default">Default:</label><br />
 		<input type="text" value="02/08/2011" id="default">
+	</p>
+
+	<p>
+		<label for="custom">Default:</label><br />
+		<input type="text" value="02/08/2011" id="custom">
 	</p>
 
 </body>

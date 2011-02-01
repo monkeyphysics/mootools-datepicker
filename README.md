@@ -197,7 +197,7 @@ This is a generic Picker Class, which is used for the basic things, like positio
 
 #### Options:
 
-- pickerClass: (*string*, defaults to `datepicker`) CSS class for the main datepicker container element.
+- pickerClass: (*string*, defaults to `datepicker`) CSS class for the main datepicker container element. You can use multiple classes by separating them by a space, e.g. `class1 class2 class3`
 - inject: (*element*, defaults to `document.body`) This is where the Picker element will be injected to.
 - anitmationDuration: (*number*, defaults to `400`) Duration of the slide/fade animations in milliseconds.
 - useFadeInOut: (*boolean*, defaults to `true`) Whether to fade-in/out the datepicker popup. You might want to set this to `false` in IE.
