@@ -76,7 +76,7 @@ Picker.Attach = new Class({
 			var events = {};
 			if (tag == 'input'){
 				// Fix in order to use togglers only
-				if (toggles.length){
+				if (!toggles.length){
 					events = {
 						focus: eventWrapper(self.open.bind(self), element),
 						keydown: eventWrapper(self.close.bind(self), element),
