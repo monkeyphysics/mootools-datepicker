@@ -4,4 +4,4 @@ Fork from the original monkeyphisics awesome datepicker class
 
 The script is almost unchanged in its interfaces, but is compatible with the new release of mootools 1.3
 The wrong year selection when clicking a day in the previous/next year part of a month view is fixed.
-Added the getZindex method in order to show the calendar even above layers.
+Added the getMaxZindex method in order to show the calendar even above layers.

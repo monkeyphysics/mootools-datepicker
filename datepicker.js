@@ -303,7 +303,8 @@ var DatePicker = new Class({
 	constructPicker: function() {
 		this.picker = new Element('div', { 'class': this.options.pickerClass }).inject(document.body);
 		if (this.options.useFadeInOut) {
-			this.picker.setStyles({opacity:0,"z-index":++window.maxZindex}).set('tween', { duration: this.options.animationDuration });
+			// add 2 to max z-index, if the layer which contains the calendar set its z-index property after the execution of this line
+			this.picker.setStyles({opacity:0,"z-index":this.getMaxZindex()+2}).set('tween', { duration: this.options.animationDuration });
 		}
 		
 		var h = new Element('div', { 'class': 'header' }).inject(this.picker);
@@ -727,5 +728,12 @@ var DatePicker = new Class({
 		};
 		
 		return d;
+	},
+
+	getMaxZindex: function() {
+		var maxZ = 0;
+		$$('body *').each(function(el) {if(el.getStyle('z-index').toInt()) maxZ = Math.max(maxZ, el.getStyle('z-index').toInt())});
+
+		return maxZ;
 	}
 });
