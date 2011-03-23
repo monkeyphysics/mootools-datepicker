@@ -311,7 +311,7 @@ var DatePicker = new Class({
 		var titlecontainer = new Element('div', { 'class': 'title' }).inject(h);
 		new Element('div', { 'class': 'previous' }).addEvent('click', this.previous.bind(this)).set('text', '«').inject(h);
 		new Element('div', { 'class': 'next' }).addEvent('click', this.next.bind(this)).set('text', '»').inject(h);
-		new Element('div', { 'class': 'closeButton' }).addEvent('click', function(evt) { this.close.(evt, true).bind(this); }.bind(this)).set('text', 'x').inject(h);
+		new Element('div', { 'class': 'closeButton' }).addEvent('click', function(evt) { this.close(evt, true).bind(this); }.bind(this)).set('text', 'x').inject(h);
 		new Element('span', { 'class': 'titleText' }).addEvent('click', this.zoomOut.bind(this)).inject(titlecontainer);
 		
 		var b = new Element('div', { 'class': 'body' }).inject(this.picker);
