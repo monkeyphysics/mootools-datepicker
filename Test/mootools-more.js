@@ -1,5 +1,5 @@
 // MooTools: the javascript framework.
-// Load this file's selection again by visiting: http://mootools.net/more/ea71e7d3aab3551fe45865dbb054a052 
+// Load this file's selection again by visiting: http://mootools.net/more/ea71e7d3aab3551fe45865dbb054a052
 // Or build this file again with packager using: packager build More/Date More/Drag More/Drag.Move More/IframeShim
 /*
 ---
@@ -30,8 +30,8 @@ provides: [MooTools.More]
 */
 
 MooTools.More = {
-	'version': '1.3.0.1',
-	'build': '6dce99bed2792dffcbbbb4ddc15a1fb9a41994b5'
+	'version': '1.3.1.1',
+	'build': '0292a3af1eea242b817fecf9daa127417d10d4ce'
 };
 
 
@@ -64,12 +64,14 @@ var defined = function(value){
 	return value != null;
 };
 
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
 Object.extend({
 
-	getFromPath: function(source, key){
-		var parts = key.split('.');
+	getFromPath: function(source, parts){
+		if (typeof parts == 'string') parts = parts.split('.');
 		for (var i = 0, l = parts.length; i < l; i++){
-			if (source.hasOwnProperty(parts[i])) source = source[parts[i]];
+			if (hasOwnProperty.call(source, parts[i])) source = source[parts[i]];
 			else return null;
 		}
 		return source;
@@ -77,20 +79,20 @@ Object.extend({
 
 	cleanValues: function(object, method){
 		method = method || defined;
-		for (key in object) if (!method(object[key])){
+		for (var key in object) if (!method(object[key])){
 			delete object[key];
 		}
 		return object;
 	},
 
 	erase: function(object, key){
-		if (object.hasOwnProperty(key)) delete object[key];
+		if (hasOwnProperty.call(object, key)) delete object[key];
 		return object;
 	},
 
 	run: function(object){
 		var args = Array.slice(arguments, 1);
-		for (key in object) if (object[key].apply){
+		for (var key in object) if (object[key].apply){
 			object[key].apply(object, args);
 		}
 		return object;
@@ -98,7 +100,7 @@ Object.extend({
 
 });
 
-})();
+}).call(this);
 
 
 /*
@@ -152,7 +154,7 @@ var Locale = this.Locale = {
 
 		if (set) locale.define(set, key, value);
 
-		
+
 
 		if (!current) current = locale;
 
@@ -167,7 +169,7 @@ var Locale = this.Locale = {
 
 			this.fireEvent('change', locale);
 
-			
+
 		}
 
 		return this;
@@ -266,7 +268,7 @@ Locale.Set = new Class({
 
 
 
-})();
+}).call(this);
 
 
 /*
@@ -302,6 +304,7 @@ Locale.define('en-US', 'Date', {
 	shortTime: '%I:%M%p',
 	AM: 'AM',
 	PM: 'PM',
+	firstDayOfWeek: 0,
 
 	// Date.Extras
 	ordinal: function(dayOfMonth){
@@ -361,9 +364,9 @@ requires:
   - Core/Array
   - Core/String
   - Core/Number
-  - /Locale
-  - /Locale.en-US.Date
-  - /MooTools.More
+  - MooTools.More
+  - Locale
+  - Locale.en-US.Date
 
 provides: [Date]
 
@@ -374,7 +377,7 @@ provides: [Date]
 
 var Date = this.Date;
 
-Date.Methods = {
+var DateMethods = Date.Methods = {
 	ms: 'Milliseconds',
 	year: 'FullYear',
 	min: 'Minutes',
@@ -389,26 +392,26 @@ Date.Methods = {
 	Date.Methods[method.toLowerCase()] = method;
 });
 
-var pad = function(what, length, string){
-	if (!string) string = '0';
-	return new Array(length - String(what).length + 1).join(string) + what;
+var pad = function(n, digits, string){
+	if (digits == 1) return n;
+	return n < Math.pow(10, digits - 1) ? (string || '0') + pad(n, digits - 1, string) : n;
 };
 
 Date.implement({
 
 	set: function(prop, value){
 		prop = prop.toLowerCase();
-		var m = Date.Methods;
-		if (m[prop]) this['set' + m[prop]](value);
+		var method = DateMethods[prop] && 'set' + DateMethods[prop];
+		if (method && this[method]) this[method](value);
 		return this;
 	}.overloadSetter(),
 
 	get: function(prop){
 		prop = prop.toLowerCase();
-		var m = Date.Methods;
-		if (m[prop]) return this['get' + m[prop]]();
+		var method = DateMethods[prop] && 'get' + DateMethods[prop];
+		if (method && this[method]) return this[method]();
 		return null;
-	},
+	}.overloadGetter(),
 
 	clone: function(){
 		return new Date(this.get('time'));
@@ -463,8 +466,55 @@ Date.implement({
 			- Date.UTC(this.get('year'), 0, 1)) / Date.units.day();
 	},
 
-	getWeek: function(){
-		return (this.get('dayofyear') / 7).ceil();
+	setDay: function(day, firstDayOfWeek){
+		if (firstDayOfWeek == null){
+			firstDayOfWeek = Date.getMsg('firstDayOfWeek');
+			if (firstDayOfWeek === '') firstDayOfWeek = 1;
+		}
+
+		day = (7 + Date.parseDay(day, true) - firstDayOfWeek) % 7;
+		var currentDay = (7 + this.get('day') - firstDayOfWeek) % 7;
+
+		return this.increment('day', day - currentDay);
+	},
+
+	getWeek: function(firstDayOfWeek){
+		if (firstDayOfWeek == null){
+			firstDayOfWeek = Date.getMsg('firstDayOfWeek');
+			if (firstDayOfWeek === '') firstDayOfWeek = 1;
+		}
+
+		var date = this,
+			dayOfWeek = (7 + date.get('day') - firstDayOfWeek) % 7,
+			dividend = 0,
+			firstDayOfYear;
+
+		if (firstDayOfWeek == 1){
+			// ISO-8601, week belongs to year that has the most days of the week (i.e. has the thursday of the week)
+			var month = date.get('month'),
+				startOfWeek = date.get('date') - dayOfWeek;
+
+			if (month == 11 && startOfWeek > 28) return 1; // Week 1 of next year
+
+			if (month == 0 && startOfWeek < -2){
+				// Use a date from last year to determine the week
+				date = new Date(date).decrement('day', dayOfWeek);
+				dayOfWeek = 0;
+			}
+
+			firstDayOfYear = new Date(date.get('year'), 0, 1).get('day') || 7;
+			if (firstDayOfYear > 4) dividend = -7; // First week of the year is not week 1
+		} else {
+			// In other cultures the first week of the year is always week 1 and the last week always 53 or 54.
+			// Days in the same week can have a different weeknumber if the week spreads across two years.
+			firstDayOfYear = new Date(date.get('year'), 0, 1).get('day');
+		}
+
+		dividend += date.get('dayofyear');
+		dividend += 6 - dayOfWeek; // Add days so we calculate the current date's week as a full week
+		dividend += (7 + firstDayOfYear - firstDayOfWeek) % 7; // Make up for first week of the year not being a full week
+
+		return (dividend / 7);
 	},
 
 	getOrdinal: function(day){
@@ -505,8 +555,12 @@ Date.implement({
 
 	format: function(f){
 		if (!this.isValid()) return 'invalid date';
-		f = f || '%x %X';
-		f = formats[f.toLowerCase()] || f; // replace short-hand with actual format
+		if (!f) f = '%x %X';
+
+		var formatLower = f.toLowerCase();
+		if (formatters[formatLower]) return formatters[formatLower](this); // it's a formatter!
+		f = formats[formatLower] || f; // replace short-hand with actual format
+
 		var d = this;
 		return f.replace(/%([a-z%])/gi,
 			function($0, $1){
@@ -515,7 +569,7 @@ Date.implement({
 					case 'A': return Date.getMsg('days')[d.get('day')];
 					case 'b': return Date.getMsg('months_abbr')[d.get('month')];
 					case 'B': return Date.getMsg('months')[d.get('month')];
-					case 'c': return d.format('%a %b %d %H:%m:%S %Y');
+					case 'c': return d.format('%a %b %d %H:%M:%S %Y');
 					case 'd': return pad(d.get('date'), 2);
 					case 'e': return pad(d.get('date'), 2, ' ');
 					case 'H': return pad(d.get('hr'), 2);
@@ -530,13 +584,13 @@ Date.implement({
 					case 'p': return Date.getMsg(d.get('ampm'));
 					case 's': return Math.round(d / 1000);
 					case 'S': return pad(d.get('seconds'), 2);
+					case 'T': return d.format('%H:%M:%S');
 					case 'U': return pad(d.get('week'), 2);
 					case 'w': return d.get('day');
 					case 'x': return d.format(Date.getMsg('shortDate'));
 					case 'X': return d.format(Date.getMsg('shortTime'));
 					case 'y': return d.get('year').toString().substr(2);
 					case 'Y': return d.get('year');
-					
 					case 'z': return d.get('GMTOffset');
 					case 'Z': return d.get('Timezone');
 				}
@@ -549,28 +603,50 @@ Date.implement({
 		return this.format('iso8601');
 	}
 
+}).alias({
+	toJSON: 'toISOString',
+	compare: 'diff',
+	strftime: 'format'
 });
-
-
-Date.alias('toJSON', 'toISOString');
-Date.alias('compare', 'diff');
-Date.alias('strftime', 'format');
 
 var formats = {
 	db: '%Y-%m-%d %H:%M:%S',
 	compact: '%Y%m%dT%H%M%S',
-	iso8601: '%Y-%m-%dT%H:%M:%S%T',
-	rfc822: '%a, %d %b %Y %H:%M:%S %Z',
 	'short': '%d %b %H:%M',
 	'long': '%B %d, %Y %H:%M'
 };
 
-var parsePatterns = [];
-var nativeParse = Date.parse;
+// The day and month abbreviations are standardized, so we cannot use simply %a and %b because they will get localized
+var rfcDayAbbr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+	rfcMonthAbbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+var formatters = {
+	rfc822: function(date){
+		return rfcDayAbbr[date.get('day')] + date.format(', %d ') + rfcMonthAbbr[date.get('month')] + date.format(' %Y %H:%M:%S %Z');
+	},
+	rfc2822: function(date){
+		return rfcDayAbbr[date.get('day')] + date.format(', %d ') + rfcMonthAbbr[date.get('month')] + date.format(' %Y %H:%M:%S %z');
+	},
+	iso8601: function(date){
+		return (
+			date.getUTCFullYear() + '-' +
+			pad(date.getUTCMonth() + 1, 2) + '-' +
+			pad(date.getUTCDate(), 2) + 'T' +
+			pad(date.getUTCHours(), 2) + ':' +
+			pad(date.getUTCMinutes(), 2) + ':' +
+			pad(date.getUTCSeconds(), 2) + '.' +
+			pad(date.getUTCMilliseconds(), 3) + 'Z'
+		);
+	}
+};
+
+
+var parsePatterns = [],
+	nativeParse = Date.parse;
 
 var parseWord = function(type, word, num){
-	var ret = -1;
-	var translated = Date.getMsg(type + 's');
+	var ret = -1,
+		translated = Date.getMsg(type + 's');
 	switch (typeOf(word)){
 		case 'object':
 			ret = translated[word.get(type)];
@@ -590,6 +666,9 @@ var parseWord = function(type, word, num){
 
 	return (num) ? translated.indexOf(ret) : ret;
 };
+
+var startCentury = 1900,
+	startYear = 70;
 
 Date.extend({
 
@@ -634,7 +713,12 @@ Date.extend({
 			var bits = pattern.re.exec(from);
 			return (bits) ? (parsed = pattern.handler(bits)) : false;
 		});
-		return parsed || new Date(nativeParse(from));
+
+		if (!(parsed && parsed.isValid())){
+			parsed = new Date(nativeParse(from));
+			if (!(parsed && parsed.isValid())) parsed = new Date(from.toInt());
+		}
+		return parsed;
 	},
 
 	parseDay: function(day, num){
@@ -665,31 +749,33 @@ Date.extend({
 
 	defineFormat: function(name, format){
 		formats[name] = format;
+		return this;
 	},
 
 	defineFormats: function(formats){
 		for (var name in formats) Date.defineFormat(name, formats[name]);
+		return this;
 	},
 
 
 
 	defineParser: function(pattern){
 		parsePatterns.push((pattern.re && pattern.handler) ? pattern : build(pattern));
+		return this;
 	},
 
 	defineParsers: function(){
 		Array.flatten(arguments).each(Date.defineParser);
+		return this;
 	},
 
 	define2DigitYearStart: function(year){
 		startYear = year % 100;
 		startCentury = year - startYear;
+		return this;
 	}
 
 });
-
-var startCentury = 1900;
-var startYear = 70;
 
 var regexOf = function(type){
 	return new RegExp('(?:' + Date.getMsg(type).map(function(name){
@@ -698,11 +784,13 @@ var regexOf = function(type){
 };
 
 var replacers = function(key){
-	switch(key){
+	switch (key){
+		case 'T':
+			return '%H:%M:%S';
 		case 'x': // iso8601 covers yyyy-mm-dd, so just check if month is first
 			return ((Date.orderIndex('month') == 1) ? '%m[-./]%d' : '%d[-./]%m') + '([-./]%y)?';
 		case 'X':
-			return '%H([.:]%M)?([.:]%S([.:]%s)?)? ?%p? ?%T?';
+			return '%H([.:]%M)?([.:]%S([.:]%s)?)? ?%p? ?%z?';
 	}
 	return null;
 };
@@ -717,7 +805,7 @@ var keys = {
 	p: /[ap]\.?m\.?/,
 	y: /\d{2}|\d{4}/,
 	Y: /\d{4}/,
-	T: /Z|[+-]\d{2}(?::?\d{2})?/
+	z: /Z|[+-]\d{2}(?::?\d{2})?/
 };
 
 keys.m = keys.I;
@@ -766,7 +854,7 @@ var build = function(format){
 
 			if (year != null) handle.call(date, 'y', year); // need to start in the right year
 			if ('d' in bits) handle.call(date, 'd', 1);
-			if ('m' in bits || 'b' in bits || 'B' in bits) handle.call(date, 'm', 1);
+			if ('m' in bits || bits.b || bits.B) handle.call(date, 'm', 1);
 
 			for (var key in bits) handle.call(date, key, bits[key]);
 			return date;
@@ -777,7 +865,7 @@ var build = function(format){
 var handle = function(key, value){
 	if (!value) return this;
 
-	switch(key){
+	switch (key){
 		case 'a': case 'A': return this.set('day', Date.parseDay(value, true));
 		case 'b': case 'B': return this.set('mo', Date.parseMonth(value, true));
 		case 'd': return this.set('date', value);
@@ -793,7 +881,7 @@ var handle = function(key, value){
 			value = +value;
 			if (value < 100) value += startCentury + (value < startYear ? 100 : 0);
 			return this.set('year', value);
-		case 'T':
+		case 'z':
 			if (value == 'Z') value = '+00';
 			var offset = value.match(/([+-])(\d{2}):?(\d{2})?/);
 			offset = (offset[1] + '1') * (offset[2] * 60 + (+offset[3] || 0)) + this.getTimezoneOffset();
@@ -810,14 +898,16 @@ Date.defineParsers(
 	'%d%o( %b( %Y)?)?( %X)?', // "31st", "31st December", "31 Dec 1999", "31 Dec 1999 11:59pm"
 	'%b( %d%o)?( %Y)?( %X)?', // Same as above with month and day switched
 	'%Y %b( %d%o( %X)?)?', // Same as above with year coming first
-	'%o %b %d %X %T %Y' // "Thu Oct 22 08:11:23 +0000 2009"
+	'%o %b %d %X %z %Y', // "Thu Oct 22 08:11:23 +0000 2009"
+	'%T', // %H:%M:%S
+	'%H:%M( ?%p)?' // "11:05pm", "11:05 am" and "11:05"
 );
 
 Locale.addEvent('change', function(language){
 	if (Locale.get('Date')) recompile(language);
 }).fireEvent('change', Locale.getCurrent());
 
-})();
+}).call(this);
 
 
 /*
@@ -1213,9 +1303,21 @@ Drag.Move = new Class({
 		};
 	},
 
+	getDroppableCoordinates: function(element){
+		var position = element.getCoordinates();
+		if (element.getStyle('position') == 'fixed'){
+			var scroll = window.getScroll();
+			position.left += scroll.x;
+			position.right += scroll.x;
+			position.top += scroll.y;
+			position.bottom += scroll.y;
+		}
+		return position;
+	},
+
 	checkDroppables: function(){
 		var overed = this.droppables.filter(function(el, i){
-			el = this.positions ? this.positions[i] : el.getCoordinates();
+			el = this.positions ? this.positions[i] : this.getDroppableCoordinates(el);
 			var now = this.mouse.now;
 			return (now.x > el.left && now.x < el.right && now.y < el.bottom && now.y > el.top);
 		}, this).getLast();
@@ -1300,23 +1402,23 @@ var calculateEdgeSize = function(edge, styles){
 	return total;
 };
 
+var isVisible = function(el){
+	return !!(!el || el.offsetHeight || el.offsetWidth);
+};
+
 
 Element.implement({
 
 	measure: function(fn){
-		var visibility = function(el){
-			return !!(!el || el.offsetHeight || el.offsetWidth);
-		};
-		if (visibility(this)) return fn.apply(this);
+		if (isVisible(this)) return fn.call(this);
 		var parent = this.getParent(),
-			restorers = [],
 			toMeasure = [];
-		while (!visibility(parent) && parent != document.body){
+		while (!isVisible(parent) && parent != document.body){
 			toMeasure.push(parent.expose());
 			parent = parent.getParent();
 		}
-		var restore = this.expose();
-		var result = fn.apply(this);
+		var restore = this.expose(),
+			result = fn.call(this);
 		restore();
 		toMeasure.each(function(restore){
 			restore();
@@ -1368,7 +1470,7 @@ Element.implement({
 	},
 
 	getComputedSize: function(options){
-		
+
 
 		options = Object.merge({
 			styles: ['padding','border'],
@@ -1380,7 +1482,8 @@ Element.implement({
 		}, options);
 
 		var styles = {},
-			size = {width: 0, height: 0};
+			size = {width: 0, height: 0},
+			dimensions;
 
 		if (options.mode == 'vertical'){
 			delete size.width;
@@ -1390,16 +1493,19 @@ Element.implement({
 			delete options.planes.height;
 		}
 
-
 		getStylesList(options.styles, options.planes).each(function(style){
 			styles[style] = this.getStyle(style).toInt();
 		}, this);
 
 		Object.each(options.planes, function(edges, plane){
 
-			var capitalized = plane.capitalize();
-			styles[plane] = this.getStyle(plane).toInt();
-			size['total' + capitalized] = styles[plane];
+			var capitalized = plane.capitalize(),
+				style = this.getStyle(plane);
+
+			if (style == 'auto' && !dimensions) dimensions = this.getDimensions();
+
+			style = styles[plane] = (style == 'auto') ? dimensions[plane] : style.toInt();
+			size['total' + capitalized] = style;
 
 			edges.each(function(edge){
 				var edgesize = calculateEdgeSize(edge, styles);
@@ -1414,7 +1520,7 @@ Element.implement({
 
 });
 
-})();
+}).call(this);
 
 
 /*
@@ -1540,7 +1646,7 @@ Element.implement({
 			prefX = options.offset.x,
 			winSize = window.getSize();
 
-		switch(options.position.x){
+		switch (options.position.x){
 			case 'left':
 				pos.x = left + prefX;
 				break;
@@ -1552,7 +1658,7 @@ Element.implement({
 				break;
 		}
 
-		switch(options.position.y){
+		switch (options.position.y){
 			case 'top':
 				pos.y = top + prefY;
 				break;
@@ -1567,7 +1673,7 @@ Element.implement({
 		if (options.edge){
 			var edgeOffset = {};
 
-			switch(options.edge.x){
+			switch (options.edge.x){
 				case 'left':
 					edgeOffset.x = 0;
 					break;
@@ -1579,7 +1685,7 @@ Element.implement({
 					break;
 			}
 
-			switch(options.edge.y){
+			switch (options.edge.y){
 				case 'top':
 					edgeOffset.y = 0;
 					break;
@@ -1642,7 +1748,7 @@ Element.implement({
 
 });
 
-})();
+}).call(this);
 
 
 /*
@@ -1674,8 +1780,8 @@ Class.Occlude = new Class({
 	occlude: function(property, element){
 		element = document.id(element || this.element);
 		var instance = element.retrieve(property || this.property);
-		if (instance && this.occluded != null)
-			return this.occluded = instance;
+		if (instance && !this.occluded)
+			return (this.occluded = instance);
 
 		this.occluded = false;
 		element.store(property || this.property, this);
@@ -1723,7 +1829,7 @@ var IframeShim = new Class({
 		zIndex: null,
 		margin: 0,
 		offset: {x: 0, y: 0},
-		browsers: ((Browser.ie && Browser.version == 6) || (Browser.firefox && Browser.version < 3 && Browser.Platform.mac))
+		browsers: (Browser.ie6 || (Browser.firefox && Browser.version < 3 && Browser.Platform.mac))
 	},
 
 	property: 'IframeShim',
@@ -1815,4 +1921,3 @@ var IframeShim = new Class({
 window.addEvent('load', function(){
 	IframeShim.ready = true;
 });
-
