@@ -105,6 +105,7 @@ All the options of the Picker and Picker.Attach classes, and:
 - startView: (*string*, defaults to `days`) The view that will be showed when the picker opens. The options are `time`, `days`, `months` and `years`
 - pickOnly: (*string*, defaults to `false`) If you just want to pick a year, month, day or time. The options are `time`, `days`, `months` and `years`
 - canAlwaysGoUp: (*array*, defaults to `['months', 'days']`) The views where you can click the title to go up. The options are `time`, `days`, `months` and `years`
+- updateAll (*boolean*, defaults to `false`) whether or not to update all inputs when selecting a date
 - months_abbr: (*array*) An array with the month name abbreviations. If nothing is set, it will automatically use MooTools Locale to get the abbreviations
 - days_abbr: (*array*) An array with the day name abbreviations. If nothing is set, it will automatically use MooTools Locale to get the abbreviations
 - years_title: (*function*, defaults to a function which returns `year + '-' + (year + options.yearsPerPage - 1)`) A function that returns the title for the yearpicker with as arguments the date object and the options object.
@@ -138,6 +139,25 @@ All the options of the Picker and Picker.Attach classes, and:
 			myHiddenField.set('value', date.format('%s');
 		}
 	});
+
+
+Picker.Date method: select
+--------------------------
+
+Selects a date manually.
+
+### Syntax:
+
+	picker.select(date[, all]);
+
+### Arguments:
+
+1. date (*Date instance*) the date instance of the new date
+2. all (*boolean*, optional) Whether it should update all inputs (defaults to the *updateAll* option)
+
+### Returns:
+
+- Picker.Date instance.
 
 
 Class: Picker.Attach

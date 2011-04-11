@@ -35,6 +35,7 @@ this.DatePicker = Picker.Date = new Class({
 		startView: 'days', // allowed values: {time, days, months, years}
 		pickOnly: false, // 'years', 'months', 'days', 'time'
 		canAlwaysGoUp: ['months', 'days'],
+		updateAll : false, //whether or not to update all inputs when selecting a date
 
 		// if you like to use your own translations
 		months_abbr: null,
@@ -305,16 +306,20 @@ this.DatePicker = Picker.Date = new Class({
 		this.setTitleEvent(titleEvent);
 	},
 
-	select: function(date){
+	select: function(date, all){
 		this.date = date;
-		if (this.inputs.length){
-            this.inputs.each(function(i){
-                i.set('value', date.format(this.options.format))
-				 .store('datepicker:value', date.strftime()) 
-            }, this);
-		}
+		var formatted = date.format(this.options.format),
+			time = date.strftime(),
+			inputs = (!this.options.updateAll && !all && this.input) ? [this.input] : this.inputs;
+
+		inputs.each(function(input){
+			input.set('value', formatted)
+				.store('datepicker:value', time)
+		}, this);
+
 		this.fireEvent('select', date);
 		this.close();
+		return this;
 	}
 
 });
