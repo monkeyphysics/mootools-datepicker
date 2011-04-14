@@ -108,7 +108,7 @@ this.DatePicker = Picker.Date = new Class({
 				var index = this.toggles.indexOf(element);
 				if (this.inputs[index]) input = this.inputs[index];
 			}
-			this.date = new Date()
+			this.date = new Date();
 			if (input){
 				var date = Date.parse(input.get('value'));
 				if (date == null || !date.isValid()){
