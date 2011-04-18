@@ -70,6 +70,7 @@ Currently the following languages are supported
 - nl-NL
 - cs-CZ
 - ru-RU
+- pl-PL
 
 You can set the current language with:
 

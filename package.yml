@@ -20,4 +20,5 @@ sources:
   - "Source/Locale.fr-FR.DatePicker.js"
   - "Source/Locale.it-IT.DatePicker.js"
   - "Source/Locale.nl-NL.DatePicker.js"
+  - "Source/Locale.pl-PL.DatePicker.js"
   - "Source/Locale.ru-RU.DatePicker.js"
