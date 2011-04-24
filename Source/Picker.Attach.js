@@ -18,7 +18,8 @@ Picker.Attach = new Class({
 
 		toggleElements: null, // deprecated
 		toggle: null, // When set it deactivate toggling by clicking on the input */
-		showOnInit: false
+		showOnInit: false, // overrides the Picker option
+		blockKeydown: true
 	},
 
 	initialize: function(attachTo, options){
@@ -30,7 +31,7 @@ Picker.Attach = new Class({
 		this.inputs = [];
 
 		var documentEvent = function(event){
-			if (this.attachedElements.contains(event.target)) return null;
+			if (this.attachedElements.contains(event.target)) return;
 			this.close();
 		}.bind(this);
 		var document = this.picker.getDocument().addEvent('click', documentEvent);
@@ -56,40 +57,60 @@ Picker.Attach = new Class({
 			allElements = [].append(elements).combine(toggles),
 			self = this;
 
-		var eventWrapper = function(fn, element){
+		var closeEvent = function(event){
+			if (self.options.blockKeydown && event.type == 'keydown' && !(['tab', 'esc'].contains(event.key))){
+				event.preventDefault();
+				return;
+			}
+			if (event.target.get('tag') == 'a') event.stop();
+			if (!(event.type == 'keydown' && !self.options.blockKeydown)){
+				self.close();
+			}
+		};
+
+		var getOpenEvent = function(element){
 			return function(event){
-				if (event.type == 'keydown' && ['tab', 'esc'].contains(event.key) == false) return false;
 				if (event.target.get('tag') == 'a') event.stop();
 				self.fireEvent('attachedEvent', [event, element]);
 				self.position(element);
-				fn();
+				self.open();
+			};
+		};
+
+		var getToggleEvent = function(open, close){
+			return function(event){
+				if (self.opened) close(event);
+				else open(event);
 			};
 		};
 
 		allElements.each(function(element, i){
 
 			// The events are already attached!
-			if (self.attachedElements.contains(element)) return null;
+			if (self.attachedElements.contains(element)) return;
 
-			var tag = element.get('tag');
-
-			var events = {};
+			var events = {},
+				tag = element.get('tag'),
+				openEvent = getOpenEvent(element),
+				// closeEvent does not have a depency on element
+				toggleEvent = getToggleEvent(openEvent, closeEvent);
+	
 			if (tag == 'input'){
 				// Fix in order to use togglers only
 				if (!toggles.length){
 					events = {
-						focus: eventWrapper(self.open.bind(self), element),
-						keydown: eventWrapper(self.close.bind(self), element),
-						click: eventWrapper(self.open.bind(self), element)
+						focus: openEvent,
+						click: openEvent,
+						keydown: closeEvent
 					};
 				}
 				self.inputs.push(element);
 			} else {
 				if (toggles.contains(element)){
 					self.toggles.push(element);
-					events.click = eventWrapper(self.toggle.bind(self), element);
+					events.click = toggleEvent
 				} else {
-					events.click = eventWrapper(self.open.bind(self), element);
+					events.click = openEvent;
 				}
 			}
 			element.addEvents(events);
@@ -112,7 +133,7 @@ Picker.Attach = new Class({
 
 		allElements.each(function(element){
 			var i = self.attachedElements.indexOf(element);
-			if (i < 0) return null;
+			if (i < 0) return;
 
 			var events = self.attachedEvents[i];
 			element.removeEvents(events);

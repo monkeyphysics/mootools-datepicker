@@ -59,11 +59,15 @@ this.DatePicker = Picker.Date = new Class({
 		this.parent(attachTo, options);
 
 		this.setOptions(options);
-		var options = this.options;
+		options = this.options;
 
 		// If we only want to use one picker / backwards compatibility
 		['year', 'month', 'day', 'time'].some(function(what){
-			if (options[what + 'PickerOnly']) return options.pickOnly = what;
+			if (options[what + 'PickerOnly']){
+				options.pickOnly = what;
+				return true;
+			}
+			return false;
 		});
 		if (options.pickOnly){
 			options[options.pickOnly + 'Picker'] = true;
@@ -77,6 +81,7 @@ this.DatePicker = Picker.Date = new Class({
 				options.startView = newViews[i];
 				return true;
 			}
+			return false;
 		});
 
 		options.canAlwaysGoUp = options.canAlwaysGoUp ? Array.from(options.canAlwaysGoUp) : [];
