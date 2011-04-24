@@ -335,8 +335,7 @@ this.DatePicker = Picker.Date = new Class({
 var renderers = {
 
 	years: function(options, date, currentDate, fn){
-		var limit = {left: false, right: false},
-			container = new Element('div.years'),
+		var container = new Element('div.years'),
 			today = new Date(),
 			year, element, classes;
 
@@ -360,12 +359,11 @@ var renderers = {
 	months: function(options, date, currentDate, fn){
 		var today = new Date(),
 			month = today.get('month'),
-			limit = {left: false, right: false},
 			thisyear = (date.get('year') == today.get('year')),
 			selectedyear = (date.get('year') == currentDate.get('year')),
 			container = new Element('div.months'),
 			months = options.months_abbr || Locale.get('Date.months_abbr'),
-			elelement, classes;
+			element, classes;
 
 		date.set('month', 0);
 		if (options.minDate){
@@ -395,7 +393,6 @@ var renderers = {
 
 	days: function(options, date, currentDate, fn){
 		var month = date.get('month'),
-			limit = {left: false, right: false},
 			todayString = new Date().toDateString(),
 			currentString = currentDate.toDateString(),
 			container = new Element('div.days'),
@@ -521,13 +518,14 @@ var limitDate = function(date, min, max){
 var isUnavailable = function(type, date, options){
 	var minDate = options.minDate,
 		maxDate = options.maxDate,
-		availableDates = options.availableDates;
+		availableDates = options.availableDates,
+		year, month, day, ms;
 
 	if (!minDate && !maxDate && !availableDates) return false;
 	date.clearTime();
 
 	if (type == 'year'){
-		var year = date.get('year');
+		year = date.get('year');
 		return (
 			(minDate && year < minDate.get('year')) ||
 			(maxDate && year > maxDate.get('year')) ||
@@ -546,9 +544,9 @@ var isUnavailable = function(type, date, options){
 	}
 
 	if (type == 'month'){
-		var year = date.get('year'),
-			month = date.get('month') + 1,
-			ms = date.format('%Y%m').toInt();
+		year = date.get('year');
+		month = date.get('month') + 1;
+		ms = date.format('%Y%m').toInt();
 		return (
 			(minDate && ms < minDate.format('%Y%m').toInt()) ||
 			(maxDate && ms > maxDate.format('%Y%m').toInt()) ||
@@ -563,9 +561,9 @@ var isUnavailable = function(type, date, options){
 	}
 
 	// type == 'date'
-	var year = date.get('year'),
-		month = date.get('month') + 1,
-		day = date.get('date');
+	year = date.get('year');
+	month = date.get('month') + 1;
+	day = date.get('date');
 	return (
 		(minDate && date < minDate) ||
 		(maxDate && date > maxDate) ||
@@ -578,11 +576,5 @@ var isUnavailable = function(type, date, options){
 		)
 	);
 };
-
-
-// Parse times
-Date.defineParsers(
-	'%H:%M( ?%p)?' // "11:05pm", "11:05 am" and "11:05"
-);
 
 })();

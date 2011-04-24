@@ -24,8 +24,10 @@
 				format : '%b %d, %y'
 			});
 
-			$('click').addEvent('click',function(){
-				pick.select(Date.parse('Nov 12, 12'));
+			$('click').addEvent('click',function(event){
+				event.stop();
+				var date = Date.parse('Nov 12, 2012');
+				pick.select(date);
 			});
 
 		});

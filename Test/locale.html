@@ -19,7 +19,9 @@
 	Locale.use('nl-NL');
 
 	window.addEvent('domready', function(){
-		myPicker = new Picker.Date('locale');
+		myPicker = new Picker.Date('locale', {
+			timePicker: true
+		});
 
 		myPicker2 = new Picker.Date('abbr', {
 			months_abbr: ['ja', 'fe', 'ma', 'ap', 'me', 'jn', 'jl', 'au', 'ok', 'se', 'no', 'de'],
