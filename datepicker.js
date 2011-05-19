@@ -127,17 +127,21 @@ var DatePicker = new Class({
 			}
 			
 			// create clone
-			var display = item.getStyle('display');
-			var clone = item
-			.setStyle('display', this.options.debug ? display : 'none')
-			.store('datepicker', true) // to prevent double attachment...
-			.clone()
-			.store('datepicker', true) // ...even for the clone (!)
-			.removeProperty('name')    // secure clean (form)submission
-			.removeProperty('pattern')    // chrome and safari self-pattern-check
-			.setStyle('display', display)
-			.set('value', init_clone_val)
-			.inject(item, 'before');
+			if(!Browser.ie7) {
+				var display = item.getStyle('display');
+				var clone = item
+				.setStyle('display', this.options.debug ? display : 'none')
+				.store('datepicker', true) // to prevent double attachment...
+				.clone()
+				.store('datepicker', true) // ...even for the clone (!)
+				.removeProperty('name')    // secure clean (form)submission
+				.removeProperty('pattern')    // chrome and safari self-pattern-check
+				.setStyle('display', display)
+				.set('value', init_clone_val)
+				.inject(item, 'before');
+			}
+			else
+				clone = item;
 			
 			// events
 			if (this.options.toggleElements != null) {
@@ -436,7 +440,7 @@ var DatePicker = new Class({
 							this.mode = 'time';
 							this.render('fade');
 						} else {
-							this.select(d);
+							this.select(day_date);
 						}
 					}.bind(this));
 				}.bind(this))();
