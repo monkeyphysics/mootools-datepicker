@@ -58,14 +58,15 @@ Picker.Attach = new Class({
 			self = this;
 
 		var closeEvent = function(event){
-			if (self.options.blockKeydown && event.type == 'keydown' && !(['tab', 'esc'].contains(event.key))){
-				event.preventDefault();
-				return;
-			}
-			if (event.target.get('tag') == 'a') event.stop();
-			if (!(event.type == 'keydown' && !self.options.blockKeydown)){
-				self.close();
-			}
+			var stopInput = self.options.blockKeydown
+					&& event.type == 'keydown'
+					&& !(['tab', 'esc'].contains(event.key)),
+				isCloseKey = event.type == 'keydown'
+					&& (['tab', 'esc'].contains(event.key)),
+				isA = event.target.get('tag') == 'a';
+
+			if (stopInput || isA) event.preventDefault();
+			if (isCloseKey || isA) self.close();
 		};
 
 		var getOpenEvent = function(element){
@@ -84,7 +85,7 @@ Picker.Attach = new Class({
 			};
 		};
 
-		allElements.each(function(element, i){
+		allElements.each(function(element){
 
 			// The events are already attached!
 			if (self.attachedElements.contains(element)) return;
@@ -152,7 +153,7 @@ Picker.Attach = new Class({
 
 	destroy: function(){
 		this.detach();
-		this.parent();
+		return this.parent();
 	}
 
 });
