@@ -76,7 +76,6 @@
 	position: relative;
 	top: 0px;
 	left: 0px;
-	border-right: 2px solid #fff;
 	height: 193px;
 	overflow: hidden;
 }
@@ -102,6 +101,19 @@
 
 .datepicker .titleText .column.column_1 {
 	margin-left: 0;
+}
+
+/* Footer */
+
+.datepicker.footer {
+	height: 280px;
+}
+
+.datepicker .footer {
+	margin-top: 3px;
+	padding: 15px 5px;
+	height: 26px;
+
 }
 
 /* time

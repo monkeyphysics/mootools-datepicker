@@ -27,7 +27,8 @@ var Picker = new Class({
 		pickerPosition: 'bottom',
 		draggable: true,
 		showOnInit: true,
-		columns: 1
+		columns: 1,
+		footer: false
 	},
 
 	initialize: function(options){
@@ -69,6 +70,11 @@ var Picker = new Class({
 
 		// Build the body of the picker
 		var body = this.body = new Element('div.body').inject(picker);
+
+		if (options.footer){
+			this.footer = new Element('div.footer').inject(picker);
+			picker.addClass('footer');
+		}
 
 		// oldContents and newContents are used to slide from the old content to a new one.
 		var slider = this.slider = new Element('div.slider', {
