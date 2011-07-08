@@ -60,12 +60,12 @@ var Picker = new Class({
 		// Build the header
 		var header = this.header = new Element('div.header').inject(picker);
 
+		var title = this.title = new Element('div.title').inject(header);
+		this.titleText = new Element('div.titleText').inject(title);
+
 		this.closeButton = new Element('div.closeButton[text=x]')
 			.addEvent('click', this.close.pass(false, this))
 			.inject(header);
-
-		var title = this.title = new Element('div.title').inject(header);
-		this.titleText = new Element('div.titleText').inject(title);
 
 		// Build the body of the picker
 		var body = this.body = new Element('div.body').inject(picker);
