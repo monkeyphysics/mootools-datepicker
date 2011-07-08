@@ -83,11 +83,7 @@ this.DatePicker = Picker.Date = new Class({
 		// backward compatibility for startView
 		var newViews = ['days', 'months', 'years'];
 		['month', 'year', 'decades'].some(function(what, i){
-			if (options.startView == what){
-				options.startView = newViews[i];
-				return true;
-			}
-			return false;
+			return (options.startView == what) && (options.startView = newViews[i]);
 		});
 
 		options.canAlwaysGoUp = options.canAlwaysGoUp ? Array.from(options.canAlwaysGoUp) : [];
@@ -113,21 +109,12 @@ this.DatePicker = Picker.Date = new Class({
 		// Some link or input has fired an event!
 		this.addEvent('attachedEvent', function(event, element){
 			var tag = element.get('tag'), input;
-			if (tag == 'input'){
-				input = element;
-			} else {
+			if (tag == 'input') input = element;
+			else {
 				var index = this.toggles.indexOf(element);
 				if (this.inputs[index]) input = this.inputs[index];
 			}
-			this.date = new Date();
-			if (input){
-				var date = Date.parse(input.get('value'));
-				if (date == null || !date.isValid()){
-					var storeDate = input.retrieve('datepicker:value');
-					if (storeDate) date = Date.parse(storeDate);
-				}
-				if (date != null && date.isValid()) this.date = date;
-			}
+			this.getInputDate(input);
 			this.input = input;
 		}.bind(this), true);
 
@@ -138,6 +125,17 @@ this.DatePicker = Picker.Date = new Class({
 			this.setColumns(this.originalColumns);
 		}.bind(this));
 
+	},
+
+	getInputDate: function(input){
+		this.date = new Date();
+		if (!input) return;
+		var date = Date.parse(input.get('value'));
+		if (date == null || !date.isValid()){
+			var storeDate = input.retrieve('datepicker:value');
+			if (storeDate) date = Date.parse(storeDate);
+		}
+		if (date != null && date.isValid()) this.date = date;
 	},
 
 	// Control the previous and next elements
@@ -202,8 +200,8 @@ this.DatePicker = Picker.Date = new Class({
 			var _date = iterateDate.clone();
 			_dates.push(_date);
 			_columns.push(renderers.years(
+				timesSelectors.years(options, _date.clone()),
 				options,
-				_date.clone(),
 				this.date.clone(),
 				function(date){
 					if (options.pickOnly == 'years') this.select(date);
@@ -245,8 +243,8 @@ this.DatePicker = Picker.Date = new Class({
 			var _date = iterateDate.clone();
 			_dates.push(_date);
 			_columns.push(renderers.months(
+				timesSelectors.months(options, _date.clone()),
 				options,
-				_date.clone(),
 				this.date.clone(),
 				function(date){
 					if (options.pickOnly == 'months') this.select(date);
@@ -292,8 +290,8 @@ this.DatePicker = Picker.Date = new Class({
 			_date = iterateDate.clone();
 			_dates.push(_date);
 			_columns.push(renderers.days(
+				timesSelectors.days(options, _date.clone()),
 				options,
-				_date.clone(),
 				this.date.clone(),
 				function(date){
 					if (options.pickOnly == 'days' || !options.timePicker) this.select(date)
@@ -383,15 +381,48 @@ this.DatePicker = Picker.Date = new Class({
 
 // Renderers only output elements and calculate the limits!
 
+var timesSelectors = {
+
+	years: function(options, date){
+		var times = [];
+		for (var i = 0; i < options.yearsPerPage; i++){
+			times.push(+date);
+			date.increment('year', 1);
+		}
+		return times;
+	},
+
+	months: function(options, date){
+		var times = [];
+		date.set('month', 0);
+		for (var i = 0; i <= 11; i++){
+			times.push(+date);
+			date.increment('month', 1);
+		}
+		return times;
+	},
+
+	days: function(options, date){
+		var times = [];
+		date.set('date', 1);
+		while (date.get('day') != options.startDay) date.set('date', date.get('date') - 1);
+		for (var i = 0; i < 42; i++){
+			times.push(+date);
+			date.increment('day',  1);
+		}
+		return times;
+	}
+
+};
+
 var renderers = {
 
-	years: function(options, date, currentDate, fn){
+	years: function(years, options, currentDate, fn){
 		var container = new Element('div.years'),
-			today = new Date(),
-			year, element, classes;
+			today = new Date(), element, classes;
 
-		for (var i = 0; i < options.yearsPerPage; i++){
-			year = date.get('year');
+		years.each(function(_year, i){
+			var date = new Date(_year), year = date.get('year');
 
 			classes = '.year.year' + i;
 			if (year == today.get('year')) classes += '.today';
@@ -399,51 +430,38 @@ var renderers = {
 			element = new Element('div' + classes, {text: year}).inject(container);
 
 			if (isUnavailable('year', date, options)) element.addClass('unavailable');
-			else element.addEvent('click', fn.pass(date.clone()));
-
-			date.increment('year', 1);
-		}
+			else element.addEvent('click', fn.pass(date));
+		});
 
 		return container;
 	},
 
-	months: function(options, date, currentDate, fn){
+	months: function(months, options, currentDate, fn){
 		var today = new Date(),
 			month = today.get('month'),
-			thisyear = (date.get('year') == today.get('year')),
-			selectedyear = (date.get('year') == currentDate.get('year')),
+			thisyear = today.get('year'),
+			selectedyear = currentDate.get('year'),
 			container = new Element('div.months'),
-			months = options.months_abbr || Locale.get('Date.months_abbr'),
+			monthsAbbr = options.months_abbr || Locale.get('Date.months_abbr'),
 			element, classes;
 
-		date.set('month', 0);
-		if (options.minDate){
-			date.decrement('month', 1);
-			date.set('date', date.get('lastdayofmonth'));
-			date.increment('month', 1);
-		}
-
-		date.set('date', date.get('lastdayofmonth'));
-
-		for (var i = 0; i <= 11; i++){
+		months.each(function(_month, i){
+			var date = new Date(_month), year = date.get('year');
 
 			classes = '.month.month' + (i + 1);
-			if (i == month && thisyear) classes += '.today';
-			if (i == currentDate.get('month') && selectedyear) classes += '.selected';
-			element = new Element('div' + classes, {text: months[i]}).inject(container);
+			if (i == month && year == thisyear) classes += '.today';
+			if (i == currentDate.get('month') && year == selectedyear) classes += '.selected';
+			element = new Element('div' + classes, {text: monthsAbbr[i]}).inject(container);
 
 			if (isUnavailable('month', date, options)) element.addClass('unavailable');
-			else element.addEvent('click', fn.pass(date.clone()));
-
-			date.increment('month', 1);
-			date.set('date', date.get('lastdayofmonth'));
-		}
+			else element.addEvent('click', fn.pass(date));
+		});
 
 		return container;
 	},
 
-	days: function(options, date, currentDate, fn){
-		var month = date.get('month'),
+	days: function(days, options, currentDate, fn){
+		var month = new Date(days[14]).get('month'),
 			todayString = new Date().toDateString(),
 			currentString = currentDate.toDateString(),
 			container = new Element('div.days'),
@@ -451,16 +469,14 @@ var renderers = {
 			localeDaysShort = options.days_abbr || Locale.get('Date.days_abbr'),
 			day, classes, element, weekcontainer, dateString;
 
-		date.setDate(1);
-		while (date.getDay() != options.startDay) date.setDate(date.getDate() - 1);
-
 		for (day = options.startDay; day < (options.startDay + 7); day++){
 			new Element('div.title.day.day' + (day % 7), {
 				text: localeDaysShort[(day % 7)]
 			}).inject(titles);
 		}
 
-		for (var i = 0; i < 42; i++){
+		days.each(function(_date, i){
+			var date = new Date(_date);
 
 			if (i % 7 == 0){
 				weekcontainer = new Element('div.week.week' + (Math.floor(i / 7))).inject(container);
@@ -476,9 +492,7 @@ var renderers = {
 
 			if (isUnavailable('date', date, options)) element.addClass('unavailable');
 			else element.addEvent('click', fn.pass(date.clone()));
-
-			date.increment('day',  1);
-		}
+		});
 
 		return container;
 	},
