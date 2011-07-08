@@ -9,12 +9,13 @@
 body {
 	font-family: Tahoma,Geneva,Kalimati,sans-serif;
 	font-size: 0.8em;
-	padding: 0;
+	padding: 20px;
 	margin: 0;
 }
 
 body.viewer {
 	background: #EEE;
+	padding: 0;
 }
 
 ::selection {
