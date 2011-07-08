@@ -71,7 +71,9 @@ Picker.Attach = new Class({
 
 		var getOpenEvent = function(element){
 			return function(event){
-				if (event.target.get('tag') == 'a') event.stop();
+				var tag = event.target.get('tag');
+				if (tag == 'input' && event.type == 'click') return;
+				if (tag == 'a') event.stop();
 				self.fireEvent('attachedEvent', [event, element]);
 				self.position(element);
 				self.open();
