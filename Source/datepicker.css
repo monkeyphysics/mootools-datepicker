@@ -260,6 +260,10 @@
 	color: #fff !important;
 }
 
+.datepicker .days .otherMonth.selected {
+	background: #bbbfc8 !important;
+}
+
 .datepicker .unavailable,
 .datepicker .body .days .week .day.unavailable:hover {
 	background: #edd !important;

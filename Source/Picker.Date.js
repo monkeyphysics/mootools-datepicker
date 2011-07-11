@@ -190,6 +190,7 @@ this.DatePicker = Picker.Date = new Class({
 	renderYears: function(date, fx){
 		var options = this.options, pages = options.columns, perPage = options.yearsPerPage,
 			_columns = [], _dates = [];
+		this.dateElements = [];
 
 		// start neatly at interval (eg. 1980 instead of 1987)
 		date = date.clone().decrement('year', date.get('year') % perPage);
@@ -203,6 +204,7 @@ this.DatePicker = Picker.Date = new Class({
 				timesSelectors.years(options, _date.clone()),
 				options,
 				this.date.clone(),
+				this.dateElements,
 				function(date){
 					if (options.pickOnly == 'years') this.select(date);
 					else this.renderMonths(date, 'fade');
@@ -238,6 +240,7 @@ this.DatePicker = Picker.Date = new Class({
 	renderMonths: function(date, fx){
 		var options = this.options, years = options.columns, _columns = [], _dates = [],
 			iterateDate = date.clone().decrement('year', Math.floor((years - 1) / 2));
+		this.dateElements = [];
 
 		for (var i = years; i--;){
 			var _date = iterateDate.clone();
@@ -246,6 +249,7 @@ this.DatePicker = Picker.Date = new Class({
 				timesSelectors.months(options, _date.clone()),
 				options,
 				this.date.clone(),
+				this.dateElements,
 				function(date){
 					if (options.pickOnly == 'months') this.select(date);
 					else this.renderDays(date, 'fade');
@@ -285,6 +289,7 @@ this.DatePicker = Picker.Date = new Class({
 	renderDays: function(date, fx){
 		var options = this.options, months = options.columns, _columns = [], _dates = [],
 			iterateDate = date.clone().decrement('month', Math.floor((months - 1) / 2));
+		this.dateElements = [];
 
 		for (var i = months; i--;){
 			_date = iterateDate.clone();
@@ -293,6 +298,7 @@ this.DatePicker = Picker.Date = new Class({
 				timesSelectors.days(options, _date.clone()),
 				options,
 				this.date.clone(),
+				this.dateElements,
 				function(date){
 					if (options.pickOnly == 'days' || !options.timePicker) this.select(date)
 					else this.renderTime(date, 'fade');
@@ -385,6 +391,7 @@ var timesSelectors = {
 
 	years: function(options, date){
 		var times = [];
+		date.clearTime();
 		for (var i = 0; i < options.yearsPerPage; i++){
 			times.push(+date);
 			date.increment('year', 1);
@@ -394,7 +401,7 @@ var timesSelectors = {
 
 	months: function(options, date){
 		var times = [];
-		date.set('month', 0);
+		date.clearTime().set('month', 0);
 		for (var i = 0; i <= 11; i++){
 			times.push(+date);
 			date.increment('month', 1);
@@ -404,7 +411,7 @@ var timesSelectors = {
 
 	days: function(options, date){
 		var times = [];
-		date.set('date', 1);
+		date.clearTime().set('date', 1);
 		while (date.get('day') != options.startDay) date.set('date', date.get('date') - 1);
 		for (var i = 0; i < 42; i++){
 			times.push(+date);
@@ -417,7 +424,7 @@ var timesSelectors = {
 
 var renderers = {
 
-	years: function(years, options, currentDate, fn){
+	years: function(years, options, currentDate, dateElements, fn){
 		var container = new Element('div.years'),
 			today = new Date(), element, classes;
 
@@ -428,6 +435,7 @@ var renderers = {
 			if (year == today.get('year')) classes += '.today';
 			if (year == currentDate.get('year')) classes += '.selected';
 			element = new Element('div' + classes, {text: year}).inject(container);
+			dateElements.push({element: element, time: _year});
 
 			if (isUnavailable('year', date, options)) element.addClass('unavailable');
 			else element.addEvent('click', fn.pass(date));
@@ -436,7 +444,7 @@ var renderers = {
 		return container;
 	},
 
-	months: function(months, options, currentDate, fn){
+	months: function(months, options, currentDate, dateElements, fn){
 		var today = new Date(),
 			month = today.get('month'),
 			thisyear = today.get('year'),
@@ -452,6 +460,7 @@ var renderers = {
 			if (i == month && year == thisyear) classes += '.today';
 			if (i == currentDate.get('month') && year == selectedyear) classes += '.selected';
 			element = new Element('div' + classes, {text: monthsAbbr[i]}).inject(container);
+			dateElements.push({element: element, time: _month});
 
 			if (isUnavailable('month', date, options)) element.addClass('unavailable');
 			else element.addEvent('click', fn.pass(date));
@@ -460,7 +469,7 @@ var renderers = {
 		return container;
 	},
 
-	days: function(days, options, currentDate, fn){
+	days: function(days, options, currentDate, dateElements, fn){
 		var month = new Date(days[14]).get('month'),
 			todayString = new Date().toDateString(),
 			currentString = currentDate.toDateString(),
@@ -489,6 +498,7 @@ var renderers = {
 			if (date.get('month') != month) classes += '.otherMonth';
 
 			element = new Element('div' + classes, {text: date.getDate()}).inject(weekcontainer);
+			dateElements.push({element: element, time: _date});
 
 			if (isUnavailable('date', date, options)) element.addClass('unavailable');
 			else element.addEvent('click', fn.pass(date.clone()));
@@ -497,7 +507,7 @@ var renderers = {
 		return container;
 	},
 
-	time: function(options, date, currentDate, fn){
+	time: function(options, date, fn){
 		var container = new Element('div.time'),
 			// make sure that the minutes are timeWheelStep * k
 			initMinutes = (date.get('minutes') / options.timeWheelStep).round() * options.timeWheelStep

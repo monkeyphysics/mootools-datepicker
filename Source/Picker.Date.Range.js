@@ -41,7 +41,7 @@ Picker.Date.Range = new Class({
 
 		}
 
-		if (dates.length == 1) this.date = dates[0];
+		if (dates.length == 1) this.date = this.startDate = this.endDate = dates[0];
 		else if (dates.length == 2){
 
 			this.date = new Date((+dates[0] + +dates[1]) / 2);
@@ -57,30 +57,37 @@ Picker.Date.Range = new Class({
 		var footer = this.footer, self = this;
 		if (!footer) return;
 
-		var startInput = this.startInput = new Element('input', {events: {
+		var events = {
+			blur: self.updateRangeSelection.pass([], self),
+			keydown: function(event){
+				if (event.key == 'enter') self.selectRange();
+			}
+		};
+
+		var startInput = this.startInput = new Element('input', {events: Object.merge(events, {
 			click: function(){
 				startInput.focus();
-			},
-			blur: self.updateRangeSelection
-		}}).inject(footer);
+			}
+		})}).inject(footer);
 
 		new Element('span', {text: ' - '});
 
-		var endInput = this.endInput = new Element('input', {events: {
+		var endInput = this.endInput = new Element('input', {events: Object.merge(events, {
 			click: function(){
 				endInput.focus();
-			},
-			blur: self.updateRangeSelection
-		}}).inject(footer);
+			}
+		})}).inject(footer);
 
-		var apply = this.applyButton = new Element('button', {
+		this.applyButton = new Element('button', {
 			text: Locale.get('DatePicker.apply_range'),
-			events: {click: function(){
-				console.log('yo');
-				self.selectRange();
-			}}
+			events: {click: self.selectRange.pass([], self)}
 		}).inject(footer);
 
+	},
+
+	renderDays: function(){
+		this.parent.apply(this, arguments);
+		this.updateRangeSelection();
 	},
 
 	select: function(date){
@@ -95,6 +102,8 @@ Picker.Date.Range = new Class({
 
 		this.startInput.set('value', formattedFirst);
 		this.endInput.set('value', formattedEnd);
+
+		this.updateRangeSelection(this.startDate, this.endDate);
 	},
 
 	selectRange: function(){
@@ -117,8 +126,17 @@ Picker.Date.Range = new Class({
 		return this;
 	},
 
-	updateRangeSelection: function(){
-		
+	updateRangeSelection: function(start, end){
+		if (!start) start = ((start = Date.parse(this.startInput.get('value'))) && start.isValid() && start) || this.startDate;
+		if (!end) end = ((end = Date.parse(this.endInput.get('value'))) && end.isValid() && end) || this.endDate || start;
+
+		if (this.dateElements) for (var i = this.dateElements.length; i--;){
+			var el = this.dateElements[i];
+			if (el.time >= start && el.time <= end) el.element.addClass('selected');
+			else el.element.removeClass('selected');
+		}
+
+		return this;
 	}
 
 });
