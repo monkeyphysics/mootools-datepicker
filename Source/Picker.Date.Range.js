@@ -43,13 +43,11 @@ Picker.Date.Range = new Class({
 
 		if (dates.length == 1) this.date = this.startDate = this.endDate = dates[0];
 		else if (dates.length == 2){
-
-			this.date = new Date((+dates[0] + +dates[1]) / 2);
-
 			this.startDate = dates[0];
 			this.endDate = dates[1];
-
 		}
+
+		this.updateRangeSelection();
 	},
 
 	constructPicker: function(){
@@ -58,7 +56,14 @@ Picker.Date.Range = new Class({
 		if (!footer) return;
 
 		var events = {
-			blur: self.updateRangeSelection.pass([], self),
+			click: function(){
+				this.focus();
+			},
+			blur: function(){
+				var date = Date.parse(this.get('value'));
+				if (date.isValid) self[(this == startInput ? 'start' : 'end') + 'Date'] = date;
+				self.updateRangeSelection();
+			},
 			keydown: function(event){
 				if (event.key == 'enter') self.selectRange();
 			}
@@ -70,7 +75,7 @@ Picker.Date.Range = new Class({
 			}
 		})}).inject(footer);
 
-		new Element('span', {text: ' - '});
+		new Element('span', {text: ' - '}).inject(footer);
 
 		var endInput = this.endInput = new Element('input', {events: Object.merge(events, {
 			click: function(){
@@ -78,9 +83,14 @@ Picker.Date.Range = new Class({
 			}
 		})}).inject(footer);
 
-		this.applyButton = new Element('button', {
+		this.applyButton = new Element('button.apply', {
 			text: Locale.get('DatePicker.apply_range'),
 			events: {click: self.selectRange.pass([], self)}
+		}).inject(footer);
+
+		this.cancelButton = new Element('button.cancel', {
+			text: Locale.get('DatePicker.cancel'),
+			events: {click: self.close.pass(false, self)}
 		}).inject(footer);
 
 	},
@@ -91,24 +101,17 @@ Picker.Date.Range = new Class({
 	},
 
 	select: function(date){
-		if (this.startDate && !this.endDate && date > this.startDate) this.endDate = date;
+		if (this.startDate && (this.endDate == this.startDate || date > this.endDate) && date >= this.startDate) this.endDate = date;
 		else {
 			this.startDate = date;
-			this.endDate = null;
+			this.endDate = date;
 		}
 
-		var formattedFirst = this.startDate.format(this.options.format)
-			formattedEnd = this.endDate && this.endDate.format(this.options.format) || '';
-
-		this.startInput.set('value', formattedFirst);
-		this.endInput.set('value', formattedEnd);
-
-		this.updateRangeSelection(this.startDate, this.endDate);
+		this.updateRangeSelection();
 	},
 
 	selectRange: function(){
 		this.date = this.startDate;
-
 		var dates = [this.startDate, this.endDate], input = this.input;
 
 		input.store('datepicker:value', dates.map(function(date){
@@ -126,15 +129,23 @@ Picker.Date.Range = new Class({
 		return this;
 	},
 
-	updateRangeSelection: function(start, end){
-		if (!start) start = ((start = Date.parse(this.startInput.get('value'))) && start.isValid() && start) || this.startDate;
-		if (!end) end = ((end = Date.parse(this.endInput.get('value'))) && end.isValid() && end) || this.endDate || start;
+	updateRangeSelection: function(){
+		var start = this.startDate,
+			end = this.endDate || start;
 
 		if (this.dateElements) for (var i = this.dateElements.length; i--;){
 			var el = this.dateElements[i];
 			if (el.time >= start && el.time <= end) el.element.addClass('selected');
 			else el.element.removeClass('selected');
 		}
+
+		var formattedFirst = start.format(this.options.format)
+			formattedEnd = end.format(this.options.format);
+
+		this.startInput.set('value', formattedFirst);
+		this.endInput.set('value', formattedEnd);
+
+		this.date = new Date((+start + +end) / 2);
 
 		return this;
 	}
