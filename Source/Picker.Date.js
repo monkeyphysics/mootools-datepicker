@@ -345,7 +345,6 @@ this.DatePicker = Picker.Date = new Class({
 		this.setContent(renderers.time(
 			options,
 			date.clone(),
-			this.date.clone(),
 			function(date){
 				this.select(date);
 			}.bind(this)
@@ -391,7 +390,6 @@ var timesSelectors = {
 
 	years: function(options, date){
 		var times = [];
-		date.clearTime();
 		for (var i = 0; i < options.yearsPerPage; i++){
 			times.push(+date);
 			date.increment('year', 1);
@@ -401,7 +399,7 @@ var timesSelectors = {
 
 	months: function(options, date){
 		var times = [];
-		date.clearTime().set('month', 0);
+		date.set('month', 0);
 		for (var i = 0; i <= 11; i++){
 			times.push(+date);
 			date.increment('month', 1);
@@ -411,7 +409,7 @@ var timesSelectors = {
 
 	days: function(options, date){
 		var times = [];
-		date.clearTime().set('date', 1);
+		date.set('date', 1);
 		while (date.get('day') != options.startDay) date.set('date', date.get('date') - 1);
 		for (var i = 0; i < 42; i++){
 			times.push(+date);
