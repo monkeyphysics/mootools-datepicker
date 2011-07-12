@@ -169,8 +169,8 @@ this.DatePicker = Picker.Date = new Class({
 		return this.setPreviousEvent(fn, true);
 	},
 
-	setColumns: function(columns, tween, view, date, viewFx){
-		var ret = this.parent(columns, tween), method;
+	setColumns: function(columns, view, date, viewFx){
+		var ret = this.parent(columns), method;
 
 		if ((view || this.currentView)
 			&& (method = 'render' + (view || this.currentView).capitalize())
@@ -335,7 +335,7 @@ this.DatePicker = Picker.Date = new Class({
 
 		var originalColumns = this.originalColumns = options.columns;
 		this.currentView = null; // otherwise you'd get crazy recursion
-		this.setColumns(1, true);
+		if (originalColumns != 1) this.setColumns(1);
 
 		this.setContent(renderers.time(
 			options,
@@ -353,7 +353,7 @@ this.DatePicker = Picker.Date = new Class({
 
 		var canGoUp = options.pickOnly != 'time' || options.canAlwaysGoUp.contains('time');
 		var titleEvent = (canGoUp) ? function(){
-			this.setColumns(originalColumns, true, 'days', date, 'fade');
+			this.setColumns(originalColumns, 'days', date, 'fade');
 		}.bind(this) : null;
 		this.setTitleEvent(titleEvent);
 

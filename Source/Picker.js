@@ -252,7 +252,7 @@ var Picker = new Class({
 		return this.setContent(null, fx);
 	},
 
-	setColumns: function(columns, tween){
+	setColumns: function(columns){
 
 		var _columns = this.columns = new Elements, _newColumns = this.newColumns = new Elements;
 		for (var i = columns; i--;){
@@ -261,13 +261,8 @@ var Picker = new Class({
 		}
 
 		var oldClass = 'column_' + this.options.columns, newClass = 'column_' + columns;
-		var picker = this.picker.setStyle('width', null).removeClass(oldClass).addClass(newClass);
-		if (tween){
-			var newWidth = picker.getStyle('width');
-			picker.removeClass(newClass).addClass(oldClass);
-			picker.tween('width', newWidth);
-			picker.removeClass(oldClass).addClass(newClass);
-		}
+		this.picker.removeClass(oldClass).addClass(newClass);
+
 		this.options.columns = columns;
 		return this;
 	},
