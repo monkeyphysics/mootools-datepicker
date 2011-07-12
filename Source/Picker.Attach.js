@@ -14,7 +14,7 @@ Picker.Attach = new Class({
 	Extends: Picker,
 
 	options: {/*
-		onAttachedEvent: function(event){},
+		onAttached: function(event){},
 
 		toggleElements: null, // deprecated
 		toggle: null, // When set it deactivate toggling by clicking on the input */
@@ -74,9 +74,9 @@ Picker.Attach = new Class({
 				var tag = event.target.get('tag');
 				if (tag == 'input' && event.type == 'click' && !element.match(':focus')) return;
 				if (tag == 'a') event.stop();
-				self.fireEvent('attachedEvent', [event, element]);
 				self.position(element);
 				self.open();
+				self.fireEvent('attached', [event, element]);
 			};
 		};
 

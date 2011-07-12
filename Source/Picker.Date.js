@@ -107,7 +107,7 @@ this.DatePicker = Picker.Date = new Class({
 		this.currentView = options.startView;
 
 		// Some link or input has fired an event!
-		this.addEvent('attachedEvent', function(event, element){
+		this.addEvent('attached', function(event, element){
 			this.date = limitDate(new Date(), options.minDate, options.maxDate);
 			var tag = element.get('tag'), input;
 			if (tag == 'input') input = element;
