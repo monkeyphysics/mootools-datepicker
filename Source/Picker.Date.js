@@ -104,10 +104,11 @@ this.DatePicker = Picker.Date = new Class({
 		}
 
 		// This is where we store the selected date
-		this.date = limitDate(new Date(), options.minDate, options.maxDate);
+		this.currentView = options.startView;
 
 		// Some link or input has fired an event!
 		this.addEvent('attachedEvent', function(event, element){
+			this.date = limitDate(new Date(), options.minDate, options.maxDate);
 			var tag = element.get('tag'), input;
 			if (tag == 'input') input = element;
 			else {
@@ -116,14 +117,8 @@ this.DatePicker = Picker.Date = new Class({
 			}
 			this.getInputDate(input);
 			this.input = input;
-		}.bind(this), true);
-
-
-		// Start rendering the default view.
-		this.currentView = options.startView;
-		this.addEvent('open', function(){
 			this.setColumns(this.originalColumns);
-		}.bind(this));
+		}.bind(this), true);
 
 	},
 
