@@ -320,9 +320,15 @@ var Picker = new Class({
 		return this.picker;
 	},
 
-	setTitle: function(text){
-		if (!(/(elements|array)/.test(typeOf(text)))) text = new Element('div.column', {text: text}).addClass('column_1');
-		this.titleText.empty().adopt(text);
+	setTitle: function(content, fn){
+		if (!fn) fn = Function.from;
+		this.titleText.empty().adopt(
+			Array.from(content).map(function(item, i){
+				return typeOf(item) == 'element'
+					? item
+					: new Element('div.column', {text: fn(item, this.options)}).addClass('column_' + (i + 1));
+			}, this)
+		);
 		return this;
 	},
 

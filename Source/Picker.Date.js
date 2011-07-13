@@ -41,20 +41,14 @@ this.DatePicker = Picker.Date = new Class({
 		months_abbr: null,
 		days_abbr: null,
 		years_title: function(date, options){
-			return Array.from(date).map(function(_date, i){
-				var year = _date.get('year');
-				return new Element('div.column', {text: year + '-' + (year + options.yearsPerPage - 1)}).addClass('column_' + (i + 1));
-			});
+			var year = date.get('year');
+			return year + '-' + (year + options.yearsPerPage - 1);
 		},
 		months_title: function(date, options){
-			return Array.from(date).map(function(_date, i){
-				return new Element('div.column', {text: _date.get('year')}).addClass('column_' + (i + 1));
-			});
+			return date.get('year');
 		},
 		days_title: function(date, options){
-			return Array.from(date).map(function(_date, i){
-				return new Element('div.column', {text: _date.format('%b %Y')}).addClass('column_' + (i + 1));
-			});
+			return date.format('%b %Y');
 		},
 		time_title: function(date, options){
 			return (options.pickOnly == 'time') ? Locale.get('DatePicker.select_a_time') : date.format('%d %B, %Y');
@@ -210,7 +204,7 @@ this.DatePicker = Picker.Date = new Class({
 		}
 
 		this.setColumnsContent(_columns, fx);
-		this.setTitle(options.years_title(_dates, options));
+		this.setTitle(_dates, options.years_title);
 
 		// Set limits
 		var limitLeft = (options.minDate && date.get('year') <= options.minDate.get('year')),
@@ -255,7 +249,7 @@ this.DatePicker = Picker.Date = new Class({
 		}
 
 		this.setColumnsContent(_columns, fx);
-		this.setTitle(options.months_title(_dates, options));
+		this.setTitle(_dates, options.months_title);
 
 		// Set limits
 		var year = date.get('year'),
@@ -304,7 +298,7 @@ this.DatePicker = Picker.Date = new Class({
 		}
 
 		this.setColumnsContent(_columns, fx);
-		this.setTitle(options.days_title(_dates, options));
+		this.setTitle(_dates, options.days_title);
 
 		var yearmonth = date.format('%Y%m').toInt(),
 			limitLeft = (options.minDate && yearmonth <= options.minDate.format('%Y%m')),
@@ -331,7 +325,7 @@ this.DatePicker = Picker.Date = new Class({
 
 	renderTime: function(date, fx){
 		var options = this.options;
-		this.setTitle(options.time_title(date, options));
+		this.setTitle(date, options.time_title);
 
 		var originalColumns = this.originalColumns = options.columns;
 		this.currentView = null; // otherwise you'd get crazy recursion
