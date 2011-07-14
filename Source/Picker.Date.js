@@ -21,6 +21,8 @@ this.DatePicker = Picker.Date = new Class({
 		minDate: new Date('3/4/2010'), // Date object or a string
 		maxDate: new Date('3/4/2011'), // same as minDate
 		availableDates: {}, //
+		invertAvailable: false,
+
 		format: null,*/
 
 		timePicker: false,
@@ -591,7 +593,7 @@ var isUnavailable = function(type, date, options){
 			(minDate && year < minDate.get('year')) ||
 			(maxDate && year > maxDate.get('year')) ||
 			(
-				(availableDates != null) && (
+				(availableDates != null &&  !options.invertAvailable) && (
 					availableDates[year] == null ||
 					Object.getLength(availableDates[year]) == 0 ||
 					Object.getLength(
@@ -612,7 +614,7 @@ var isUnavailable = function(type, date, options){
 			(minDate && ms < minDate.format('%Y%m').toInt()) ||
 			(maxDate && ms > maxDate.format('%Y%m').toInt()) ||
 			(
-				(availableDates != null) && (
+				(availableDates != null && !options.invertAvailable) && (
 					availableDates[year] == null ||
 					availableDates[year][month] == null ||
 					availableDates[year][month].length == 0
@@ -625,17 +627,17 @@ var isUnavailable = function(type, date, options){
 	year = date.get('year');
 	month = date.get('month') + 1;
 	day = date.get('date');
-	return (
-		(minDate && date < minDate) ||
-		(maxDate && date > maxDate) ||
-		(
-			(availableDates != null) && (
-				availableDates[year] == null ||
-				availableDates[year][month] == null ||
-				!availableDates[year][month].contains(day)
-			)
-		)
-	);
+
+	var dateAllow = (minDate && date < minDate) || (minDate && date > maxDate);
+	if (availableDates != null){
+		dateAllow = dateAllow
+			|| availableDates[year] == null
+			|| availableDates[year][month] == null
+			|| !availableDates[year][month].contains(day);
+		if (options.invertAvailable) dateAllow = !dateAllow;
+	}
+
+	return dateAllow;
 };
 
 })();
