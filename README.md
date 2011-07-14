@@ -63,14 +63,15 @@ Just include the file in your page with a script tag to use the translations.
 
 Currently the following languages are supported
 
-- en-US
+- cs-CZ
 - de-DE
+- en-US
+- es-ES
 - fr-FR
 - it-IT
 - nl-NL
-- cs-CZ
-- ru-RU
 - pl-PL
+- ru-RU
 
 You can set the current language with:
 
