@@ -100,15 +100,13 @@ Picker.Date.Range = new Class({
 		this.date = this.startDate;
 		var dates = [this.startDate, this.endDate], input = this.input;
 
+		this.options.setStartEndDate.call(this, input, dates);
 		input.store('datepicker:value', dates.map(function(date){
 			return date.strftime();
-		}));
-
-		this.options.setStartEndDate.call(this, input, dates);
+		})).fireEvent('change');
 
 		this.fireEvent('select', dates);
 		this.close();
-		input.blur();
 		return this;
 	},
 
