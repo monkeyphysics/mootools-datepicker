@@ -35,6 +35,7 @@ this.DatePicker = Picker.Date = new Class({
 		startDay: 1, // Sunday (0) through Saturday (6) - be aware that this may affect your layout, since the days on the right might have a different margin
 
 		startView: 'days', // allowed values: {time, days, months, years}
+		openLastView: false,
 		pickOnly: false, // 'years', 'months', 'days', 'time'
 		canAlwaysGoUp: ['months', 'days'],
 		updateAll : false, //whether or not to update all inputs when selecting a date
@@ -99,11 +100,12 @@ this.DatePicker = Picker.Date = new Class({
 			if (options.timePicker) options.format = (options.format) + (options.format ? ' ' : '') + Locale.get('Date.shortTime');
 		}
 
-		// This is where we store the selected date
-		this.currentView = options.startView;
-
 		// Some link or input has fired an event!
 		this.addEvent('attached', function(event, element){
+
+			// This is where we store the selected date
+			if (!this.currentView || !options.openLastView) this.currentView = options.startView;
+
 			this.date = limitDate(new Date(), options.minDate, options.maxDate);
 			var tag = element.get('tag'), input;
 			if (tag == 'input') input = element;
