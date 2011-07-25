@@ -106,6 +106,7 @@ All the options of the Picker and Picker.Attach classes, and:
 - yearPicker: (*boolean*, defaults to `true`) Enable/disable yearpicker functionality. Makes it much easier to change years.
 - yearPerPage: (*number*, defaults to `20`) Amount of years to show in the year-picking view. Be aware that this may affect your layout.
 - startView: (*string*, defaults to `days`) The view that will be showed when the picker opens. The options are `time`, `days`, `months` and `years`
+- openLastView: (*boolean*, defaults to `false`) Opens the last opened view after the picker is opened again, instead of the `startView`
 - pickOnly: (*string*, defaults to `false`) If you just want to pick a year, month, day or time. The options are `time`, `days`, `months` and `years`
 - canAlwaysGoUp: (*array*, defaults to `['months', 'days']`) The views where you can click the title to go up. The options are `time`, `days`, `months` and `years`
 - updateAll (*boolean*, defaults to `false`) whether or not to update all inputs when selecting a date
@@ -143,7 +144,6 @@ All the options of the Picker and Picker.Attach classes, and:
 		}
 	});
 
-
 Picker.Date method: select
 --------------------------
 
@@ -161,6 +161,28 @@ Selects a date manually.
 ### Returns:
 
 - Picker.Date instance.
+
+
+Class: Picker.Date.Range
+------------------------
+
+The range picker can be used to select date ranges, with a start date and a end date.
+
+### Syntax:
+
+	#JS
+	var dp = new Picker.Date.Range([element, options]);
+
+### Arguments:
+
+#### Options:
+
+All `Picker.Date` options plus:
+
+- getStartEndDate: (*function*) Parses the two dates in the input field to `Date` instances. Signature: `function(input)`
+- setStartEndDate: (*function*) Formats the dates and sets the input field value. Signature: `function(input, dates)`
+- columns: (*number*, defaults to `3`) Number of columns
+- footer: (*boolean*, defaults to `true`) Creates an extra footer element
 
 
 Class: Picker.Attach
@@ -227,6 +249,8 @@ This is a generic Picker Class, which is used for the basic things, like positio
 - positionOffset: (*object*, defaults to `{x: 0, y: 0}`) Allows you to tweak the position at which the datepicker appears, relative to the input element. Formatted as an object with x and y properties. Values can be negative.
 - pickerPosition: (*string*, defaults to `bottom`) If the picker is positioned relative to an element, you can choose to position it top, bottom, left or right.
 - draggable: (*boolean*, defaults to `true`) Will make the picker draggable, if Drag from MooTools More is included.
+- columns: (*number*, defaults to `1`) Number of columns
+- footer: (*boolean*, defaults to `false`) Creates an extra footer element
 
 #### Events:
 
