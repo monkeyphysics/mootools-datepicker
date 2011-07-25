@@ -29,15 +29,15 @@ Picker.Date.Range = new Class({
 		if (!input) return;
 
 		var dates = input.retrieve('datepicker:value');
-		if (!dates || !dates.length || !dates.every(function(date){
-			return Date.isValid(date);
+		if (dates && dates.length) dates = dates.map(Date.parse);
+		if (!dates || !dates.length || dates.some(function(date){
+			return !Date.isValid(date);
 		})){
 			dates = this.options.getStartEndDate(input);
 			if (!dates.length || !dates.every(function(date){
 				return Date.isValid(date);
 			})) dates = [this.date];
 		}
-
 		if (dates.length == 1) this.date = this.startDate = this.endDate = dates[0];
 		else if (dates.length == 2){
 			this.date = this.startDate = dates[0];
@@ -132,5 +132,3 @@ Picker.Date.Range = new Class({
 	}
 
 });
-
-
