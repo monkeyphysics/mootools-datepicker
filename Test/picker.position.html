@@ -21,10 +21,11 @@
 
 	<script>
 
+	var myPicker, pickers = {};
+
 	window.addEvent('domready', function(){
 
-		// sorry for the global, but this is easier debugging with the console!
-		myPicker = new Picker({
+		pickers[1] = new Picker({
 			positionOffset: {x: 20, y: 10}
 		}).position(20, 200);
 
@@ -49,6 +50,18 @@
 			myPicker.toggle();
 		});
 
+		pickers[2] = new Picker({
+			inject: $('relative')
+		}).close(true);
+
+		myPicker = pickers[1];
+
+		$('picker').addEvent('change', function(){
+			myPicker.close();
+			myPicker = pickers[this.get('value')];
+			myPicker.open();
+		})
+
 	});
 
 	</script>
@@ -67,6 +80,10 @@
 		<a href="#" id="open">Open</a>
 		<a href="#" id="close">Close</a>
 		<a href="#" id="toggle">Toggle</a>
+		<select id="picker">
+			<option value="1">1</option>
+			<option value="2">2</option>
+		</select>
 	</p>
 
 	<div id="relative">
