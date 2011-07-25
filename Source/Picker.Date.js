@@ -368,7 +368,7 @@ this.DatePicker = Picker.Date = new Class({
 			input.set('value', formatted).store('datepicker:value', time).fireEvent('change');
 		}, this);
 
-		this.fireEvent('select', date);
+		this.fireEvent('select', [date].concat(inputs));
 		this.close();
 		return this;
 	}

@@ -105,7 +105,7 @@ Picker.Date.Range = new Class({
 			return date.strftime();
 		})).fireEvent('change');
 
-		this.fireEvent('select', dates);
+		this.fireEvent('select', dates, input);
 		this.close();
 		return this;
 	},

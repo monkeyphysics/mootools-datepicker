@@ -33,7 +33,8 @@
 			onClose: function(){
 				debug.tween('#AAA');
 			},
-			onSelect: function(date){
+			onSelect: function(date, input){
+				input.highlight();
 				debug.set('text', date.format('%c'));
 			}
 		});
