@@ -14,5 +14,6 @@ Locale.define('en-US', 'DatePicker', {
 	use_mouse_wheel: 'Use the mouse wheel to quickly change value',
 	time_confirm_button: 'OK',
 	apply_range: 'Apply',
-	cancel: 'Cancel'
+	cancel: 'Cancel',
+	week: 'Wk'
 });

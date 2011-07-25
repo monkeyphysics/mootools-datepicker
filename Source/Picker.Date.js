@@ -40,6 +40,8 @@ this.DatePicker = Picker.Date = new Class({
 		canAlwaysGoUp: ['months', 'days'],
 		updateAll : false, //whether or not to update all inputs when selecting a date
 
+		weeknumbers: false,
+
 		// if you like to use your own translations
 		months_abbr: null,
 		days_abbr: null,
@@ -465,13 +467,19 @@ var renderers = {
 		var month = new Date(days[14]).get('month'),
 			todayString = new Date().toDateString(),
 			currentString = currentDate.toDateString(),
-			container = new Element('table.days', {role: 'grid', 'aria-labelledby': this.titleID}),
+			weeknumbers = options.weeknumbers,
+			container = new Element('table.days' + (weeknumbers ? '.weeknumbers' : ''), {
+				role: 'grid', 'aria-labelledby': this.titleID
+			}),
 			header = new Element('thead').inject(container),
 			body = new Element('tbody').inject(container),
 			titles = new Element('tr.titles').inject(header),
 			localeDaysShort = options.days_abbr || Locale.get('Date.days_abbr'),
 			day, classes, element, weekcontainer, dateString;
 
+		if (weeknumbers) new Element('th.title.day.weeknumber', {
+			text: Locale.get('DatePicker.week')
+		}).inject(titles);
 		for (day = options.startDay; day < (options.startDay + 7); day++){
 			new Element('th.title.day.day' + (day % 7), {
 				text: localeDaysShort[(day % 7)],
@@ -484,6 +492,7 @@ var renderers = {
 
 			if (i % 7 == 0){
 				weekcontainer = new Element('tr.week.week' + (Math.floor(i / 7))).set('role', 'row').inject(body);
+				if (weeknumbers) new Element('td.day.weeknumber', {text: date.get('week')}).inject(weekcontainer);
 			}
 
 			dateString = date.toDateString();

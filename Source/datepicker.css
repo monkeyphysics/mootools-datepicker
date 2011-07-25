@@ -277,6 +277,17 @@
 	color: #fff !important;
 }
 
+.datepicker .days.weeknumbers .day {
+	width: 22px;
+}
+
+.datepicker .days.weeknumbers .day.weeknumber,
+.datepicker .days.weeknumbers .day.weeknumber:hover {
+	color: #AAA !important;
+	width: 16px !important;
+	background: #EEE !important;
+}
+
 .datepicker table {
 	border-spacing: 0;
 }
