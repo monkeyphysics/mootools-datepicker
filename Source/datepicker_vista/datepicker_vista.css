@@ -246,11 +246,11 @@
 	cursor: default !important;
 }
 
-.datepicker_dashboard table {
+.datepicker_vista table {
 	border-spacing: 0;
 }
 
-.datepicker_dashboard th,
-.datepicker_dashboard td {
+.datepicker_vista th,
+.datepicker_vista td {
 	padding: 0;
 }

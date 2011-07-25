@@ -277,11 +277,11 @@
 	color: #fff !important;
 }
 
-.datepicker_dashboard table {
+.datepicker table {
 	border-spacing: 0;
 }
 
-.datepicker_dashboard th,
-.datepicker_dashboard td {
+.datepicker th,
+.datepicker td {
 	padding: 0;
 }
