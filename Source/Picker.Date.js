@@ -492,7 +492,7 @@ var renderers = {
 
 			if (i % 7 == 0){
 				weekcontainer = new Element('tr.week.week' + (Math.floor(i / 7))).set('role', 'row').inject(body);
-				if (weeknumbers) new Element('td.day.weeknumber', {text: date.get('week')}).inject(weekcontainer);
+				if (weeknumbers) new Element('th.day.weeknumber', {text: date.get('week'), scope: 'row', role: 'rowheader'}).inject(weekcontainer);
 			}
 
 			dateString = date.toDateString();
