@@ -481,7 +481,7 @@ var renderers = {
 			body = new Element('tbody').inject(container),
 			titles = new Element('tr.titles').inject(header),
 			localeDaysShort = options.days_abbr || Locale.get('Date.days_abbr'),
-			day, classes, element, weekcontainer, dateString
+			day, classes, element, weekcontainer, dateString,
 			where = options.rtl ? 'top' : 'bottom';
 
 		if (weeknumbers) new Element('th.title.day.weeknumber', {
