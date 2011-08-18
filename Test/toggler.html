@@ -21,6 +21,11 @@
 			toggle: $$('.myLink')
 		});
 
+		new Picker.Date($$('.myInput2'), {
+			toggle: $$('.myLink2'),
+			togglesOnly: false
+		});
+
 	});
 
 	</script>
@@ -44,5 +49,16 @@
 		<input type="text" class="myInput"> <a class="myLink" onclick="return false;" href="#" >toggler</a>
 	</p>
 
+	<p>For these inputs it's both the input field and the toggle link</p>
+
+	<p>
+		Input3:<br />
+		<input type="text" class="myInput2"> <a class="myLink2" onclick="return false;" href="#" >toggler</a>
+	</p>
+
+	<p>
+		Input4:<br />
+		<input type="text" class="myInput2"> <a class="myLink2" onclick="return false;" href="#" >toggler</a>
+	</p>
 </body>
 </html>

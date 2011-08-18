@@ -202,6 +202,7 @@ This class adds a outerclick as well to close the Picker if you click outside th
 #### Options:
 
 - toggle: (*element*, *string*, *array*) A collection of elements which will toggle the picker when such a link is clicked.
+- togglesOnly: (*boolean, defaults to `true`) If the `toggle` option is set, this option determines if the focus/blur events on the input fields are still added as well.
 - blockKeydown: (*boolean*, defaults to `true`) Whether it should block keydown events, so the user can type into the input field or not.
 
 ### Picker.Attach Method: attach

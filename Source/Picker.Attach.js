@@ -18,6 +18,7 @@ Picker.Attach = new Class({
 
 		toggleElements: null, // deprecated
 		toggle: null, // When set it deactivate toggling by clicking on the input */
+		togglesOnly: true, // set to false to always make calendar popup on input element, if true, it depends on the toggles elements set.
 		showOnInit: false, // overrides the Picker option
 		blockKeydown: true
 	},
@@ -97,10 +98,10 @@ Picker.Attach = new Class({
 				openEvent = getOpenEvent(element),
 				// closeEvent does not have a depency on element
 				toggleEvent = getToggleEvent(openEvent, closeEvent);
-	
+
 			if (tag == 'input'){
 				// Fix in order to use togglers only
-				if (!toggles.length){
+				if (!self.options.togglesOnly || !toggles.length){
 					events = {
 						focus: openEvent,
 						click: openEvent,
