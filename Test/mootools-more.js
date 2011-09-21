@@ -31,8 +31,8 @@ provides: [MooTools.More]
 */
 
 MooTools.More = {
-	'version': '1.3.2.1',
-	'build': 'e586bcd2496e9b22acfde32e12f84d49ce09e59d'
+	'version': '1.4.0.1',
+	'build': 'a4244edf2aa97ac8a196fc96082dd35af1abab87'
 };
 
 
@@ -551,19 +551,19 @@ Date.implement({
 	},
 
 	isValid: function(date){
-		return !isNaN((date || this).valueOf());
+		if (!date) date = this;
+		return typeOf(date) == 'date' && !isNaN(date.valueOf());
 	},
 
-	format: function(f){
+	format: function(format){
 		if (!this.isValid()) return 'invalid date';
-		if (!f) f = '%x %X';
 
-		var formatLower = f.toLowerCase();
-		if (formatters[formatLower]) return formatters[formatLower](this); // it's a formatter!
-		f = formats[formatLower] || f; // replace short-hand with actual format
+		if (!format) format = '%x %X';
+		if (typeof format == 'string') format = formats[format.toLowerCase()] || format;
+		if (typeof format == 'function') return format(this);
 
 		var d = this;
-		return f.replace(/%([a-z%])/gi,
+		return format.replace(/%([a-z%])/gi,
 			function($0, $1){
 				switch ($1){
 					case 'a': return Date.getMsg('days_abbr')[d.get('day')];
@@ -610,18 +610,15 @@ Date.implement({
 	strftime: 'format'
 });
 
-var formats = {
-	db: '%Y-%m-%d %H:%M:%S',
-	compact: '%Y%m%dT%H%M%S',
-	'short': '%d %b %H:%M',
-	'long': '%B %d, %Y %H:%M'
-};
-
 // The day and month abbreviations are standardized, so we cannot use simply %a and %b because they will get localized
 var rfcDayAbbr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 	rfcMonthAbbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-var formatters = {
+var formats = {
+	db: '%Y-%m-%d %H:%M:%S',
+	compact: '%Y%m%dT%H%M%S',
+	'short': '%d %b %H:%M',
+	'long': '%B %d, %Y %H:%M',
 	rfc822: function(date){
 		return rfcDayAbbr[date.get('day')] + date.format(', %d ') + rfcMonthAbbr[date.get('month')] + date.format(' %Y %H:%M:%S %Z');
 	},
@@ -640,7 +637,6 @@ var formatters = {
 		);
 	}
 };
-
 
 var parsePatterns = [],
 	nativeParse = Date.parse;
@@ -753,11 +749,6 @@ Date.extend({
 		return this;
 	},
 
-	defineFormats: function(formats){
-		for (var name in formats) Date.defineFormat(name, formats[name]);
-		return this;
-	},
-
 
 
 	defineParser: function(pattern){
@@ -776,6 +767,8 @@ Date.extend({
 		return this;
 	}
 
+}).extend({
+	defineFormats: Date.defineFormat.overloadSetter()
 });
 
 var regexOf = function(type){
@@ -1736,7 +1729,7 @@ var local = Element.Position = {
 Element.implement({
 
 	position: function(options){
-		if (options && (options.x != null || options.y != null)) {
+		if (options && (options.x != null || options.y != null)){
 			return (original ? original.apply(this, arguments) : this);
 		}
 		var position = this.setStyle('position', 'absolute').calculatePosition(options);
