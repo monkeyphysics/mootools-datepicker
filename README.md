@@ -68,12 +68,12 @@ Currently the following languages are supported
 - en-US
 - es-ES
 - fr-FR
+- he-IL
 - it-IT
 - nl-NL
 - pl-PL
 - pt-BR
 - ru-RU
-- he-IL
 
 You can set the current language with:
 

@@ -95,7 +95,7 @@ var Picker = new Class({
 			transition: Fx.Transitions.Quad.easeInOut
 		}).inject(body);
 
-        this.newContents = new Element('div', {
+		this.newContents = new Element('div', {
 			styles: {
 				position: 'absolute',
 				top: 0,
