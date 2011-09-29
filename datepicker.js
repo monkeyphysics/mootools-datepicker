@@ -127,9 +127,8 @@ var DatePicker = new Class({
 			}
 			
 			// create clone
-			if(!Browser.ie7) {
-				var display = item.getStyle('display');
-				var clone = item
+			var display = item.getStyle('display');
+			var clone = item
 				.setStyle('display', this.options.debug ? display : 'none')
 				.store('datepicker', true) // to prevent double attachment...
 				.clone()
@@ -139,9 +138,6 @@ var DatePicker = new Class({
 				.setStyle('display', display)
 				.set('value', init_clone_val)
 				.inject(item, 'before');
-			}
-			else
-				clone = item;
 			
 			// events
 			if (this.options.toggleElements != null) {
