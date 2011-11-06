@@ -653,7 +653,7 @@ var isUnavailable = function(type, date, options){
 	month = date.get('month') + 1;
 	day = date.get('date');
 
-	var dateAllow = (minDate && date < minDate) || (minDate && date > maxDate);
+	var dateAllow = (minDate && date < minDate) || (maxDate && date > maxDate);
 	if (availableDates != null){
 		dateAllow = dateAllow
 			|| availableDates[year] == null
