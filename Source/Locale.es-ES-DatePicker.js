@@ -15,5 +15,5 @@ Locale.define('es-ES', 'DatePicker', {
 	time_confirm_button: 'OK',
 	apply_range: 'Aplicar',
 	cancel: 'Cancelar',
-	 week: 'S'
+	week: 'S'
 });
