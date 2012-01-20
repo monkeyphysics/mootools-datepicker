@@ -286,7 +286,7 @@ var Picker = new Class({
 			this.fx(fx);
 		} else {
 			this.slider.setStyle('left', 0);
-			this.oldContents.setStyles({left: 0, opacity: 0});
+			this.oldContents.setStyles({left: this.bodysize.x, opacity: 0});
 			this.newContents.setStyles({left: 0, opacity: 1});
 		}
 		return this;
