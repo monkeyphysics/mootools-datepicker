@@ -296,7 +296,8 @@ var DatePicker = new Class({
 		} else if (fx == 'fade') {
 			this.slider.setStyle('left', 0);
 			this.oldContents.setStyle('left', 0).set('tween', { duration: this.options.animationDuration / 2 }).tween('opacity', 1, 0);
-			this.newContents.setStyles({ opacity: 0, left: 0}).set('tween', { duration: this.options.animationDuration }).tween('opacity', 0, 1);
+			var oldzindex = this.oldContents.getStyle('z-index').toInt() | 0;
+			this.newContents.setStyles({ opacity: 0, left: 0, 'z-index': (oldzindex+1)}).set('tween', { duration: this.options.animationDuration }).tween('opacity', 0, 1);
 		}
 	},
 	
@@ -473,7 +474,7 @@ var DatePicker = new Class({
 				available = true;
 				(function() {
 					var my_month = i;
-					e.addEvent('click', function(e) {
+					e.addEvent('click', function(evt) {
 						this.d.setDate(1);
 						this.d.setMonth(my_month);
 						this.mode = 'month';
