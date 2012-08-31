@@ -664,6 +664,7 @@ var DatePicker = new Class({
 		var d = new Date();
 		var a = {};
 		var c, m;
+		var original_t = t;
 		t = t.toString();
 		
 		for (var i = 0; i < format.length; i++) {
@@ -728,6 +729,14 @@ var DatePicker = new Class({
 			}
 		};
 		
+		// @todo improve performance
+		// call the function again
+		// necessary because of 31/30/29/28 days months. 
+		// if changing month before day maybe the month is shifted forward if the starting date day is greater than the number of days of the changed month
+		if(!date) {
+			d = this.unformat(original_t, format, new Date(d));
+		}
+
 		return d;
 	},
 
