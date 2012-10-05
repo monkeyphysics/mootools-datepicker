@@ -608,6 +608,10 @@ Picker.Date.defineRenderer = function(name, fn){
 	return this;
 };
 
+Picker.Date.getRenderer = function(name) {
+	return renderers[name];
+}
+
 var limitDate = function(date, min, max){
 	if (min && date < min) return min;
 	if (max && date > max) return max;
