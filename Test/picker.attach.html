@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Picker.Attach</title>
+	<script src="mootools-core.js" type="text/javascript"></script>
+	<script src="mootools-more.js" type="text/javascript"></script>
+	<script src="../Source/Picker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Attach.js" type="text/javascript"></script>
+
+	<link href="style.css" rel="stylesheet" />
+	<link href="../Source/datepicker.css" rel="stylesheet">
+
+	<script>
+
+	window.addEvent('domready', function(){
+
+		var myPicker = new Picker.Attach($$('a.open, input:not(#dontBlockKeydown)'), {
+			toggles: $$('toggles'),
+			positionOffset: {x: -10, y: 20}
+		});
+
+		$('open').addEvent('click', function(e){
+			e.stop();
+			myPicker.open();
+		});
+		$('close').addEvent('click', function(e){
+			e.stop();
+			myPicker.close();
+		});
+		$('toggle').addEvent('click', function(e){
+			e.stop();
+			myPicker.toggle();
+		});
+
+		// tests blockKeydown option
+		new Picker.Attach('dontBlockKeydown', {
+			blockKeydown: false
+		});
+
+	});
+
+	</script>
+
+</head>
+
+<body>
+	<h1>The base Picker Class</h1>
+
+	<p>
+		Manual:
+		<a href="#" id="open">Open</a>
+		<a href="#" id="close">Close</a>
+		<a href="#" id="toggle">Toggle</a>
+	</p>
+
+	<p>
+		Links:
+		<a href="#" class="open">Open 1</a>
+		<a href="#" class="open">Open 2</a>
+		<a href="#" class="open">Open 3</a>
+	</p>
+
+	<p>
+		Inputs:
+		<input type="text" value="hi">
+		<input type="text" value="hi">
+		<input type="text" value="hi">
+	</p>
+
+	<div>
+		<p>
+			The picker should float over the select item in IE6.
+			You can drag the Picker over the select box.
+		</p>
+		<select>
+			<option>You should see me under the picker</option>
+		</select>
+	</div>
+
+	<p>
+		You should be able to edit this text. The text of the above input fields
+		should not be editable.<br />
+		<input type="text" value="Try to edit me" id="dontBlockKeydown" />
+	</p>
+
+</body>
+</html>

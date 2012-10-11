@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Picker.Date Localization</title>
+	<script src="mootools-core.js" type="text/javascript"></script>
+	<script src="mootools-more.js" type="text/javascript"></script>
+	<script src="Locale.nl-NL.Date.js" type="text/javascript"></script>
+	<script src="../Source/Locale.nl-NL.DatePicker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Attach.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Date.js" type="text/javascript"></script>
+
+	<link href="style.css" rel="stylesheet" />
+	<link href="../Source/datepicker.css" rel="stylesheet">
+
+	<script>
+
+	Locale.use('nl-NL');
+
+	window.addEvent('domready', function(){
+		myPicker = new Picker.Date('locale', {
+			timePicker: true
+		});
+
+		myPicker2 = new Picker.Date('abbr', {
+			months_abbr: ['ja', 'fe', 'ma', 'ap', 'me', 'jn', 'jl', 'au', 'ok', 'se', 'no', 'de'],
+			days_abbr: ['zon', 'maa', 'din', 'woe', 'don', 'vri', 'zat']
+		});
+
+		myPicker3 = new Picker.Date('titles', {
+			timePicker: true,
+			years_title: function(){
+				return 'Pick your year';
+			},
+			months_title: function(){
+				return 'Pick your month';
+			},
+			days_title: function(){
+				return 'Pick your day';
+			},
+			time_title: function(){
+				return 'Pick the time';
+			}
+		});
+	});
+
+	</script>
+
+</head>
+
+<body>
+	<h1>Localized Date Picker</h1>
+
+	<p>
+		This datepicker should parse the date as february 8th 1991 (dd-mm-yyyy). And should format it that way when it is ready.
+		The month and day names should be localized as well.
+	</p>
+
+	<p>
+		Inputs:
+		<input type="text" value="08-02-1991" id="locale">
+	</p>
+
+	<p>
+		This demo uses a custom set of day/month name abbreviations
+	</p>
+
+	<p>
+		Inputs:
+		<input type="text" value="08-02-1991" id="abbr">
+	</p>
+
+	<p>
+		This demo uses custom titlebar texts
+	</p>
+
+	<p>
+		Inputs: <input type="text" value="08-02-1991" id="titles">
+	</p>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Min and Max Dates</title>
+	<script src="mootools-core.js" type="text/javascript"></script>
+	<script src="mootools-more.js" type="text/javascript"></script>
+	<script src="../Source/Locale.en-US.DatePicker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Attach.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Date.js" type="text/javascript"></script>
+
+	<link href="style.css" rel="stylesheet" />
+	<link href="../Source/datepicker.css" rel="stylesheet">
+	<link href="../Source/datepicker_vista/datepicker_vista.css" rel="stylesheet">
+
+	<script>
+
+	window.addEvent('domready', function(){
+		var myInput = $('myInput').set('value', new Date().format('%x')),
+			myInput2 = $('myInput2').set('value', new Date().format('%x')),
+			min = new Date().decrement('month', 2).decrement('day', 10),
+			max = new Date().increment('month', 2).increment('day', 20);
+
+		$('min').set('text', min.format('%x'));
+		$('max').set('text', max.format('%x'));
+
+		new Picker.Date(myInput, {
+			minDate: min,
+			maxDate: max
+		});
+
+		new Picker.Date(myInput2, {
+			minDate: min.format('%x'),
+			maxDate: max.format('%x')
+		});
+
+		new Picker.Date('myInput3', {
+			pickerClass: 'datepicker_vista',
+			format: '%Y-%m-%d',
+			startView: 'days',
+			yearPicker: false,
+			minDate: '2011-1-19',
+			maxDate: '2011-10-24',
+			availableDates: {
+				2011: {
+					1: [19, 29, 31],
+					3: [5, 19, 24],
+					7: [6, 8, 20],
+					8: [29],
+					9: [15, 20],
+					10:[2]
+				}
+			}
+		});
+
+		new Picker.Date('myInput4', {
+			pickerClass: 'datepicker_vista',
+			format: '%Y-%m-%d',
+			startView: 'days',
+			yearPicker: false,
+			minDate: '2011-1-19',
+			maxDate: '2011-10-24',
+			availableDates: {
+				2011: {
+					1: [19, 29, 31],
+					3: [5, 19, 24],
+					7: [6, 8, 20],
+					8: [29],
+					9: [15, 20],
+					10:[2]
+				}
+			},
+			invertAvailable: true
+		});
+
+		new Picker.Date('myInput5', {
+			yearPicker: false,
+			draggable: false,
+			format: '%e %b %Y',
+			allowEmpty: false,
+			maxDate: Date.parse(' 6 Dec 2010')
+		});
+
+	});
+
+	</script>
+
+</head>
+
+<body>
+
+	<h1>Min and Max dates</h1>
+
+	<p>
+		This demo shows the <code>minDate</code> and <code>maxDate</code> options. You can set them to a certain date so the user
+		cannot select a date outside that limits. The limits are set to <code id="min"></code> and <code id="max"></code>.
+	</p>
+
+	<p>
+		Input:<br />
+		<input type="text" id="myInput">
+	</p>
+	<p>
+		Input (option is set as string):<br />
+		<input type="text" id="myInput2">
+	</p>
+	<p>
+		Input (only a few dates are available):<br />
+		<input type="text" id="myInput3">
+	</p>
+	<p>
+		Input (invert previously available dates):<br />
+		<input type="text" id="myInput4">
+	</p>
+	<p>
+		Input with only maxDate:<br />
+		<input type="text" id="myInput5" value=" 6 Nov 2010" />
+	</p>
+
+</body>
+</html>
