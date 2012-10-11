@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Picker.Date Timepicker</title>
+	<script src="mootools-core.js" type="text/javascript"></script>
+	<script src="mootools-more.js" type="text/javascript"></script>
+	<script src="../Source/Locale.en-US.DatePicker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Attach.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Date.js" type="text/javascript"></script>
+
+	<link href="style.css" rel="stylesheet" />
+	<link href="../Source/datepicker.css" rel="stylesheet">
+
+	<script>
+
+	window.addEvent('domready', function(){
+		myPicker = new Picker.Date($$('input'), {
+			pickOnly: 'time',
+			timeWheelStep: 5
+		});
+	});
+
+	</script>
+
+</head>
+
+<body>
+	<h1>TimePicker</h1>
+
+	<p>
+		This test shows a timepicker only. It should parse the current time (11:05AM) and it should format it that way.<br />
+		You should not be able to go up by clicking the picker title. The title should say a localized string "select a time"<br />
+		You should be able to change the hours and minutes with your scrollweel. The minutes should go in steps of 5.
+	</p>
+
+	<p>
+		Inputs:
+		<input type="text" value="11:07AM">
+	</p>
+
+
+</body>
+</html>

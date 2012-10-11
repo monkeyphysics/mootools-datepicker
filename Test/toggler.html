@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Toggled by a link</title>
+	<script src="mootools-core.js" type="text/javascript"></script>
+	<script src="mootools-more.js" type="text/javascript"></script>
+	<script src="../Source/Locale.en-US.DatePicker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Attach.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Date.js" type="text/javascript"></script>
+
+	<link href="style.css" rel="stylesheet" />
+	<link href="../Source/datepicker.css" rel="stylesheet">
+
+	<script>
+
+	addEvent('domready', function(){
+
+		new Picker.Date($$('.myInput'), {
+			toggle: $$('.myLink')
+		});
+
+		new Picker.Date($$('.myInput2'), {
+			toggle: $$('.myLink2'),
+			togglesOnly: false
+		});
+
+	});
+
+	</script>
+
+</head>
+
+<body>
+	<h1>Toggled by a link</h1>
+
+	<p>
+		This demo shows the external toggler feature which allow to manual update the input.
+	</p>
+
+	<p>
+		Input1:<br />
+		<input type="text" class="myInput"> <a class="myLink" onclick="return false;" href="#" >toggler</a>
+	</p>
+
+	<p>
+		Input2:<br />
+		<input type="text" class="myInput"> <a class="myLink" onclick="return false;" href="#" >toggler</a>
+	</p>
+
+	<p>For these inputs it's both the input field and the toggle link</p>
+
+	<p>
+		Input3:<br />
+		<input type="text" class="myInput2"> <a class="myLink2" onclick="return false;" href="#" >toggler</a>
+	</p>
+
+	<p>
+		Input4:<br />
+		<input type="text" class="myInput2"> <a class="myLink2" onclick="return false;" href="#" >toggler</a>
+	</p>
+</body>
+</html>

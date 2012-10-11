@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>DatePicker Events</title>
+	<script src="mootools-core.js" type="text/javascript"></script>
+	<script src="mootools-more.js" type="text/javascript"></script>
+	<script src="../Source/Locale.en-US.DatePicker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Attach.js" type="text/javascript"></script>
+	<script src="../Source/Picker.Date.js" type="text/javascript"></script>
+
+	<link href="style.css" rel="stylesheet" />
+	<link href="../Source/datepicker.css" rel="stylesheet">
+
+	<style>
+		#debug {
+			padding: 30px;
+			border: 1px solid #666;
+		}
+	</style>
+
+	<script>
+
+	window.addEvent('domready', function(){
+		var debug = $('debug').set('tween', {property: 'background-color'}).setStyle('background-color', '#fff');
+
+		new Picker.Date($$('input'), {
+			timePicker: true,
+			onOpen: function(){
+				debug.tween('#00ffff');
+			},
+			onClose: function(){
+				debug.tween('#AAA');
+			},
+			onSelect: function(date, input){
+				input.highlight();
+				debug.set('text', date.format('%c'));
+			}
+		});
+	});
+
+	</script>
+
+</head>
+
+<body>
+	<h1>DatePicker Events</h1>
+
+	<p>
+		This shows the different Events DatePicker fires. You can use the <code>onSelect</code> event if you want to
+		display the selected date elsewhere for example.
+	</p>
+
+	<div id="debug">&nbsp;</div>
+
+	<p>
+		Inputs:
+		<input type="text" value="02/08/1991 11:05AM">
+	</p>
+
+
+</body>
+</html>

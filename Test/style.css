@@ -1,0 +1,126 @@
+
+@font-face {
+  font-family: 'Cantarell';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Cantarell Regular'), local('Cantarell-Regular'), url('http://themes.googleusercontent.com/font?kit=p5ydP_uWQ5lsFzcP_XVMEw') format('truetype');
+}
+
+body {
+	font-family: Tahoma,Geneva,Kalimati,sans-serif;
+	font-size: 0.8em;
+	padding: 20px;
+	margin: 0;
+}
+
+body.viewer {
+	background: #EEE;
+	padding: 0;
+}
+
+::selection {
+	background: #fd9800;
+	color: #2d77e0;
+}
+::-moz-selection {
+	background: #fd9800;
+	color: #2d77e0;
+}
+
+a {
+	color: #2d77e0;
+	padding: 1px 3px;
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+h1 {
+	color: #2d77e0;
+	font-size: 2.3em;
+	text-shadow: 1px 1px 1px #999;
+	margin: 0;
+	font-family: 'Cantarell', sans-serif;
+}
+
+h2,
+h3 {
+	color: #333;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+	font-size: 1.6em;
+}
+
+h3 {
+	font-size: 1.2em;
+}
+
+code {
+	font-size: 1.2em;
+}
+
+label {
+	font-weight: bold;
+}
+
+p > input {
+	border-radius: 3px;
+	border: 1px solid #CCC;
+	padding: 5px;
+}
+
+#container {
+	width: 990px;
+	margin: 10px auto;
+	overflow: hidden;
+	background: white;
+	padding: 20px;
+	border: 1px solid #CCC;
+	-moz-box-shadow: 1px 1px 20px #DDD;
+	-webkit-box-shadow: 1px 1px 20px #DDD;
+	box-shadow: 1px 1px 20px #DDD;
+}
+
+#menu {
+	float: left;
+	width: 210px;
+	margin-right: 20px;
+}
+
+#menu ul,
+#menu li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+#menu ul {
+	margin-bottom: 30px;
+}
+
+#menu li {
+	border-bottom: 1px solid #CCC
+}
+
+#menu a {
+	padding: 5px;
+	display: block;
+}
+
+#menu a:hover {
+	background: #EEE;
+}
+
+#content {
+	float: left;
+	width: 738px;
+	padding: 10px;
+	border: 1px solid #CCC;
+	border-radius: 5px;
+}
+
+

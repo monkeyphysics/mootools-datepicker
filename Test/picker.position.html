@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Picker</title>
+	<script src="mootools-core.js" type="text/javascript"></script>
+	<script src="mootools-more.js" type="text/javascript"></script>
+	<script src="../Source/Picker.js" type="text/javascript"></script>
+
+	<link href="style.css" rel="stylesheet">
+	<link href="../Source/datepicker.css" rel="stylesheet">
+
+	<style>
+		#relative {
+			margin: 200px 0 0 300px;
+		}
+		#relative a {
+			padding: 5px 10px;
+		}
+	</style>
+
+	<script>
+
+	var myPicker, pickers = {};
+
+	window.addEvent('domready', function(){
+
+		pickers[1] = new Picker({
+			positionOffset: {x: 20, y: 10}
+		}).position(20, 200);
+
+		var positions = ['top', 'right', 'bottom', 'left'];
+		$$('#relative a').each(function(el, i){
+			el.addEvent('click', function(event){
+				event.stop();
+				myPicker.open().position(el, positions[i]);
+			});
+		});
+
+		$('open').addEvent('click', function(e){
+			e.stop();
+			myPicker.open();
+		});
+		$('close').addEvent('click', function(e){
+			e.stop();
+			myPicker.close();
+		});
+		$('toggle').addEvent('click', function(e){
+			e.stop();
+			myPicker.toggle();
+		});
+
+		pickers[2] = new Picker({
+			inject: $('relative')
+		}).close(true);
+
+		myPicker = pickers[1];
+
+		$('picker').addEvent('change', function(){
+			myPicker.close();
+			myPicker = pickers[this.get('value')];
+			myPicker.open();
+		})
+
+	});
+
+	</script>
+
+</head>
+
+<body>
+	<h1>Position the Picker</h1>
+
+	<p>
+		Clicking on one of the links should position the Picker at the top, right, bottom or left of the element.<br />
+		The picker will have a offset of {x: 20, y: 10}. If the position is at the top, the offset should be to the top, just like the x offset when the picker is positioned on the left.
+	</p>
+
+	<p>
+		<a href="#" id="open">Open</a>
+		<a href="#" id="close">Close</a>
+		<a href="#" id="toggle">Toggle</a>
+		<select id="picker">
+			<option value="1">1</option>
+			<option value="2">2</option>
+		</select>
+	</p>
+
+	<div id="relative">
+		<a href="#">Top</a>
+		<a href="#">Right</a>
+		<a href="#">Bottom</a>
+		<a href="#">Left</a>
+	</div>
+
+
+</body>
+</html>
