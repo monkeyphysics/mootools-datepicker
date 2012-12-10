@@ -2,6 +2,26 @@
  * Made by Nima Izadi (nim.izadi@gmail.com / @Nima_Izadi / github.com/nim1989)
  *
  */
+.datepicker_bootstrap:after {
+  content: '';
+  display: inline-block;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+  position: absolute;
+  top: -6px;
+  left: 7px; }
+
+.datepicker_bootstrap:before {
+  content: '';
+  display: inline-block;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #cccccc;
+  position: absolute;
+  top: -7px;
+  left: 6px; }
+
 .datepicker_bootstrap {
   position: absolute;
   font-size: 1em;
@@ -11,8 +31,13 @@
   height: 16.5em;
   padding: 0.5em 0.3em;
   background-color: white;
-  border: 1px solid #eeeeee;
-  box-shadow: 1px 1px 5px #eeeeee; }
+  border: 1px solid #cccccc;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px; }
 
 /* header
 ********************************************************/

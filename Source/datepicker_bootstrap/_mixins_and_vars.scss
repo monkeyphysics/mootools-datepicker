@@ -1,5 +1,6 @@
 $gray                   : #777;
 $grayLight              : #999;
+$grayLightBetween       : #CCC;
 $grayLighter            : #EEE;
 
 // Mixins
@@ -8,6 +9,12 @@ $grayLighter            : #EEE;
   -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
           border-radius: $radius;
+}
+
+@mixin box-shadow($shadow) {
+  -webkit-box-shadow: $shadow;
+     -moz-box-shadow: $shadow;
+          box-shadow: $shadow;
 }
 
 @mixin box-sizing($boxmodel) {
