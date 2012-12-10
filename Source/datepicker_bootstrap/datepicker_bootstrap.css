@@ -46,7 +46,8 @@
   text-align: center;
   margin-bottom: 0.5em;
   border-bottom: inset 1px rgba(204, 204, 204, 0.55);
-  padding-bottom: 0.2em; }
+  padding-bottom: 0.2em;
+  font-weight: bold; }
   .datepicker_bootstrap .header .title {
     text-align: center;
     margin: auto;
