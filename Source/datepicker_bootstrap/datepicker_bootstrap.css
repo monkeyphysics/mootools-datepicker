@@ -1,0 +1,212 @@
+/*
+ * Datepicker for Bootstrap
+ *
+ * Copyright 2012 Stefan Petre
+ * Improvements by Andrew Rowls
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+.datepicker_bootstrap {
+  position: absolute;
+  font-size: 1em;
+  color: #000;
+  line-height: normal;
+  width: 17.2em;
+  height: 13.5em;
+  padding: 0.3em;
+  background-color: white;
+  border: 1px solid #eeeeee;
+  box-shadow: 1px 1px 5px #eeeeee; }
+
+/* header
+********************************************************/
+.datepicker_bootstrap .header {
+  position: relative;
+  text-align: center; }
+  .datepicker_bootstrap .header .title {
+    text-align: center;
+    margin: auto;
+    display: inline-block; }
+    .datepicker_bootstrap .header .title .titleText {
+      margin: auto;
+      padding: 0.5em;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px; }
+      .datepicker_bootstrap .header .title .titleText:hover {
+        background-color: #eeeeee; }
+  .datepicker_bootstrap .header .previous, .datepicker_bootstrap .header .next {
+    position: absolute;
+    cursor: pointer;
+    text-indent: -4em;
+    overflow: hidden;
+    width: 1.2em;
+    height: 1.2em;
+    top: 0.2em;
+    display: block;
+    border-top: 6px solid white;
+    border-bottom: 6px solid white;
+    height: 0px;
+    margin-top: .4em; }
+  .datepicker_bootstrap .header .previous {
+    left: 0.4em;
+    border-right: 7px solid black; }
+    .datepicker_bootstrap .header .previous:hover {
+      border-right-color: #999999; }
+  .datepicker_bootstrap .header .next {
+    right: 0.4em;
+    border-left: 7px solid black; }
+    .datepicker_bootstrap .header .next:hover {
+      border-left-color: #999999; }
+  .datepicker_bootstrap .header .closeButton {
+    display: none; }
+
+/* body
+********************************************************/
+.datepicker_bootstrap .body {
+  position: relative;
+  top: 0;
+  left: 0.2em;
+  width: 16.8em;
+  height: 11.2em;
+  overflow: hidden; }
+
+/* days-grid
+********************************************************/
+.datepicker_bootstrap .days .day {
+  float: left;
+  text-align: center;
+  overflow: hidden;
+  width: 2.3em;
+  padding-top: .1em;
+  height: 1.4em;
+  margin: 0 .1em .1em 0;
+  font-weight: normal; }
+.datepicker_bootstrap .days .titles {
+  height: 1.5em;
+  margin-bottom: .2em;
+  text-transform: uppercase; }
+
+/* days-colors
+********************************************************/
+.datepicker_bootstrap .days .week .day {
+  cursor: pointer;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px; }
+
+.datepicker_bootstrap .days .week .day:hover {
+  background-color: #eeeeee; }
+
+.datepicker_bootstrap .days .otherMonth {
+  color: #999999; }
+
+.datepicker_bootstrap .days .selected, .datepicker_bootstrap .days .selected:hover {
+  background-color: #999999;
+  color: #FFF; }
+
+/* months-grid
+********************************************************/
+.datepicker_bootstrap .months .month {
+  float: left;
+  cursor: pointer;
+  text-align: center;
+  padding-top: .6em;
+  width: 5.5em;
+  overflow: hidden;
+  height: 2.1em;
+  margin: 0 .1em .1em 0; }
+
+.datepicker_bootstrap .months .month3,
+.datepicker_bootstrap .months .month6,
+.datepicker_bootstrap .months .month9,
+.datepicker_bootstrap .months .month12 {
+  margin-right: 0; }
+
+.datepicker_bootstrap .months .month10,
+.datepicker_bootstrap .months .month11,
+.datepicker_bootstrap .months .month12 {
+  margin-bottom: 0; }
+
+/* months-colors
+********************************************************/
+/* years-grid
+********************************************************/
+.datepicker_bootstrap .years .year {
+  float: left;
+  cursor: pointer;
+  text-align: center;
+  padding-top: .6em;
+  width: 3.2em;
+  overflow: hidden;
+  height: 2.1em;
+  margin: 0 .1em .1em 0; }
+
+.datepicker_bootstrap .years .year4,
+.datepicker_bootstrap .years .year9,
+.datepicker_bootstrap .years .year14,
+.datepicker_bootstrap .years .year19 {
+  margin-right: 0; }
+
+.datepicker_bootstrap .years .year15,
+.datepicker_bootstrap .years .year16,
+.datepicker_bootstrap .years .year17,
+.datepicker_bootstrap .years .year18,
+.datepicker_bootstrap .years .year19 {
+  margin-bottom: 0; }
+
+/* years-colors
+********************************************************/
+/* global
+********************************************************/
+.datepicker_bootstrap .unavailable {
+  color: #eeeeee !important;
+  cursor: default !important;
+  text-decoration: line-through; }
+
+.datepicker_bootstrap table {
+  border-spacing: 0; }
+
+.datepicker_bootstrap th,
+.datepicker_bootstrap td {
+  padding: 0; }
+
+/* time
+********************************************************/
+.datepicker_bootstrap .time {
+  position: relative;
+  width: 100%;
+  height: 100%; }
+
+.datepicker_bootstrap .time .hour,
+.datepicker_bootstrap .time .separator,
+.datepicker_bootstrap .time .minutes {
+  background: #333;
+  border: 0px;
+  width: 5em;
+  font-size: 3.2em;
+  color: #fff;
+  position: absolute;
+  top: 1em;
+  text-align: center;
+  padding: 0.2em; }
+
+.datepicker_bootstrap .time .hour {
+  left: 15px; }
+
+.datepicker_bootstrap .time .separator {
+  background: transparent;
+  width: 10px;
+  left: 76px; }
+
+.datepicker_bootstrap .time .minutes {
+  left: 95px; }
+
+.datepicker_bootstrap .time .ok {
+  position: absolute;
+  top: 65px;
+  height: 32px;
+  width: 136px;
+  left: 15px;
+  font-size: 20px; }
