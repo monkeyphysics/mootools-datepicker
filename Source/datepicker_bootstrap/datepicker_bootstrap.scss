@@ -11,7 +11,7 @@
     color           : #000;
     line-height     : normal;
     width           : 17.2em;
-    height          : 13.5em;
+    height          : 16.5em;
     padding         : 0.5em 0.3em;
     background-color: white;
     border          : 1px solid $grayLighter;
@@ -71,8 +71,7 @@
     position    : relative;
     top         : 0;
     left        : 0.2em;
-    //width       : 16.8em;
-    height      : 11.2em;
+    height      : 100%;
     overflow    : hidden;
 }
 
@@ -85,8 +84,8 @@
         text-align  : center;
         overflow    : hidden;
         width       : 2.3em;
-        padding-top : .1em;
-        height      : 1.4em;
+        padding-top : .2em;
+        height      : 1.8em;
         margin      : 0 .1em .1em 0;
         font-weight: normal;
     }
@@ -107,10 +106,10 @@
         float       : left;
         cursor      : pointer;
         text-align  : center;
-        padding-top : .6em;
+        padding-top : 1em;
         width       : 5.5em;
         overflow    : hidden;
-        height      : 2.1em;
+        height      : 2.4em;
         margin      : 0 .1em .1em 0;
     }
 }
@@ -135,10 +134,10 @@
     float       : left;
     cursor      : pointer;
     text-align  : center;
-    padding-top : .6em;
+    padding-top : 1em;
     width       : 3.25em;
     overflow    : hidden;
-    height      : 2.1em;
+    height      : 2.4em;
     margin      : 0 .1em .1em 0;
 }
 
