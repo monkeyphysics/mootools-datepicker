@@ -1,10 +1,5 @@
 /*
- * Datepicker for Bootstrap
- *
- * Copyright 2012 Stefan Petre
- * Improvements by Andrew Rowls
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
+ * Made by Nima Izadi (nim.izadi@gmail.com / @Nima_Izadi / github.com/nim1989)
  *
  */
 .datepicker_bootstrap {
@@ -14,7 +9,7 @@
   line-height: normal;
   width: 17.2em;
   height: 13.5em;
-  padding: 0.3em;
+  padding: 0.5em 0.3em;
   background-color: white;
   border: 1px solid #eeeeee;
   box-shadow: 1px 1px 5px #eeeeee; }
@@ -23,7 +18,8 @@
 ********************************************************/
 .datepicker_bootstrap .header {
   position: relative;
-  text-align: center; }
+  text-align: center;
+  margin-bottom: 0.5em; }
   .datepicker_bootstrap .header .title {
     text-align: center;
     margin: auto;
@@ -68,7 +64,6 @@
   position: relative;
   top: 0;
   left: 0.2em;
-  width: 16.8em;
   height: 11.2em;
   overflow: hidden; }
 
@@ -87,24 +82,8 @@
   height: 1.5em;
   margin-bottom: .2em;
   text-transform: uppercase; }
-
-/* days-colors
-********************************************************/
-.datepicker_bootstrap .days .week .day {
-  cursor: pointer;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px; }
-
-.datepicker_bootstrap .days .week .day:hover {
-  background-color: #eeeeee; }
-
 .datepicker_bootstrap .days .otherMonth {
   color: #999999; }
-
-.datepicker_bootstrap .days .selected, .datepicker_bootstrap .days .selected:hover {
-  background-color: #999999;
-  color: #FFF; }
 
 /* months-grid
 ********************************************************/
@@ -118,19 +97,19 @@
   height: 2.1em;
   margin: 0 .1em .1em 0; }
 
-.datepicker_bootstrap .months .month3,
-.datepicker_bootstrap .months .month6,
-.datepicker_bootstrap .months .month9,
-.datepicker_bootstrap .months .month12 {
-  margin-right: 0; }
-
-.datepicker_bootstrap .months .month10,
-.datepicker_bootstrap .months .month11,
-.datepicker_bootstrap .months .month12 {
-  margin-bottom: 0; }
-
-/* months-colors
+/* years months and days style
 ********************************************************/
+.datepicker_bootstrap .months .month, .datepicker_bootstrap .days .day, .datepicker_bootstrap .years .year {
+  cursor: pointer;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px; }
+  .datepicker_bootstrap .months .month:hover, .datepicker_bootstrap .days .day:hover, .datepicker_bootstrap .years .year:hover {
+    background-color: #eeeeee; }
+  .datepicker_bootstrap .months .month.selected, .datepicker_bootstrap .days .day.selected, .datepicker_bootstrap .years .year.selected {
+    background-color: #999999;
+    color: white; }
+
 /* years-grid
 ********************************************************/
 .datepicker_bootstrap .years .year {
@@ -138,26 +117,11 @@
   cursor: pointer;
   text-align: center;
   padding-top: .6em;
-  width: 3.2em;
+  width: 3.25em;
   overflow: hidden;
   height: 2.1em;
   margin: 0 .1em .1em 0; }
 
-.datepicker_bootstrap .years .year4,
-.datepicker_bootstrap .years .year9,
-.datepicker_bootstrap .years .year14,
-.datepicker_bootstrap .years .year19 {
-  margin-right: 0; }
-
-.datepicker_bootstrap .years .year15,
-.datepicker_bootstrap .years .year16,
-.datepicker_bootstrap .years .year17,
-.datepicker_bootstrap .years .year18,
-.datepicker_bootstrap .years .year19 {
-  margin-bottom: 0; }
-
-/* years-colors
-********************************************************/
 /* global
 ********************************************************/
 .datepicker_bootstrap .unavailable {
