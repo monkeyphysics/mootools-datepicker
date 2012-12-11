@@ -195,7 +195,7 @@ this.DatePicker = Picker.Date = new Class({
 
 		// start neatly at interval (eg. 1980 instead of 1987)
 		date = date.clone().decrement('year', date.get('year') % perPage);
-	
+
 		var iterateDate = date.clone().decrement('year', Math.floor((pages - 1) / 2) * perPage);
 
 		for (var i = pages; i--;){
@@ -550,6 +550,8 @@ var renderers = {
 			maxlength: 2
 		}).inject(container);
 
+		new Element('div.separator[text=:]').inject(container);
+
 		var minutesInput = new Element('input.minutes[type=text]', {
 			title: Locale.get('DatePicker.use_mouse_wheel'),
 			value: date.format('%M'),
@@ -572,10 +574,9 @@ var renderers = {
 			maxlength: 2
 		}).inject(container);
 
-		new Element('div.separator[text=:]').inject(container);
 
 		new Element('input.ok', {
-			'type': 'input',
+			'type': 'submit',
 			value: Locale.get('DatePicker.time_confirm_button'),
 			events: {click: function(event){
 				event.stop();
