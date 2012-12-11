@@ -29,7 +29,7 @@
   line-height: normal;
   width: 17.2em;
   height: 16.5em;
-  padding: 0.5em 0.3em;
+  padding: 0.3em;
   background-color: white;
   border: 1px solid #cccccc;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -44,22 +44,24 @@
   ********************************************************/
   /* days-grid
   ********************************************************/
+  /* years and mongths -grid
+  ********************************************************/
   /* months-grid
   ********************************************************/
   /* years months and days style
-  ********************************************************/
-  /* years-grid
   ********************************************************/
   /* global
   ********************************************************/
   /* time
   ********************************************************/ }
   .datepicker_bootstrap .header {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     position: relative;
     text-align: center;
-    margin-bottom: 0.5em;
     border-bottom: inset 1px rgba(204, 204, 204, 0.55);
-    padding-bottom: 0.2em;
+    padding-bottom: 0.3em;
     font-weight: bold; }
     .datepicker_bootstrap .header .title {
       text-align: center;
@@ -102,31 +104,40 @@
     top: 0;
     left: 0.2em;
     height: 100%;
-    overflow: hidden; }
+    height: 14em;
+    overflow: hidden;
+    margin-top: 0.4em; }
   .datepicker_bootstrap .days .day {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     float: left;
     text-align: center;
     overflow: hidden;
     width: 2.3em;
-    padding-top: .2em;
-    height: 1.8em;
+    padding: .3em;
     margin: 0 .1em .1em 0;
     font-weight: normal; }
   .datepicker_bootstrap .days .titles {
     height: 1.5em;
     margin-bottom: .2em;
     text-transform: uppercase; }
+    .datepicker_bootstrap .days .titles .title:hover {
+      background-color: transparent; }
   .datepicker_bootstrap .days .otherMonth {
     color: #999999; }
-  .datepicker_bootstrap .months .month {
+  .datepicker_bootstrap .months .month, .datepicker_bootstrap .years .year {
     float: left;
     cursor: pointer;
     text-align: center;
     padding-top: 1em;
-    width: 5.5em;
     overflow: hidden;
-    height: 2.4em;
+    height: 2.3em;
     margin: 0 .1em .1em 0; }
+  .datepicker_bootstrap .years .year {
+    width: 3.25em; }
+  .datepicker_bootstrap .months .month {
+    width: 5.5em; }
   .datepicker_bootstrap .months .month, .datepicker_bootstrap .days .day, .datepicker_bootstrap .years .year {
     cursor: pointer;
     -webkit-border-radius: 3px;
@@ -137,15 +148,6 @@
     .datepicker_bootstrap .months .month.selected, .datepicker_bootstrap .days .day.selected, .datepicker_bootstrap .years .year.selected {
       background-color: #999999;
       color: white; }
-  .datepicker_bootstrap .years .year {
-    float: left;
-    cursor: pointer;
-    text-align: center;
-    padding-top: 1em;
-    width: 3.25em;
-    overflow: hidden;
-    height: 2.4em;
-    margin: 0 .1em .1em 0; }
   .datepicker_bootstrap .unavailable {
     color: #eeeeee !important;
     cursor: default !important;
@@ -172,6 +174,8 @@
   .datepicker_bootstrap .time .separator {
     width: 1em; }
   .datepicker_bootstrap .time .ok:active {
+    -webkit-box-shadow: inset 0 1px 5px #999999;
+    -moz-box-shadow: inset 0 1px 5px #999999;
     box-shadow: inset 0 1px 5px #999999; }
   .datepicker_bootstrap .time .ok:hover {
     background-color: #eeeeee; }
