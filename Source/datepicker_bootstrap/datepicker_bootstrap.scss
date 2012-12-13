@@ -5,6 +5,12 @@
 
 @import "mixins_and_vars";
 
+.selected-button {
+    // If you have a specific selected-button style, you can do @extend .my-btn--selected
+    background-color: $selectedColor;
+    color           : white;
+}
+
 .datepicker_bootstrap:after {
     content: '';
     display: inline-block;
@@ -26,18 +32,24 @@
     left: 6px;
 }
 
+$datepicker-width: 18em;
+$datepicker-height: 18em;
+$datepicker-header-height: 2.5em;
+$datepicker-padding: 0.3em;
+
 .datepicker_bootstrap {
     position        : absolute;
     font-size       : 1em;
     color           : #000;
     line-height     : normal;
-    width           : 17.2em;
-    height          : 16.5em;
+    width           : $datepicker-width;
+    height          : $datepicker-height;
     padding         : 0.3em;
     background-color: white;
     border          : 1px solid $grayLightBetween;
     @include box-shadow(0 5px 10px rgba(0,0,0,0.2));
     @include border-radius(3px);
+    @include box-sizing(border-box);
 
     /* header
     ********************************************************/
@@ -48,6 +60,7 @@
         border-bottom   : inset 1px rgba(204, 204, 204, 0.55);
         padding-bottom  : 0.3em;
         font-weight     : bold;
+        height          : $datepicker-header-height;
         .title {
             text-align: center;
             margin    : auto;
@@ -91,34 +104,33 @@
     /* body
     ********************************************************/
     .body {
+        @include box-sizing(border-box);
         position    : relative;
         top         : 0;
         left        : 0.2em;
-        height      : 100%;
-        height      : 14em;
+        height      : $datepicker-height - $datepicker-header-height;
         overflow    : hidden;
-        margin-top  : 0.4em;
+        margin-top  : 0.2em;
     }
 
 
     /* days-grid
     ********************************************************/
     .days {
+        width: $datepicker-width - $datepicker-padding * 3;
+        height: $datepicker-height - $datepicker-header-height - $datepicker-padding * 3;// - $datepicker-padding * 3;
         .day {
-            @include box-sizing(border-box);
-            float       : left;
+            //float       : left;
             text-align  : center;
             overflow    : hidden;
             width       : 2.3em;
-            padding     : .3em;
-            //height      : 1.6em;
-            margin      : 0 .1em .1em 0;
+            //padding     : .4em .3em;
+            //margin      : 0 .1em .1em 0;
             font-weight: normal;
         }
         .titles {
             height: 1.5em;
-            margin-bottom: .2em;
-            text-transform: uppercase;
+            margin-bottom: 0;
             .title:hover {
                 background-color: transparent;
             }
@@ -159,9 +171,8 @@
         &:hover {
             background-color: $grayLighter;
         }
-        &.selected {
-            background-color: $grayLight;
-            color           : white;
+        &.selected, &.selected:hover {
+            @extend .selected-button;
         }
     }
 

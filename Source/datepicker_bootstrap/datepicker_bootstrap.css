@@ -2,6 +2,10 @@
  * Made by Nima Izadi (nim.izadi@gmail.com / @Nima_Izadi / github.com/nim1989)
  *
  */
+.selected-button, .datepicker_bootstrap .months .month.selected, .datepicker_bootstrap .months .month.selected:hover, .datepicker_bootstrap .days .day.selected, .datepicker_bootstrap .days .day.selected:hover, .datepicker_bootstrap .years .year.selected, .datepicker_bootstrap .years .year.selected:hover {
+  background-color: #049cdb;
+  color: white; }
+
 .datepicker_bootstrap:after {
   content: '';
   display: inline-block;
@@ -27,8 +31,8 @@
   font-size: 1em;
   color: #000;
   line-height: normal;
-  width: 17.2em;
-  height: 16.5em;
+  width: 18em;
+  height: 18em;
   padding: 0.3em;
   background-color: white;
   border: 1px solid #cccccc;
@@ -38,6 +42,9 @@
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   /* header
   ********************************************************/
   /* body
@@ -62,7 +69,8 @@
     text-align: center;
     border-bottom: inset 1px rgba(204, 204, 204, 0.55);
     padding-bottom: 0.3em;
-    font-weight: bold; }
+    font-weight: bold;
+    height: 2.5em; }
     .datepicker_bootstrap .header .title {
       text-align: center;
       margin: auto;
@@ -100,32 +108,30 @@
     .datepicker_bootstrap .header .closeButton {
       display: none; }
   .datepicker_bootstrap .body {
-    position: relative;
-    top: 0;
-    left: 0.2em;
-    height: 100%;
-    height: 14em;
-    overflow: hidden;
-    margin-top: 0.4em; }
-  .datepicker_bootstrap .days .day {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    float: left;
-    text-align: center;
+    position: relative;
+    top: 0;
+    left: 0.2em;
+    height: 15.5em;
     overflow: hidden;
-    width: 2.3em;
-    padding: .3em;
-    margin: 0 .1em .1em 0;
-    font-weight: normal; }
-  .datepicker_bootstrap .days .titles {
-    height: 1.5em;
-    margin-bottom: .2em;
-    text-transform: uppercase; }
-    .datepicker_bootstrap .days .titles .title:hover {
-      background-color: transparent; }
-  .datepicker_bootstrap .days .otherMonth {
-    color: #999999; }
+    margin-top: 0.2em; }
+  .datepicker_bootstrap .days {
+    width: 17.1em;
+    height: 14.6em; }
+    .datepicker_bootstrap .days .day {
+      text-align: center;
+      overflow: hidden;
+      width: 2.3em;
+      font-weight: normal; }
+    .datepicker_bootstrap .days .titles {
+      height: 1.5em;
+      margin-bottom: 0; }
+      .datepicker_bootstrap .days .titles .title:hover {
+        background-color: transparent; }
+    .datepicker_bootstrap .days .otherMonth {
+      color: #999999; }
   .datepicker_bootstrap .months .month, .datepicker_bootstrap .years .year {
     float: left;
     cursor: pointer;
@@ -145,9 +151,6 @@
     border-radius: 3px; }
     .datepicker_bootstrap .months .month:hover, .datepicker_bootstrap .days .day:hover, .datepicker_bootstrap .years .year:hover {
       background-color: #eeeeee; }
-    .datepicker_bootstrap .months .month.selected, .datepicker_bootstrap .days .day.selected, .datepicker_bootstrap .years .year.selected {
-      background-color: #999999;
-      color: white; }
   .datepicker_bootstrap .unavailable {
     color: #eeeeee !important;
     cursor: default !important;
