@@ -1,12 +1,20 @@
-$gray                   : #777;
-$grayLight              : #999;
-$grayLightBetween       : #CCC;
-$grayLighter            : #EEE;
-$blue                   : #049cdb;
-$selectedColor          : $blue;
+// Colors
+$gray                       : #777;
+$grayLight                  : #999;
+$grayLightBetween           : #CCC;
+$grayLighter                : #EEE;
+$blue                       : #049cdb;
+$hoveredColor               : $grayLighter;
+$selectedColor              : $blue;
+
+// Dimensions
+$datepicker-width           : 18em;
+$datepicker-height          : 18em;
+$datepicker-header-height   : 2.5em;
+$datepicker-padding         : 0.3em;
+
 
 // Mixins
-// Border Radius
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
