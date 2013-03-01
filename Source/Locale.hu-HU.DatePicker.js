@@ -4,7 +4,7 @@ name: Locale.hu-HU.DatePicker
 description: English Language File for DatePicker
 authors: Gabor Garami
 requires: [More/Locale]
-provides: Locale.en-US.DatePicker
+provides: Locale.hu-HU.DatePicker
 ...
 */
 
