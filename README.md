@@ -1,3 +1,8 @@
+# Fork Improvements
+
+- Months and years are now displayed in tables instead of divs.
+- A bootstrap-like theme is available. Sources are written in SCSS and can be easily modified as the positionning is no longer done in absolute.
+
 MooTools-DatePicker
 ===================
 
@@ -50,7 +55,7 @@ Then you can simply use, for example:
 
 ### Theming:
 
-Theming is done with CSS files, there are four themes available, which you can find in the Source folder.
+Theming is done with CSS files, there are five themes available, which you can find in the Source folder.
 
 Just include the CSS file and set the `pickerClass` option.
 
