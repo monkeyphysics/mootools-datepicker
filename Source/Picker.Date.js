@@ -424,8 +424,8 @@ var renderers = {
 
 	years: function(years, options, currentDate, dateElements, fn){
 		var container = new Element('table.years'),
-			today 	  = new Date(),
-			rows 	  = [],
+			today     = new Date(),
+			rows      = [],
 			element, classes;
 
 		years.each(function(_year, i){
@@ -449,13 +449,13 @@ var renderers = {
 	},
 
 	months: function(months, options, currentDate, dateElements, fn){
-		var today 		 = new Date(),
-			month 	 	 = today.get('month'),
-			thisyear 	 = today.get('year'),
+		var today        = new Date(),
+			month        = today.get('month'),
+			thisyear     = today.get('year'),
 			selectedyear = currentDate.get('year'),
-			container 	 = new Element('table.months'),
+			container    = new Element('table.months'),
 			monthsAbbr   = options.months_abbr || Locale.get('Date.months_abbr'),
-			rows		 = [],
+			rows         = [],
 			element, classes;
 
 		months.each(function(_month, i){

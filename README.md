@@ -55,7 +55,7 @@ Then you can simply use, for example:
 
 ### Theming:
 
-Theming is done with CSS files, there are four themes available, which you can find in the Source folder.
+Theming is done with CSS files, there are five themes available, which you can find in the Source folder.
 
 Just include the CSS file and set the `pickerClass` option.
 
