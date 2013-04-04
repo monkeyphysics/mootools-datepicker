@@ -70,6 +70,7 @@ Currently the following languages are supported
 - es-ES
 - fr-FR
 - he-IL
+- hu-HU
 - it-IT
 - nl-NL
 - pl-PL
