@@ -1,6 +1,6 @@
 name: MooTools-DatePicker
 author: astolwijk
-current: 2.1.1
+current: 2.2.0
 category: Widgets
 tags: [Datepicker, Calendar, Picker]
 demo: http://www.aryweb.nl/projects/mootools-datepicker/
@@ -15,11 +15,18 @@ sources:
   - "Source/Picker.Attach.js"
   - "Source/Picker.Date.js"
   - "Source/Picker.Date.Range.js"
-  - "Source/Locale.en-US.DatePicker.js"
+  - "Source/Locale.af-ZA.DatePicker.js"
   - "Source/Locale.cs-CZ.DatePicker.js"
   - "Source/Locale.de-DE.DatePicker.js"
+  - "Source/Locale.en-US.DatePicker.js"
+  - "Source/Locale.es-ES-DatePicker.js"
   - "Source/Locale.fr-FR.DatePicker.js"
+  - "Source/Locale.he-IL.DatePicker.js"
+  - "Source/Locale.hu-HU.DatePicker.js"
   - "Source/Locale.it-IT.DatePicker.js"
   - "Source/Locale.nl-NL.DatePicker.js"
   - "Source/Locale.pl-PL.DatePicker.js"
+  - "Source/Locale.pt-BR.DatePicker.js"
   - "Source/Locale.ru-RU.DatePicker.js"
+  - "Source/Locale.sv-SE.DatePicker.js"
+  - "Source/Locale.uk-UA.DatePicker.js"
