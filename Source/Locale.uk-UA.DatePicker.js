@@ -2,7 +2,7 @@
 ---
 name: Locale.uk-UA.DatePicker
 description: Ukrainian Language File for DatePicker
-authors: Arian Stolwijk, Jon Baker
+authors: Arian Stolwijk, Jon Baker, Artem Godlevskyy
 requires: [More/Locale]
 provides: Locale.uk-UA.DatePicker
 ...
