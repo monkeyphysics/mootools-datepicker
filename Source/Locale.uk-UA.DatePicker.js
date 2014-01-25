@@ -1,10 +1,10 @@
 /*
 ---
-name: Locale.en-US.DatePicker
-description: English Language File for DatePicker
-authors: Arian Stolwijk
+name: Locale.uk-UA.DatePicker
+description: Ukrainian Language File for DatePicker
+authors: Arian Stolwijk, Jon Baker, Artem Godlevskyy
 requires: [More/Locale]
-provides: Locale.en-US.DatePicker
+provides: Locale.uk-UA.DatePicker
 ...
 */
 
