@@ -293,7 +293,7 @@ this.DatePicker = Picker.Date = new Class({
 		this.dateElements = [];
 
 		for (var i = months; i--;){
-			_date = iterateDate.clone();
+			var _date = iterateDate.clone();
 			_dates.push(_date);
 			_columns.push(renderers.days(
 				timesSelectors.days(options, _date.clone()),
