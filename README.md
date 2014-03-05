@@ -153,7 +153,7 @@ All the options of the Picker and Picker.Attach classes, and:
 		timePicker: true,
 		pickerClass: 'datepicker_jqui',
 		onSelect: function(date){
-			myHiddenField.set('value', date.format('%s');
+			myHiddenField.set('value', date.format('%s'));
 		}
 	});
 
