@@ -425,8 +425,8 @@ var DatePicker = new Class({
 				available = true;
 				e.addEvent('click', function(e, d) {
 					if (this.options.timePicker) {
-						this.d.setDate(d.day);
 						this.d.setMonth(d.month);
+						this.d.setDate(d.day);
 						this.mode = 'time';
 						this.render('fade');
 					} else {
