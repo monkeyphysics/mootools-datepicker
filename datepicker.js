@@ -285,6 +285,7 @@ var DatePicker = new Class({
 	},
 	
 	fx: function(fx) {
+        this.newContents.setStyle('display', 'block');
 		if (fx == 'right') {
 			this.oldContents.setStyles({ left: 0, opacity: 1 });
 			this.newContents.setStyles({ left: this.bodysize.x, opacity: 1 });
@@ -295,7 +296,13 @@ var DatePicker = new Class({
 			this.slider.setStyle('left', -this.bodysize.x).tween('left', -this.bodysize.x, 0);
 		} else if (fx == 'fade') {
 			this.slider.setStyle('left', 0);
-			this.oldContents.setStyle('left', 0).set('tween', { duration: this.options.animationDuration / 2 }).tween('opacity', 1, 0);
+            this.oldContents.addClass('tween_dispose');
+			this.oldContents.setStyle('left', 0).set('tween', { duration: this.options.animationDuration / 2, onComplete: function(){
+                $$('.tween_dispose').each( function(d){
+                   d.setStyle('display', 'none'); 
+                   d.removeClass('tween_dispose');
+                });
+            }}).tween('opacity', 1, 0);
 			this.newContents.setStyles({ opacity: 0, left: 0}).set('tween', { duration: this.options.animationDuration }).tween('opacity', 0, 1);
 		}
 	},
