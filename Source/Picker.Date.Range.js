@@ -120,7 +120,7 @@ Picker.Date.Range = new Class({
 			else el.element.removeClass('selected');
 		}
 
-		var formattedFirst = start.format(this.options.format)
+		var formattedFirst = start.format(this.options.format),
 			formattedEnd = end.format(this.options.format);
 
 		this.startInput.set('value', formattedFirst);
