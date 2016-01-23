@@ -86,7 +86,7 @@ this.DatePicker = Picker.Date = new Class({
 			return (options.startView == what) && (options.startView = newViews[i]);
 		});
 
-		options.canAlwaysGoUp = options.canAlwaysGoUp ? Array.from(options.canAlwaysGoUp) : [];
+		options.canAlwaysGoUp = options.canAlwaysGoUp ? Array.convert(options.canAlwaysGoUp) : [];
 
 		// Set the min and max dates as Date objects
 		if (options.minDate){
