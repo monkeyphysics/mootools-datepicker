@@ -120,7 +120,7 @@ var DatePicker = new Class({
 			
 			// determine starting value(s)
 			if ($chk(item.get('value'))) {
-				var init_clone_val = this.format(new Date(this.unformat(item.get('value'), this.options.inputOutputFormat)), this.options.format);
+				var init_clone_val = this.format(this.unformat(item.get('value'), this.options.inputOutputFormat), this.options.format);
 			} else if (!this.options.allowEmpty) {
 				var init_clone_val = this.format(new Date(), this.options.format);
 			} else {
@@ -182,10 +182,10 @@ var DatePicker = new Class({
 		} else {
 			init_visual_date = new Date();
 			if ($chk(this.options.maxDate) && init_visual_date.valueOf() > this.options.maxDate.valueOf()) {
-				init_visual_date = new Date(this.options.maxDate.valueOf());
+				init_visual_date.setTime(this.options.maxDate.getTime());
 			}
 			if ($chk(this.options.minDate) && init_visual_date.valueOf() < this.options.minDate.valueOf()) {
-				init_visual_date = new Date(this.options.minDate.valueOf());
+				init_visual_date.setTime(this.options.minDate.getTime());
 			}
 		}
 		
@@ -227,7 +227,8 @@ var DatePicker = new Class({
 	show: function(position, timestamp) {
 		this.formatMinMaxDates();
 		if ($chk(timestamp)) {
-			this.d = new Date(timestamp);
+			this.d = new Date();
+			this.d.setTime(timestamp);
 		} else {
 			this.d = new Date();
 		}
@@ -250,7 +251,8 @@ var DatePicker = new Class({
 		}
 		
 		// remember current working date
-		var startDate = new Date(this.d.getTime());
+		var startDate = new Date();
+		startDate.setTime(this.d.getTime());
 		
 		// intially assume both left and right are allowed
 		this.limit = { right: false, left: false };
@@ -717,7 +719,7 @@ var DatePicker = new Class({
 				case 'h': if (a['a'] == 'pm' || a['A'] == 'PM') { d.setHours(v == 12 ? 0 : v.toInt() + 12); } else { d.setHours(v); } break;
 				case 'i': d.setMinutes(v); break;
 				case 's': d.setSeconds(v); break;
-				case 'U': d = new Date(v.toInt() * 1000);
+				case 'U': d = new Date(); d.setTime(v.toInt() * 1000);
 			}
 		};
 		
